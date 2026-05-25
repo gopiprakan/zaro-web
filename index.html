@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO & Brand Metadata -->
+  <title>ZARO | Web Development Agency for Local Shops & Businesses</title>
+  <meta name="description" content="Take your local retail shop, boutique, salon, or cafe online with ZARO. We design elegant, high-performing websites to grow your sales and brand value.">
+  <meta name="keywords" content="web development, local shops website, boutique website, e-commerce, digital catalog, local SEO, ZARO web creation">
+  
+  <!-- Remix Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  
+  <!-- Link Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Decorative Glowing Meshes -->
+  <div class="bg-glow glow-top-right"></div>
+  <div class="bg-glow glow-bottom-left"></div>
+
+  <!-- --- HEADER / NAVIGATION --- -->
+  <header id="main-header">
+    <div class="container header-container">
+      <!-- Brand Logo -->
+      <a href="#" class="logo">
+        <span>Z</span>ZARO
+      </a>
+      
+      <!-- Nav Links -->
+      <nav id="nav-menu">
+        <ul class="nav-links">
+          <li><a href="#home" class="nav-link active">Home</a></li>
+          <li><a href="#calculator" class="nav-link">Value Boost</a></li>
+          <li><a href="#transformation" class="nav-link">Why Website</a></li>
+          <li><a href="#services" class="nav-link">Services</a></li>
+          <li><a href="#portfolio" class="nav-link">Our Work</a></li>
+          <li><a href="#reviews" class="nav-link">Reviews</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+      
+      <!-- Header CTA & Theme Toggle -->
+      <div class="header-actions">
+        <button id="theme-toggle-btn" class="theme-toggle" aria-label="Toggle Theme">
+          <i class="ri-sun-line" id="theme-icon-element"></i>
+        </button>
+        
+        <!-- Login & Profile Actions -->
+        <div id="auth-actions-wrapper" style="display: flex; align-items: center; gap: 12px;">
+          <button id="header-login-btn" class="btn btn-secondary" style="padding: 10px 20px; font-size: 0.9rem;">
+            <i class="ri-user-line"></i> Login
+          </button>
+          
+          <button id="header-profile-btn" class="profile-avatar-btn" style="display: none; padding: 0;" aria-label="Open Profile">
+            <div class="header-avatar-circle">
+              <img id="header-profile-img" src="" alt="Profile Image" style="display: none;">
+              <span id="header-profile-initials">U</span>
+            </div>
+          </button>
+        </div>
+
+        <a href="#contact" class="btn btn-secondary" style="padding: 10px 20px; font-size: 0.9rem;">Get Started</a>
+        <i class="ri-menu-line mobile-menu-btn" id="mobile-toggle"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- --- HERO SECTION --- -->
+  <section id="home" class="hero">
+    <div class="container hero-grid">
+      <!-- Hero Left: Headlines & CTA -->
+      <div class="hero-content">
+        <div class="badge">
+          <i class="ri-rocket-2-fill"></i> Taking Local Businesses Online
+        </div>
+        <h1 class="hero-title">
+          Turn Local Footfall Into <span class="gradient-text">Global Sales.</span>
+        </h1>
+        <p class="hero-description">
+          Over 65% of local shops lose customers because they are invisible online. ZARO builds premium, elegant websites specifically designed to help boutiques, cafes, clinics, and shops attract 2x more walk-ins and automated online orders.
+        </p>
+        <div class="hero-ctas">
+          <a href="#calculator" class="btn btn-primary">
+            <i class="ri-calculator-line"></i> Calculate Your Growth
+          </a>
+          <a href="https://wa.me/919043379569?text=Hi%20ZARO,%20I%20want%20to%20take%20my%20business%20online.%20Can%20we%20discuss?" target="_blank" class="btn btn-secondary">
+            <i class="ri-whatsapp-line" style="color: #25d366; font-size: 1.25rem;"></i> Chat on WhatsApp
+          </a>
+        </div>
+        
+        <!-- Quick Agency Trust Statistics -->
+        <div class="hero-stats">
+          <div class="stat-item">
+            <h3>24h</h3>
+            <p>Support Response</p>
+          </div>
+          <div class="stat-item">
+            <h3>100%</h3>
+            <p>Custom UI Designs</p>
+          </div>
+          <div class="stat-item">
+            <h3>2.5x</h3>
+            <p>Average Sales Boost</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Hero Right: Dynamic Interactive CSS Screen Mockup -->
+      <div class="hero-visual">
+        <div class="visual-scene">
+          <div class="floating-circle"></div>
+          
+          <!-- Mockup Website Dashboard Container -->
+          <div class="hero-glass-card">
+            <div class="card-header">
+              <div class="dot dot-red"></div>
+              <div class="dot dot-yellow"></div>
+              <div class="dot dot-green"></div>
+            </div>
+            
+            <!-- Live Preview Card Design -->
+            <div class="mock-shop-hero">
+              <div class="mock-navbar">
+                <div class="mock-logo"><i class="ri-store-2-fill gradient-text"></i> Bella Boutique</div>
+                <div class="mock-menu">
+                  <div class="mock-line" style="width: 20px;"></div>
+                  <div class="mock-line" style="width: 20px;"></div>
+                </div>
+              </div>
+              <div class="mock-body">
+                <div class="mock-badge">EXCLUSIVE SUMMER COLLECTION</div>
+                <h2 class="mock-h1">Stunning Dresses Made Just For You</h2>
+                <p class="mock-desc">Explore standard, custom stitched apparel orderable straight from your smartphone.</p>
+                <div class="mock-btn"><i class="ri-shopping-bag-3-line"></i> Shop Catalog</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Secondary Overlap floating tag -->
+          <div class="floating-sales-tag">
+            <div class="tag-icon">
+              <i class="ri-line-chart-line"></i>
+            </div>
+            <div class="tag-content">
+              <p>Online Revenue Boost</p>
+              <h4>+142% This Month</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- --- VALUE CALCULATOR SECTION --- -->
+  <section id="calculator">
+    <div class="container">
+      <div class="section-header">
+        <div class="badge"><i class="ri-funds-box-line"></i> Value Estimator</div>
+        <h2>See Your Business <span class="gradient-text">Multiply</span></h2>
+        <p>Most shop owners don't realize how much revenue they are leaving on the table. Adjust the parameters below to see how a ZARO website turns local footfall into digital profit.</p>
+      </div>
+      
+      <div class="calculator-box">
+        <!-- Input Panel -->
+        <div class="calc-inputs">
+          <!-- Business Category -->
+          <div class="input-group">
+            <label for="calc-business-type" class="input-label">Select Business Type</label>
+            <select id="calc-business-type" class="calc-select">
+              <option value="retail" selected>Fashion Boutique / Retail Shop</option>
+              <option value="cafe">Cafe / Local Restaurant</option>
+              <option value="salon">Salon / Spa / Service Business</option>
+              <option value="grocery">Local Grocery / Supermarket</option>
+            </select>
+          </div>
+          
+          <!-- Daily Footfall Slider -->
+          <div class="input-group">
+            <div class="input-label">
+              Daily Walk-In Customers <span id="label-footfall">50</span>
+            </div>
+            <input type="range" id="slider-footfall" class="range-slider" min="10" max="300" value="50">
+          </div>
+          
+          <!-- Average Customer Spend -->
+          <div class="input-group">
+            <div class="input-label">
+              Average Customer Spend (₹) <span id="label-spend">₹500</span>
+            </div>
+            <input type="range" id="slider-spend" class="range-slider" min="100" max="3000" step="50" value="500">
+          </div>
+        </div>
+        
+        <!-- Results Panel -->
+        <div class="calc-results">
+          <div class="results-header">
+            <h3>Estimated Annual Sales Increase</h3>
+            <div id="result-annual-revenue" class="results-revenue">₹1,82,500</div>
+          </div>
+          
+          <div class="results-details">
+            <div class="detail-row">
+              <span class="detail-label">Projected Monthly Web Visitors</span>
+              <span id="result-web-visitors" class="detail-val">1,200+</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">New Orders Generated / Month</span>
+              <span id="result-new-orders" class="detail-val">45 Orders</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Estimated Brand Value Boost</span>
+              <span class="detail-val benefit"><i class="ri-vip-crown-fill"></i> Highly Recommended</span>
+            </div>
+          </div>
+          
+          <div class="calc-cta">
+            <a href="#contact" class="btn btn-primary" style="width: 100%; box-sizing: border-box;">
+              Claim This Revenue Boost <i class="ri-arrow-right-line"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- --- BEFORE & AFTER TRANSFORMATION SECTION --- -->
+  <section id="transformation">
+    <div class="container">
+      <div class="section-header">
+        <div class="badge"><i class="ri-swap-line"></i> The Transformation</div>
+        <h2>The Cost of <span class="gradient-text-sec">Staying Invisible</span></h2>
+        <p>Here is what happens when you operate purely offline compared to having a modern web storefront built by ZARO.</p>
+      </div>
+      
+      <div class="transform-grid">
+        <!-- Card: Before (Without Website) -->
+        <div class="transform-card before">
+          <div class="card-status-badge">Purely Offline Shop</div>
+          <h3><i class="ri-close-circle-fill"></i> Without ZARO Website</h3>
+          <div class="transform-list">
+            <div class="transform-item">
+              <div class="item-icon"><i class="ri-map-pin-user-line"></i></div>
+              <div class="item-text">
+                <h4>Invisible on Maps & Web</h4>
+                <p>New residents and tourists nearby cannot discover you when they search on their phone.</p>
+              </div>
+            </div>
+            <div class="transform-item">
+              <div class="item-icon"><i class="ri-timer-flash-line"></i></div>
+              <div class="item-text">
+                <h4>Closed When Doors Are Shut</h4>
+                <p>You can only sell during physical shop hours. Orders stop completely at night.</p>
+              </div>
+            </div>
+            <div class="transform-item">
+              <div class="item-icon"><i class="ri-database-2-line"></i></div>
+              <div class="item-text">
+                <h4>No Customer Loyalty Data</h4>
+                <p>Customers walk in and out. You cannot contact them for new arrivals, discounts, or loyalty points.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Card: After (With Website) -->
+        <div class="transform-card after">
+          <div class="card-status-badge">Powered by Zaro</div>
+          <h3><i class="ri-checkbox-circle-fill"></i> With ZARO Web Storefront</h3>
+          <div class="transform-list">
+            <div class="transform-item">
+              <div class="item-icon"><i class="ri-global-line"></i></div>
+              <div class="item-text">
+                <h4>Found Instantly by Customers</h4>
+                <p>Appear on top google search queries like "best shop near me" with interactive catalog links.</p>
+              </div>
+            </div>
+            <div class="transform-item">
+              <div class="item-icon"><i class="ri-shopping-cart-2-line"></i></div>
+              <div class="item-text">
+                <h4>24/7 Automated Ordering</h4>
+                <p>Receive queries, pre-orders, and table bookings directly on WhatsApp while you sleep.</p>
+              </div>
+            </div>
+            <div class="transform-item">
+              <div class="item-icon"><i class="ri-shake-hands-line"></i></div>
+              <div class="item-text">
+                <h4>Retain & Re-engage Buyers</h4>
+                <p>Build a customer list. Inform hundreds of clients of weekly stock updates with one click.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- --- SERVICES SECTION --- -->
+  <section id="services">
+    <div class="container">
+      <div class="section-header">
+        <div class="badge"><i class="ri-tools-fill"></i> Custom Solutions</div>
+        <h2>Websites Engineered For <span class="gradient-text">Growth</span></h2>
+        <p>We build tailored, easy-to-manage web experiences that directly solve local commercial business problems.</p>
+      </div>
+      
+      <div class="services-grid">
+        <!-- Service 1: E-Commerce Storefront -->
+        <div class="service-card">
+          <div class="service-icon"><i class="ri-shopping-bag-3-fill"></i></div>
+          <h3>E-Commerce & Online Stores</h3>
+          <p>Complete shopping carts designed for boutiques, cosmetics, toys, and custom local products.</p>
+          <ul class="service-features">
+            <li><i class="ri-checkbox-circle-fill"></i> Instant payment integration</li>
+            <li><i class="ri-checkbox-circle-fill"></i> User-friendly product uploads</li>
+            <li><i class="ri-checkbox-circle-fill"></i> Automatic invoice generation</li>
+          </ul>
+        </div>
+        
+        <!-- Service 2: Interactive Digital Catalogs -->
+        <div class="service-card">
+          <div class="service-icon"><i class="ri-pages-fill"></i></div>
+          <h3>Smart Digital Catalogs</h3>
+          <p>Ideal for restaurants, furniture showrooms, and pharmacies wanting to show products without a full checkout.</p>
+          <ul class="service-features">
+            <li><i class="ri-checkbox-circle-fill"></i> QR Code scanning direct to menu</li>
+            <li><i class="ri-checkbox-circle-fill"></i> "Order via WhatsApp" buttons</li>
+            <li><i class="ri-checkbox-circle-fill"></i> Ultra-fast load times for mobile</li>
+          </ul>
+        </div>
+        
+        <!-- Service 3: Booking & Appointments -->
+        <div class="service-card">
+          <div class="service-icon"><i class="ri-calendar-event-fill"></i></div>
+          <h3>Appointments & Booking</h3>
+          <p>Perfect for beauty salons, dental clinics, consulting hubs, and home repair services.</p>
+          <ul class="service-features">
+            <li><i class="ri-checkbox-circle-fill"></i> Live slot selection calendars</li>
+            <li><i class="ri-checkbox-circle-fill"></i> WhatsApp slot reminders</li>
+            <li><i class="ri-checkbox-circle-fill"></i> Staff availability panel</li>
+          </ul>
+        </div>
+        
+        <!-- Service 4: Local SEO Booster -->
+        <div class="service-card">
+          <div class="service-icon"><i class="ri-map-pin-2-fill"></i></div>
+          <h3>Local Maps & Search Booster</h3>
+          <p>Optimize your google maps presence linked directly to your landing pages to capture hot local traffic.</p>
+          <ul class="service-features">
+            <li><i class="ri-checkbox-circle-fill"></i> High ranking review setups</li>
+            <li><i class="ri-checkbox-circle-fill"></i> Schema tags for maps optimization</li>
+            <li><i class="ri-checkbox-circle-fill"></i> Built-in review collector widget</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- --- PORTFOLIO GALLERY SECTION --- -->
+  <section id="portfolio">
+    <div class="container">
+      <div class="section-header">
+        <div class="badge"><i class="ri-gallery-fill"></i> Portfolio Showcase</div>
+        <h2>Designed to <span class="gradient-text">Impress</span></h2>
+        <p>Click on the categories below to preview actual designs and layouts we custom-tailor for local commercial shops.</p>
+      </div>
+      
+      <!-- Portfolio Filter Tabs -->
+      <div class="portfolio-tabs">
+        <button class="portfolio-tab active" data-filter="boutique">Fashion Boutique</button>
+        <button class="portfolio-tab" data-filter="cafe">Gourmet Cafe</button>
+        <button class="portfolio-tab" data-filter="services">Spa & Salon</button>
+      </div>
+      
+      <!-- Premium CSS Interactive Showcase Layout -->
+      <div class="portfolio-display-wrapper">
+        
+        <!-- Portfolio Info Card (Left) -->
+        <div class="portfolio-info" id="portfolio-info-box">
+          <div class="portfolio-meta">
+            <span class="meta-tag" id="meta-category">Boutique</span>
+            <span class="meta-tag" style="color: var(--accent-color); border-color: rgba(16, 185, 129, 0.3);" id="meta-status">Active Online Store</span>
+          </div>
+          <h3 id="portfolio-title">Bella Chic Boutique</h3>
+          <p id="portfolio-desc">
+            A beautiful, visual-first e-commerce interface for a high-end designer clothing boutique. Featuring smooth layout swipes, quick sizing selection drawers, and unified single-page payments directly linked to inventory management.
+          </p>
+          
+          <div class="device-toggle-container">
+            <button class="device-btn active" id="btn-device-desktop">
+              <i class="ri-computer-line"></i> Desktop View
+            </button>
+            <button class="device-btn" id="btn-device-mobile">
+              <i class="ri-smartphone-line"></i> Mobile View
+            </button>
+          </div>
+        </div>
+        
+        <!-- Devices Mockup Visualizer (Right) -->
+        <div class="portfolio-showcase-view">
+          
+          <!-- CSS Desktop Frame Container -->
+          <div class="desktop-device" id="showcase-desktop">
+            <div class="desktop-screen">
+              <!-- Render beautiful customized inside frames via dynamic CSS grids -->
+              <div class="desktop-content" id="desktop-bg-frame" style="background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=800');">
+                <div style="padding: 20px; color: white;">
+                  <h4 id="inner-desktop-logo" style="font-family: 'Plus Jakarta Sans'; font-size: 1rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 6px; margin-bottom: 30px;">BELLA CHIC</h4>
+                  <h2 id="inner-desktop-title" style="font-size: 1.8rem; line-height: 1.2; font-family: 'Plus Jakarta Sans';">Exclusive Summer Styles</h2>
+                  <p id="inner-desktop-desc" style="font-size: 0.8rem; opacity: 0.8; margin: 10px 0 20px; max-width: 250px;">Handpicked clothing styles available for quick checkout.</p>
+                  <span style="background: white; color: black; font-size: 0.75rem; padding: 8px 14px; border-radius: 4px; font-weight: 600;">Shop Inventory</span>
+                </div>
+              </div>
+            </div>
+            <div class="desktop-base"></div>
+          </div>
+          
+          <!-- CSS Mobile Phone Frame Container (Hidden initially by javascript unless selected) -->
+          <div class="mobile-device" id="showcase-mobile" style="display: none;">
+            <div class="mobile-notch"></div>
+            <div class="mobile-content" id="mobile-bg-frame" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=400');">
+              <div style="padding: 30px 15px 15px 15px; color: white; display: flex; flex-direction: column; justify-content: space-between; height: calc(100% - 45px);">
+                <div style="font-size: 0.75rem; font-weight: 700;" id="inner-mobile-logo">BELLA CHIC</div>
+                <div>
+                  <h3 id="inner-mobile-title" style="font-size: 1.25rem; font-family: 'Plus Jakarta Sans'; line-height: 1.2;">Exclusive Summer Styles</h3>
+                  <span style="background: var(--primary-color); display: inline-block; font-size: 0.65rem; padding: 6px 12px; border-radius: 4px; font-weight: 600; margin-top: 12px;">Order Now</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        
+      </div>
+    </div>
+  </section>
+
+  <!-- --- TESTIMONIALS & REVIEWS SECTION --- -->
+  <section id="reviews">
+    <div class="container">
+      <div class="section-header">
+        <div class="badge"><i class="ri-feedback-fill"></i> Client Success Stories</div>
+        <h2>What Shop Owners <span class="gradient-text-sec">Say About Us</span></h2>
+        <p>We've helped local businesses transform their daily operations and scale sales overnight. Read their verified feedback.</p>
+      </div>
+      
+      <!-- Review Tabs for filter -->
+      <div class="reviews-tabs">
+        <button class="reviews-tab active" data-review-filter="all">All Reviews</button>
+        <button class="reviews-tab" data-review-filter="retail">Retail Stores</button>
+        <button class="reviews-tab" data-review-filter="food">Cafes & Dining</button>
+        <button class="reviews-tab" data-review-filter="services">Local Services</button>
+      </div>
+      
+      <!-- Reviews Grid Layout -->
+      <div class="reviews-grid" id="reviews-container">
+        
+        <!-- Review 1 (Retail) -->
+        <div class="review-card" data-category="retail">
+          <div class="review-stars">
+            <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+          </div>
+          <p class="review-text">
+            "Before ZARO built our catalog storefront, we sold only to footfall on the main road. Now we get over 25 orders per day on WhatsApp from neighbouring sectors. Highly professional design!"
+          </p>
+          <div class="review-author">
+            <div class="author-avatar">AP</div>
+            <div class="author-info">
+              <h4>Ananya Patel</h4>
+              <p>Owner, Ananya's Designer Studio</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Review 2 (Food) -->
+        <div class="review-card" data-category="food">
+          <div class="review-stars">
+            <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+          </div>
+          <p class="review-text">
+            "ZARO constructed an elegant QR Menu website for our cafe. Customers order quickly right from tables, saving us cashier labor costs and speeding up service. Our average order bill increased by 20%!"
+          </p>
+          <div class="review-author">
+            <div class="author-avatar">MS</div>
+            <div class="author-info">
+              <h4>Marcus Silva</h4>
+              <p>Manager, The Aroma Hub Cafe</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Review 3 (Services) -->
+        <div class="review-card" data-category="services">
+          <div class="review-stars">
+            <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+          </div>
+          <p class="review-text">
+            "Our clinic and spa bookings were a mess with manual entries. ZARO implemented a smooth booking schedule portal. Now, appointments sync perfectly, client no-shows have dropped by 80%."
+          </p>
+          <div class="review-author">
+            <div class="author-avatar">KD</div>
+            <div class="author-info">
+              <h4>Dr. Kavita Das</h4>
+              <p>Founder, Nirvana Wellness & Spa</p>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+
+  <!-- --- CONTACT & ESTIMATE FORM SECTION --- -->
+  <section id="contact">
+    <div class="container">
+      <div class="contact-container">
+        
+        <!-- Left Side: ZARO Contact Details Panel -->
+        <div class="contact-info-panel">
+          <div class="info-header">
+            <h3>Let's Get Your Business Online</h3>
+            <p>Don't let your shop remain invisible. We'll handle everything: the elegant UI designs, high-speed hosting, maps indexing, and WhatsApp integration.</p>
+          </div>
+          
+          <div class="info-list">
+            <!-- Phone call -->
+            <div class="info-item">
+              <div class="info-icon"><i class="ri-phone-fill"></i></div>
+              <div class="info-text">
+                <p>Call Us Directly</p>
+                <a href="tel:+919043379569">+91 9043379569</a>
+              </div>
+            </div>
+            
+            <!-- Email link -->
+            <div class="info-item">
+              <div class="info-icon"><i class="ri-mail-fill"></i></div>
+              <div class="info-text">
+                <p>Official Email</p>
+                <a href="mailto:zaroweb.in@gmail.com">zaroweb.in@gmail.com</a>
+              </div>
+            </div>
+            
+            <!-- Working Hours -->
+            <div class="info-item">
+              <div class="info-icon"><i class="ri-time-line"></i></div>
+              <div class="info-text">
+                <p>Working Hours</p>
+                <a style="cursor: default; text-decoration: none;">Mon - Sat | 9:00 AM - 8:00 PM</a>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Social Profiles -->
+          <div class="info-socials">
+            <a href="https://instagram.com/zaroweb.in" target="_blank" class="social-circle" aria-label="Instagram">
+              <i class="ri-instagram-fill"></i>
+            </a>
+            <a href="https://facebook.com/zaroweb" target="_blank" class="social-circle" aria-label="Facebook">
+              <i class="ri-facebook-fill"></i>
+            </a>
+            <a href="https://linkedin.com/company/zaroweb" target="_blank" class="social-circle" aria-label="LinkedIn">
+              <i class="ri-linkedin-fill"></i>
+            </a>
+            <a href="https://wa.me/919043379569" target="_blank" class="social-circle" aria-label="WhatsApp">
+              <i class="ri-whatsapp-fill"></i>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Right Side: Custom Form Booking Panel -->
+        <div class="contact-form-panel">
+          <h3>Request a Free Mockup Design</h3>
+          <p>Tell us about your business, and we'll draft a FREE homepage design concept for your shop within 48 hours!</p>
+          
+          <form class="contact-form" id="consultation-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="form-name">Your Full Name *</label>
+                <input type="text" id="form-name" class="form-input" placeholder="e.g. Rajesh Kumar" required>
+              </div>
+              <div class="form-group">
+                <label for="form-phone">Phone / WhatsApp Number *</label>
+                <input type="tel" id="form-phone" class="form-input" placeholder="e.g. 9876543210" required>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="form-shop-name">Shop / Business Name *</label>
+                <input type="text" id="form-shop-name" class="form-input" placeholder="e.g. Fresh Grocers" required>
+              </div>
+              <div class="form-group">
+                <label for="form-business-type">Business Sector *</label>
+                <select id="form-business-type" class="form-select" required>
+                  <option value="" disabled selected>Select sector</option>
+                  <option value="Retail Boutique">Fashion / Clothing Boutique</option>
+                  <option value="Cafe or Restaurant">Cafe, Diner or Food Hub</option>
+                  <option value="Spa, Salon, or Service">Beauty Spa / Salon / Fitness</option>
+                  <option value="Grocery, Pharmacy, etc">Grocery Store / Pharmacy / Retail Shop</option>
+                  <option value="Professional Services">Consulting / Clinic / Agencies</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="form-message">Tell us about your products or goals *</label>
+              <textarea id="form-message" class="form-textarea" placeholder="e.g. I run a local boutique selling kids clothing. I want to showcase catalog pictures and receive custom pre-order sizes on WhatsApp..." required></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="margin-top: 10px;">
+              Submit & Connect on WhatsApp <i class="ri-arrow-right-line"></i>
+            </button>
+          </form>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+
+  <!-- --- FOOTER --- -->
+  <footer>
+    <div class="container footer-grid">
+      <!-- Brand Info -->
+      <div class="footer-brand">
+        <a href="#" class="logo"><span>Z</span>ZARO</a>
+        <p>ZARO is a bespoke creative web agency on a mission to digitize every offline shop and small commercial business. We elevate your offline trust into digital profit.</p>
+      </div>
+      
+      <!-- Quick Links -->
+      <div class="footer-links-col">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#calculator">Value Boost Calculator</a></li>
+          <li><a href="#transformation">Transformation Guide</a></li>
+          <li><a href="#services">Tailored Services</a></li>
+        </ul>
+      </div>
+      
+      <!-- Quick Links 2 -->
+      <div class="footer-links-col">
+        <h4>Agency Core</h4>
+        <ul>
+          <li><a href="#portfolio">Our Portfolio Designs</a></li>
+          <li><a href="#reviews">Verified Shop Reviews</a></li>
+          <li><a href="#contact">Consultation Form</a></li>
+          <li><a href="tel:+919043379569">Call Support</a></li>
+        </ul>
+      </div>
+      
+      <!-- Newsletter Info -->
+      <div class="footer-cta-col">
+        <h4>Weekly Growth Tips</h4>
+        <p>Get simple ideas on how to promote your local business online. No spam, only value.</p>
+        <form class="footer-newsletter" id="newsletter-form">
+          <input type="email" placeholder="Your Business Email" required aria-label="Business Email">
+          <button type="submit" aria-label="Subscribe"><i class="ri-send-plane-fill"></i></button>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Footer Bottom Details -->
+    <div class="container footer-bottom">
+      <p>&copy; 2026 ZARO Web Agency. All Rights Reserved. Designed for small and medium shops.</p>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- --- DYNAMIC FLOATING WIDGETS --- -->
+  <div class="floating-widget-bar">
+    <a href="tel:+919043379569" class="widget-btn widget-phone" aria-label="Call ZARO Support">
+      <i class="ri-phone-line"></i>
+    </a>
+    <a href="https://wa.me/919043379569?text=Hello%20ZARO!%20I%20saw%20your%20website%20ad%20and%20want%20to%20know%20more%20about%20your%20web%20design%20pricing." target="_blank" class="widget-btn widget-whatsapp" aria-label="WhatsApp ZARO Support">
+      <i class="ri-whatsapp-line"></i>
+    </a>
+  </div>
+
+  <!-- --- AUTHENTICATION MODAL --- -->
+  <div id="auth-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="auth-modal-close" aria-label="Close modal">
+        <i class="ri-close-line"></i>
+      </button>
+      
+      <!-- Login Form View -->
+      <div id="auth-login-view">
+        <h3 class="modal-title">Welcome Back</h3>
+        <p class="modal-subtitle">Log in to track your web designs and order status.</p>
+        <form id="login-form" class="modal-form">
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" class="form-input" placeholder="e.g. name@shop.com" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn btn-primary w-full" style="margin-top: 10px; width: 100%;">
+            Sign In <i class="ri-arrow-right-line"></i>
+          </button>
+        </form>
+        <p class="auth-toggle-text">
+          Don't have an account? <a href="#" id="go-to-signup" class="gradient-text">Create Account</a>
+        </p>
+      </div>
+      
+      <!-- Signup Form View -->
+      <div id="auth-signup-view" style="display: none;">
+        <h3 class="modal-title">Launch Your Shop</h3>
+        <p class="modal-subtitle">Create an account to manage your ZARO storefront design.</p>
+        <form id="signup-form" class="modal-form">
+          <div class="form-group">
+            <label for="signup-name">Full Name</label>
+            <input type="text" id="signup-name" class="form-input" placeholder="e.g. Rajesh Kumar" required autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label for="signup-shop">Shop / Business Name</label>
+            <input type="text" id="signup-shop" class="form-input" placeholder="e.g. Bella Boutique" required>
+          </div>
+          <div class="form-group">
+            <label for="signup-email">Email Address</label>
+            <input type="email" id="signup-email" class="form-input" placeholder="e.g. name@shop.com" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label for="signup-password">Choose Password</label>
+            <input type="password" id="signup-password" class="form-input" placeholder="Min. 6 characters" required autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn btn-primary w-full" style="margin-top: 10px; width: 100%;">
+            Register Account <i class="ri-arrow-right-line"></i>
+          </button>
+        </form>
+        <p class="auth-toggle-text">
+          Already registered? <a href="#" id="go-to-login" class="gradient-text">Log In</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- --- PROFILE DASHBOARD DRAWER --- -->
+  <div id="profile-drawer" class="drawer-overlay" style="display: none;">
+    <div class="drawer-content">
+      <button class="drawer-close-btn" id="profile-drawer-close" aria-label="Close profile">
+        <i class="ri-close-line"></i>
+      </button>
+      
+      <div class="drawer-grid">
+        <!-- Left Column: User Profile Details Editing -->
+        <div class="profile-meta-panel">
+          <div class="profile-avatar-wrapper">
+            <div class="avatar-uploader-circle" id="avatar-upload-trigger">
+              <img id="drawer-avatar-img" src="" alt="Profile Photo" style="display: none;">
+              <span id="drawer-avatar-initials">U</span>
+              <div class="avatar-hover-overlay">
+                <i class="ri-camera-switch-line"></i>
+                <span>Change</span>
+              </div>
+            </div>
+            <!-- File Input hidden -->
+            <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
+            <p class="avatar-upload-tip">Upload PNG or JPG (Max 2MB)</p>
+          </div>
+          
+          <div class="profile-fields">
+            <div class="form-group">
+              <label for="profile-name-input">Client Name</label>
+              <input type="text" id="profile-name-input" class="profile-edit-input" placeholder="Your Name">
+            </div>
+            <div class="form-group">
+              <label for="profile-shop-display">Business Storefront</label>
+              <input type="text" id="profile-shop-display" class="profile-edit-input" placeholder="Store Name" disabled style="opacity: 0.6; cursor: not-allowed;">
+            </div>
+            <div class="form-group">
+              <label for="profile-email-display">Registered Email</label>
+              <input type="email" id="profile-email-display" class="profile-edit-input" placeholder="email@domain.com" disabled style="opacity: 0.6; cursor: not-allowed;">
+            </div>
+            
+            <button id="save-profile-btn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+              <i class="ri-save-line"></i> Save Profile Details
+            </button>
+            <button id="logout-btn" class="btn btn-secondary" style="width: 100%; margin-top: 10px; color: var(--danger-color); border-color: var(--danger-color);">
+              <i class="ri-logout-box-r-line"></i> Sign Out
+            </button>
+          </div>
+        </div>
+        
+        <!-- Right Column: Web Order History System -->
+        <div class="profile-orders-panel">
+          <h3 class="orders-title"><i class="ri-shopping-bag-3-line"></i> Your Web Storefront Orders</h3>
+          <p class="orders-subtitle">Real-time status updates of active website projects built by ZARO.</p>
+          
+          <div class="orders-list" id="orders-list-container">
+            <!-- Dynamically populated orders -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- --- TOAST ALERTS CONTAINER --- -->
+  <div id="toast-container" class="toast-wrapper"></div>
+
+  <!-- Link Custom Script -->
+  <script src="script.js"></script>
+</body>
+</html>
