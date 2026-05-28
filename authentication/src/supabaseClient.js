@@ -4,12 +4,12 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Check if credentials are valid and not the default placeholders
-const isConfigured = 
-  supabaseUrl && 
-  supabaseAnonKey && 
-  supabaseUrl !== 'your-supabase-project-url' && 
-  supabaseAnonKey !== 'your-supabase-anon-key' &&
-  supabaseUrl.trim() !== '' &&
+const isConfigured =
+  supabaseUrl &&
+  supabaseAnonKey &&
+  !supabaseUrl.includes('your-supabase') &&
+  !supabaseAnonKey.includes('your-supabase') &&
+  supabaseUrl.startsWith('https://') &&
   supabaseAnonKey.trim() !== '';
 
 export const supabase = isConfigured ? createClient(supabaseUrl, supabaseAnonKey) : null;
