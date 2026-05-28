@@ -873,3 +873,27 @@ body {
   border: 3px solid var(--bg-secondary);
   box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
 }
+
+/* --- GLOW EFFECTS --- */
+.bg-glow {
+  position: absolute;
+  width: clamp(200px, 40vw, 600px);
+  height: clamp(200px, 40vw, 600px);
+  border-radius: 50%;
+  background: var(--primary-color);
+  filter: blur(120px);
+  opacity: 0.15;
+  z-index: -1;
+  pointer-events: none;
+  transition: opacity var(--transition-smooth), background var(--transition-smooth);
+}
+
+.glow-top-right {
+  top: -100px;
+  right: -100px;
+}
+
+.glow-bottom-left {
+  bottom: -100px;
+  left: -100px;
+}
