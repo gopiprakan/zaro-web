@@ -725,16 +725,13 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
 
   /* --- 14. AUTHENTICATION CONTROLLER FLOWS --- */
 
+  const getPortalURL = () => {
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    return isLocal ? 'http://localhost:5173' : './authentication/dist/index.html';
+  };
+
   const openAuthModal = () => {
-    authModal.style.display = 'flex';
-    authModal.style.opacity = '0';
-    setTimeout(() => {
-      authModal.style.opacity = '1';
-    }, 50);
-    
-    // Default show login view
-    authLoginView.style.display = 'block';
-    authSignupView.style.display = 'none';
+    window.location.href = getPortalURL();
   };
 
   const closeAuthModal = () => {
@@ -745,8 +742,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   };
 
   const openProfileDrawer = () => {
-    profileDrawer.style.display = 'block';
-    checkActiveSession(); // fresh sync
+    window.location.href = getPortalURL();
   };
 
   const closeProfileDrawer = () => {
