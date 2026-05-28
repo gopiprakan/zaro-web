@@ -91,7 +91,13 @@ function App() {
 
   const handleBackToHomepage = (e) => {
     e.preventDefault();
-    window.location.href = "../index.html";
+    // In dev mode (Vite), the main site runs on a separate server at port 8080
+    // In production, the relative path works since both are served together
+    if (window.location.port === '5173') {
+      window.location.href = "http://localhost:8080";
+    } else {
+      window.location.href = "../index.html";
+    }
   };
 
   // --- LOADING STATE ---
