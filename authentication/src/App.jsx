@@ -1,23 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { supabase, checkSupabaseConnection } from './supabaseClient';
+import { supabase, checkSupabaseConnection, createProfile, getProfile } from './supabaseClient';
 
 function App() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // Auth state
   const [userData, setUserData] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isSignUp, setIsSignUp] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   const [toast, setToast] = useState(null);
+
+  // Login fields
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+
+  // Sign-up fields
+  const [signUpUsername, setSignUpUsername] = useState("");
+  const [signUpPhone, setSignUpPhone] = useState("");
+  const [signUpEmail, setSignUpEmail] = useState("");
+  const [signUpPassword, setSignUpPassword] = useState("");
+  const [signUpConfirmPassword, setSignUpConfirmPassword] = useState("");
 
   const { isConfigured } = checkSupabaseConnection();
 
-  // Show toast notification instead of alert()
+  // ── Toast Notification ──
   const showToast = (title, message, type = 'success') => {
     setToast({ title, message, type });
-    setTimeout(() => setToast(null), 4000);
+    setTimeout(() => setToast(null), 4500);
   };
 
+  // ── Load session & profile on mount ──
   useEffect(() => {
     if (!isConfigured || !supabase) {
       setLoading(false);
@@ -28,7 +40,14 @@ function App() {
       try {
         const { data, error } = await supabase.auth.getSession();
         if (error) throw error;
-        setUserData(data?.session || null);
+        const session = data?.session || null;
+        setUserData(session);
+
+        // Load profile if logged in
+        if (session?.user?.id) {
+          const { data: profile } = await getProfile(session.user.id);
+          if (profile) setUserProfile(profile);
+        }
       } catch (err) {
         console.error("Auth check error:", err.message);
       } finally {
@@ -38,8 +57,14 @@ function App() {
 
     checkSession();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, currentSession) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, currentSession) => {
       setUserData(currentSession || null);
+      if (currentSession?.user?.id) {
+        const { data: profile } = await getProfile(currentSession.user.id);
+        if (profile) setUserProfile(profile);
+      } else {
+        setUserProfile(null);
+      }
     });
 
     return () => {
@@ -47,52 +72,131 @@ function App() {
     };
   }, [isConfigured]);
 
-  const handleSubmit = async (e) => {
+  // ── Handle Login ──
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (!email.trim() || !password) {
+    if (!loginEmail.trim() || !loginPassword) {
       showToast('Missing Fields', 'Please fill in both email and password.', 'error');
       return;
     }
-
     if (!isConfigured || !supabase) {
-      showToast('Not Connected', 'Supabase is not configured. Please add your credentials to .env', 'error');
+      showToast('Not Connected', 'Supabase is not configured. Add credentials to .env', 'error');
       return;
     }
 
     setFormLoading(true);
-
     try {
-      if (isSignUp) {
-        const { error } = await supabase.auth.signUp({ email, password });
-        if (error) throw error;
-        showToast('Account Created', 'Check your email for a verification link.', 'success');
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        showToast('Welcome Back', 'Successfully logged in.', 'success');
-      }
+      const { error } = await supabase.auth.signInWithPassword({
+        email: loginEmail,
+        password: loginPassword
+      });
+      if (error) throw error;
+      showToast('Welcome Back', 'Successfully logged in.', 'success');
+      setLoginEmail("");
+      setLoginPassword("");
     } catch (err) {
-      showToast(isSignUp ? 'Sign Up Failed' : 'Login Failed', err.message, 'error');
+      showToast('Login Failed', err.message, 'error');
     } finally {
       setFormLoading(false);
     }
   };
 
+  // ── Handle Sign Up ──
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+
+    // Validate all fields
+    if (!signUpUsername.trim()) {
+      showToast('Missing Username', 'Please enter a username.', 'error');
+      return;
+    }
+    if (!signUpEmail.trim()) {
+      showToast('Missing Email', 'Please enter your email address.', 'error');
+      return;
+    }
+    if (!signUpPhone.trim()) {
+      showToast('Missing Phone', 'Please enter your phone number.', 'error');
+      return;
+    }
+    if (!signUpPassword) {
+      showToast('Missing Password', 'Please create a password.', 'error');
+      return;
+    }
+    if (signUpPassword.length < 6) {
+      showToast('Weak Password', 'Password must be at least 6 characters.', 'error');
+      return;
+    }
+    if (signUpPassword !== signUpConfirmPassword) {
+      showToast('Password Mismatch', 'Passwords do not match. Please re-enter.', 'error');
+      return;
+    }
+    if (!isConfigured || !supabase) {
+      showToast('Not Connected', 'Supabase is not configured. Add credentials to .env', 'error');
+      return;
+    }
+
+    setFormLoading(true);
+    try {
+      // 1. Create the auth user
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: signUpEmail,
+        password: signUpPassword,
+        options: {
+          data: {
+            username: signUpUsername,
+            phone: signUpPhone,
+          }
+        }
+      });
+      if (authError) throw authError;
+
+      // 2. Save profile to the profiles table
+      if (authData?.user?.id) {
+        const { error: profileError } = await createProfile(authData.user.id, {
+          username: signUpUsername,
+          phone: signUpPhone,
+          email: signUpEmail,
+        });
+        if (profileError) {
+          console.warn("Profile save warning:", profileError.message);
+          // Don't block sign-up if profile save fails — the user is still registered
+        }
+      }
+
+      showToast('Account Created!', 'Check your email for a verification link.', 'success');
+
+      // Clear sign-up fields
+      setSignUpUsername("");
+      setSignUpPhone("");
+      setSignUpEmail("");
+      setSignUpPassword("");
+      setSignUpConfirmPassword("");
+
+      // Switch to login view
+      setTimeout(() => setIsSignUp(false), 2000);
+    } catch (err) {
+      showToast('Sign Up Failed', err.message, 'error');
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  // ── Logout ──
   const handleLogout = async () => {
     if (!supabase) return;
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
+      setUserProfile(null);
       showToast('Signed Out', 'You have been logged out successfully.', 'success');
     } catch (err) {
       showToast('Logout Error', err.message, 'error');
     }
   };
 
+  // ── Navigate back to main site ──
   const handleBackToHomepage = (e) => {
     e.preventDefault();
-    // In dev mode (Vite), the main site runs on a separate server at port 8080
-    // In production, the relative path works since both are served together
     if (window.location.port === '5173') {
       window.location.href = "http://localhost:8080";
     } else {
@@ -100,34 +204,51 @@ function App() {
     }
   };
 
-  // --- LOADING STATE ---
+  // ── LOADING STATE ──
   if (loading) {
     return (
       <div className="portal-container">
         <div className="auth-page">
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '16px'
-          }}>
-            <div style={{
-              width: '48px',
-              height: '48px',
-              border: '3px solid rgba(99, 102, 241, 0.2)',
-              borderTopColor: '#6366f1',
-              borderRadius: '50%',
-              animation: 'spin 0.8s linear infinite'
-            }} />
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+            <div className="loading-spinner" />
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
               Connecting to ZARO workspace...
             </p>
           </div>
         </div>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
+
+  // ── Shared Back Link Component ──
+  const BackLink = ({ muted }) => (
+    <a
+      href="#"
+      onClick={handleBackToHomepage}
+      style={{
+        color: muted ? 'var(--text-muted)' : 'var(--text-secondary)',
+        textDecoration: 'none',
+        fontSize: '0.85rem',
+        fontWeight: 500,
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '6px',
+        transition: 'color 0.2s'
+      }}
+      onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-color)'}
+      onMouseLeave={(e) => e.currentTarget.style.color = muted ? 'var(--text-muted)' : 'var(--text-secondary)'}
+    >
+      <i className="ri-arrow-left-line"></i> Back to Homepage
+    </a>
+  );
+
+  // ── Spinner inside button ──
+  const ButtonSpinner = () => (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+      <span className="btn-spinner" />
+      Processing...
+    </span>
+  );
 
   return (
     <div className="portal-container" style={{ position: 'relative', overflow: 'hidden' }}>
@@ -157,13 +278,16 @@ function App() {
       )}
 
       {userData ? (
-        /* ── LOGGED IN: Client Workspace ── */
+        /* ═══════════════════════════════════════════
+           LOGGED IN — Client Workspace Dashboard
+           ═══════════════════════════════════════════ */
         <div className="auth-page">
-          <div className="auth-card" style={{ textAlign: 'center' }}>
+          <div className="auth-card" style={{ textAlign: 'center', maxWidth: '480px' }}>
             <div className="auth-header">
+              {/* Avatar */}
               <div style={{
-                width: '64px',
-                height: '64px',
+                width: '72px',
+                height: '72px',
                 borderRadius: '50%',
                 background: 'var(--primary-gradient)',
                 display: 'inline-flex',
@@ -173,39 +297,48 @@ function App() {
                 color: 'white',
                 fontWeight: 800,
                 marginBottom: '16px',
-                boxShadow: '0 8px 16px -4px var(--primary-glow)'
+                boxShadow: '0 8px 24px -4px var(--primary-glow)'
               }}>
-                {userData.user?.email
-                  ? userData.user.email.substring(0, 2).toUpperCase()
-                  : 'U'}
+                {(userProfile?.username || userData.user?.email || 'U').substring(0, 2).toUpperCase()}
               </div>
-              <h2>ZARO Client Space</h2>
-              <p>Your secure storefront tracker workspace</p>
+              <h2>Welcome, {userProfile?.username || 'User'}</h2>
+              <p>Your secure ZARO client workspace</p>
             </div>
 
-            <div style={{
-              background: 'var(--bg-secondary)',
-              border: '1px solid var(--border-color)',
-              padding: '18px 24px',
-              borderRadius: 'var(--radius-md)',
-              marginBottom: '24px',
-              wordBreak: 'break-all',
-              textAlign: 'left'
-            }}>
-              <span style={{
-                color: 'var(--text-muted)',
-                display: 'block',
-                fontSize: '0.78rem',
-                fontWeight: 600,
-                letterSpacing: '0.05em',
-                textTransform: 'uppercase',
-                marginBottom: '6px'
-              }}>
-                Active Session
-              </span>
-              <strong style={{ color: 'var(--text-primary)', fontSize: '0.95rem' }}>
-                {userData.user?.email || 'Authenticated User'}
-              </strong>
+            {/* Profile Info Card */}
+            <div className="profile-info-card">
+              <div className="profile-info-row">
+                <i className="ri-user-line"></i>
+                <div>
+                  <span className="profile-info-label">Username</span>
+                  <span className="profile-info-value">{userProfile?.username || '—'}</span>
+                </div>
+              </div>
+              <div className="profile-info-row">
+                <i className="ri-mail-line"></i>
+                <div>
+                  <span className="profile-info-label">Email</span>
+                  <span className="profile-info-value">{userData.user?.email || userProfile?.email || '—'}</span>
+                </div>
+              </div>
+              <div className="profile-info-row">
+                <i className="ri-phone-line"></i>
+                <div>
+                  <span className="profile-info-label">Phone</span>
+                  <span className="profile-info-value">{userProfile?.phone || '—'}</span>
+                </div>
+              </div>
+              <div className="profile-info-row">
+                <i className="ri-calendar-line"></i>
+                <div>
+                  <span className="profile-info-label">Member Since</span>
+                  <span className="profile-info-value">
+                    {userProfile?.created_at
+                      ? new Date(userProfile.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+                      : '—'}
+                  </span>
+                </div>
+              </div>
             </div>
 
             <button
@@ -216,105 +349,187 @@ function App() {
               <i className="ri-logout-box-r-line"></i> Sign Out
             </button>
 
-            <div style={{
-              borderTop: '1px solid var(--border-color)',
-              paddingTop: '16px',
-              marginTop: '10px'
-            }}>
-              <a
-                href="#"
-                onClick={handleBackToHomepage}
-                className="back-link"
-                style={{
-                  color: 'var(--text-secondary)',
-                  textDecoration: 'none',
-                  fontSize: '0.9rem',
-                  fontWeight: 500,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  transition: 'color 0.2s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-color)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
-              >
-                <i className="ri-arrow-left-line"></i> Back to Homepage
-              </a>
+            <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '16px', marginTop: '10px' }}>
+              <BackLink />
             </div>
           </div>
         </div>
       ) : (
-        /* ── LOGGED OUT: Auth Card ── */
+        /* ═══════════════════════════════════════════
+           LOGGED OUT — Login / Sign Up Forms
+           ═══════════════════════════════════════════ */
         <div className="auth-page">
-          <div className="auth-card">
+          <div className="auth-card" style={{ maxWidth: isSignUp ? '500px' : '440px', transition: 'max-width 0.3s ease' }}>
             <div className="auth-header">
-              <h2>{isSignUp ? 'Create Account' : 'ZARO Client Login'}</h2>
+              <h2>{isSignUp ? 'Create Your Account' : 'ZARO Client Login'}</h2>
               <p>{isSignUp
-                ? 'Sign up to track your custom storefront'
+                ? 'Fill in your details to get started'
                 : 'Access your custom storefront tracker'}
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div className="form-group">
-                <label>Email Address</label>
-                <div className="input-wrapper">
-                  <i className="ri-mail-line"></i>
-                  <input
-                    type="email"
-                    placeholder="name@shop.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="form-input"
-                    required
-                    autoComplete="email"
-                  />
+            {!isSignUp ? (
+              /* ── LOGIN FORM ── */
+              <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div className="form-group">
+                  <label>Email Address</label>
+                  <div className="input-wrapper">
+                    <i className="ri-mail-line"></i>
+                    <input
+                      type="email"
+                      placeholder="name@shop.com"
+                      value={loginEmail}
+                      onChange={(e) => setLoginEmail(e.target.value)}
+                      className="form-input"
+                      required
+                      autoComplete="email"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="form-group">
-                <label>Password</label>
-                <div className="input-wrapper">
-                  <i className="ri-lock-line"></i>
-                  <input
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="form-input"
-                    required
-                    autoComplete={isSignUp ? 'new-password' : 'current-password'}
-                  />
+                <div className="form-group">
+                  <label>Password</label>
+                  <div className="input-wrapper">
+                    <i className="ri-lock-line"></i>
+                    <input
+                      type="password"
+                      placeholder="••••••••"
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
+                      className="form-input"
+                      required
+                      autoComplete="current-password"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={formLoading}
-                style={{ width: '100%', padding: '14px', marginTop: '16px' }}
-              >
-                {formLoading ? (
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{
-                      width: '16px',
-                      height: '16px',
-                      border: '2px solid rgba(255,255,255,0.3)',
-                      borderTopColor: '#fff',
-                      borderRadius: '50%',
-                      animation: 'spin 0.6s linear infinite',
-                      display: 'inline-block'
-                    }} />
-                    Processing...
-                  </span>
-                ) : isSignUp ? (
-                  <><i className="ri-user-add-line"></i> Create Account</>
-                ) : (
-                  <><i className="ri-login-box-line"></i> Log In</>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={formLoading}
+                  style={{ width: '100%', padding: '14px', marginTop: '16px' }}
+                >
+                  {formLoading ? <ButtonSpinner /> : (
+                    <><i className="ri-login-box-line"></i> Log In</>
+                  )}
+                </button>
+              </form>
+            ) : (
+              /* ── SIGN UP FORM ── */
+              <form onSubmit={handleSignUp} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div className="form-group">
+                  <label>Username</label>
+                  <div className="input-wrapper">
+                    <i className="ri-user-line"></i>
+                    <input
+                      type="text"
+                      placeholder="johndoe"
+                      value={signUpUsername}
+                      onChange={(e) => setSignUpUsername(e.target.value)}
+                      className="form-input"
+                      required
+                      autoComplete="username"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Email Address</label>
+                  <div className="input-wrapper">
+                    <i className="ri-mail-line"></i>
+                    <input
+                      type="email"
+                      placeholder="name@shop.com"
+                      value={signUpEmail}
+                      onChange={(e) => setSignUpEmail(e.target.value)}
+                      className="form-input"
+                      required
+                      autoComplete="email"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Phone Number</label>
+                  <div className="input-wrapper">
+                    <i className="ri-phone-line"></i>
+                    <input
+                      type="tel"
+                      placeholder="+91 98765 43210"
+                      value={signUpPhone}
+                      onChange={(e) => setSignUpPhone(e.target.value)}
+                      className="form-input"
+                      required
+                      autoComplete="tel"
+                    />
+                  </div>
+                </div>
+
+                <div className="signup-password-row">
+                  <div className="form-group">
+                    <label>Create Password</label>
+                    <div className="input-wrapper">
+                      <i className="ri-lock-line"></i>
+                      <input
+                        type="password"
+                        placeholder="Min. 6 chars"
+                        value={signUpPassword}
+                        onChange={(e) => setSignUpPassword(e.target.value)}
+                        className="form-input"
+                        required
+                        autoComplete="new-password"
+                        minLength={6}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label>Confirm Password</label>
+                    <div className="input-wrapper">
+                      <i className="ri-lock-check-line"></i>
+                      <input
+                        type="password"
+                        placeholder="Re-enter"
+                        value={signUpConfirmPassword}
+                        onChange={(e) => setSignUpConfirmPassword(e.target.value)}
+                        className="form-input"
+                        required
+                        autoComplete="new-password"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Password match indicator */}
+                {signUpConfirmPassword && (
+                  <div style={{
+                    fontSize: '0.8rem',
+                    fontWeight: 500,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    marginTop: '-4px',
+                    marginBottom: '8px',
+                    color: signUpPassword === signUpConfirmPassword ? 'var(--accent-color)' : 'var(--danger-color)'
+                  }}>
+                    <i className={signUpPassword === signUpConfirmPassword ? 'ri-checkbox-circle-line' : 'ri-close-circle-line'}></i>
+                    {signUpPassword === signUpConfirmPassword ? 'Passwords match' : 'Passwords do not match'}
+                  </div>
                 )}
-              </button>
-            </form>
 
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={formLoading}
+                  style={{ width: '100%', padding: '14px', marginTop: '8px' }}
+                >
+                  {formLoading ? <ButtonSpinner /> : (
+                    <><i className="ri-user-add-line"></i> Create Account</>
+                  )}
+                </button>
+              </form>
+            )}
+
+            {/* Toggle between Login / Sign Up */}
             <div className="auth-toggle" style={{
               borderTop: '1px solid var(--border-color)',
               paddingTop: '20px',
@@ -338,24 +553,7 @@ function App() {
             </div>
 
             <div style={{ textAlign: 'center', marginTop: '16px' }}>
-              <a
-                href="#"
-                onClick={handleBackToHomepage}
-                style={{
-                  color: 'var(--text-muted)',
-                  textDecoration: 'none',
-                  fontSize: '0.85rem',
-                  fontWeight: 500,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  transition: 'color 0.2s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-color)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
-              >
-                <i className="ri-arrow-left-line"></i> Back to Homepage
-              </a>
+              <BackLink muted />
             </div>
           </div>
         </div>
