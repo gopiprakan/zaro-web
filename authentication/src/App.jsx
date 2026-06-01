@@ -197,17 +197,28 @@ function App() {
   // ── Navigate back to main site ──
   const handleBackToHomepage = (e) => {
     e.preventDefault();
+    // If we have a referrer from the main site, go back there
+    if (document.referrer && !document.referrer.includes(':5173')) {
+      window.location.href = document.referrer;
+      return;
+    }
+    // Check if stored in sessionStorage (set by main site before redirect)
+    const storedHome = sessionStorage.getItem('zaro-homepage');
+    if (storedHome) {
+      window.location.href = storedHome;
+      return;
+    }
+    // Fallback: relative path for production or navigate to parent
     const hostname = window.location.hostname;
     const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
-    if (isLocal && window.location.port === '5173') {
-      // Dev mode: landing page is served separately — go to the parent origin
-      // Try common dev ports; fallback to just the hostname root
-      window.location.href = window.location.protocol + '//' + hostname + ':62236';
-    } else if (isLocal) {
-      // Same server, go to root
-      window.location.href = '/';
+    if (isLocal) {
+      // In local dev, go back in history or root
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = '/';
+      }
     } else {
-      // Production / deployed — relative path
       window.location.href = '../index.html';
     }
   };

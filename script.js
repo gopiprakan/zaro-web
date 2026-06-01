@@ -773,6 +773,8 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   };
 
   const openAuthModal = () => {
+    // Store current page URL so the auth portal can navigate back
+    sessionStorage.setItem('zaro-homepage', window.location.href);
     window.location.href = getPortalURL();
   };
 
@@ -784,6 +786,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   };
 
   const openProfileDrawer = () => {
+    sessionStorage.setItem('zaro-homepage', window.location.href);
     window.location.href = getPortalURL();
   };
 
