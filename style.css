@@ -2438,3 +2438,85 @@ footer {
     gap: 12px;
   }
 }
+
+/* 
+================================================================
+   PREMIUM UI UPGRADES (SCROLL REVEAL & GLASS GLOWS)
+================================================================
+*/
+
+/* Scroll Reveal Base Class */
+.reveal-element {
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: transform, opacity;
+  transition: opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1), transform 1.0s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-element.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger Delay Utility Classes */
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* Enhanced Glassmorphism & Hover States for Cards */
+.calculator-box, 
+.transform-card, 
+.service-card, 
+.review-card, 
+.portfolio-info,
+.contact-form-box {
+  position: relative;
+  background: var(--bg-glass) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  transition: transform var(--transition-elastic), border-color var(--transition-smooth), box-shadow var(--transition-smooth) !important;
+}
+
+.calculator-box:hover, 
+.transform-card:hover, 
+.service-card:hover, 
+.review-card:hover, 
+.portfolio-info:hover {
+  transform: translateY(-8px) scale(1.005) !important;
+  border-color: rgba(99, 102, 241, 0.3) !important;
+  box-shadow: 0 30px 60px -15px rgba(99, 102, 241, 0.25) !important;
+}
+
+/* Specific left border glowing transition for Transformation Cards */
+.transform-card.before:hover {
+  border-left-color: #ff3333 !important;
+}
+.transform-card.after:hover {
+  border-left-color: #00ff88 !important;
+}
+
+/* Smooth glass shimmer card loading effect (optional utility) */
+.service-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.03) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  transition: 0.75s;
+  pointer-events: none;
+}
+
+.service-card:hover::after {
+  left: 125%;
+  transition: all 0.75s ease-in-out;
+}
+

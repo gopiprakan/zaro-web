@@ -84,7 +84,38 @@ document.addEventListener('DOMContentLoaded', () => {
   const resultWebVisitors = document.getElementById('result-web-visitors');
   const resultNewOrders = document.getElementById('result-new-orders');
 
-  const calculateROI = () => {
+  let currentRevValue = 0;
+  let currentVisitorsValue = 0;
+  let currentOrdersValue = 0;
+  
+  let revAnimId = null;
+  let visitorsAnimId = null;
+  let ordersAnimId = null;
+
+  // Optimized smooth cubic interpolation counter
+  const animateCounter = (element, start, end, duration, formatFn, animIdRef, setRef) => {
+    if (animIdRef.id) cancelAnimationFrame(animIdRef.id);
+    
+    const startTime = performance.now();
+    
+    const step = (now) => {
+      const progress = Math.min((now - startTime) / duration, 1);
+      // Ease out cubic curves for realistic weight and deceleration
+      const easeProgress = 1 - Math.pow(1 - progress, 3);
+      const currentValue = Math.round(start + (end - start) * easeProgress);
+      
+      element.textContent = formatFn(currentValue);
+      setRef(currentValue);
+      
+      if (progress < 1) {
+        animIdRef.id = requestAnimationFrame(step);
+      }
+    };
+    
+    animIdRef.id = requestAnimationFrame(step);
+  };
+
+  const calculateROI = (isInitial = false) => {
     const businessType = selectBusinessType.value;
     const footfall = parseInt(sliderFootfall.value);
     const spend = parseInt(sliderSpend.value);
@@ -94,23 +125,21 @@ document.addEventListener('DOMContentLoaded', () => {
     labelSpend.textContent = `₹${spend.toLocaleString('en-IN')}`;
 
     // Calculation Models
-    // A website extends the reach beyond standard local footfall by digital visibility.
-    // Projected monthly visitors: (Footfall * 30 days) * local search multiplier (e.g. 1.2 for salons, 1.8 for retail/delivery)
     let searchMultiplier = 1.5;
-    let conversionRate = 0.045; // average 4.5% conversion of visitors ordering or booking online
+    let conversionRate = 0.045;
 
     if (businessType === 'retail') {
       searchMultiplier = 1.8;
-      conversionRate = 0.04; // 4% conversion
+      conversionRate = 0.04;
     } else if (businessType === 'cafe') {
       searchMultiplier = 1.6;
-      conversionRate = 0.06; // 6% conversion (food menus have high immediate action rates)
+      conversionRate = 0.06;
     } else if (businessType === 'salon') {
       searchMultiplier = 1.3;
-      conversionRate = 0.05; // 5% appointment bookings
+      conversionRate = 0.05;
     } else if (businessType === 'grocery') {
       searchMultiplier = 2.0;
-      conversionRate = 0.035; // 3.5% regular restocking orders
+      conversionRate = 0.035;
     }
 
     const projectedMonthlyVisitors = Math.round(footfall * 30 * searchMultiplier);
@@ -118,19 +147,57 @@ document.addEventListener('DOMContentLoaded', () => {
     const monthlyRevenueGain = newMonthlyOrders * spend;
     const annualRevenueGain = monthlyRevenueGain * 12;
 
-    // Display formatted results
-    resultAnnualRevenue.textContent = `₹${annualRevenueGain.toLocaleString('en-IN')}`;
-    resultWebVisitors.textContent = `${projectedMonthlyVisitors.toLocaleString()}+`;
-    resultNewOrders.textContent = `${newMonthlyOrders} New Orders`;
+    if (isInitial === true) {
+      resultAnnualRevenue.textContent = `₹${annualRevenueGain.toLocaleString('en-IN')}`;
+      resultWebVisitors.textContent = `${projectedMonthlyVisitors.toLocaleString()}+`;
+      resultNewOrders.textContent = `${newMonthlyOrders} New Orders`;
+      currentRevValue = annualRevenueGain;
+      currentVisitorsValue = projectedMonthlyVisitors;
+      currentOrdersValue = newMonthlyOrders;
+    } else {
+      // Animate with micro-deceleration curve
+      const revRef = { id: revAnimId };
+      animateCounter(
+        resultAnnualRevenue, 
+        currentRevValue, 
+        annualRevenueGain, 
+        400, 
+        v => `₹${v.toLocaleString('en-IN')}`, 
+        revRef, 
+        v => { currentRevValue = v; revAnimId = revRef.id; }
+      );
+
+      const visitorsRef = { id: visitorsAnimId };
+      animateCounter(
+        resultWebVisitors, 
+        currentVisitorsValue, 
+        projectedMonthlyVisitors, 
+        400, 
+        v => `${v.toLocaleString()}+`, 
+        visitorsRef, 
+        v => { currentVisitorsValue = v; visitorsAnimId = visitorsRef.id; }
+      );
+
+      const ordersRef = { id: ordersAnimId };
+      animateCounter(
+        resultNewOrders, 
+        currentOrdersValue, 
+        newMonthlyOrders, 
+        400, 
+        v => `${v.toLocaleString()} New Orders`, 
+        ordersRef, 
+        v => { currentOrdersValue = v; ordersAnimId = ordersRef.id; }
+      );
+    }
   };
 
   // Add event listeners to calculator inputs
-  selectBusinessType.addEventListener('change', calculateROI);
-  sliderFootfall.addEventListener('input', calculateROI);
-  sliderSpend.addEventListener('input', calculateROI);
+  selectBusinessType.addEventListener('change', () => calculateROI(false));
+  sliderFootfall.addEventListener('input', () => calculateROI(false));
+  sliderSpend.addEventListener('input', () => calculateROI(false));
 
   // Initial Calculation Run
-  calculateROI();
+  calculateROI(true);
 
 
   /* --- 4. INTERACTIVE PORTFOLIO GALLERY (CSS DEVICES) --- */
@@ -950,6 +1017,30 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
     
     showToast('Logged Out', `Goodbye, ${userName}! Have a wonderful day!`, 'warning');
   });
+
+  /* --- 9. HIGH-PERFORMANCE SCROLL REVEAL ENGINE --- */
+  const revealElements = document.querySelectorAll('.reveal-element');
+  
+  if ('IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.08,
+      rootMargin: '0px 0px -30px 0px'
+    });
+    
+    revealElements.forEach(el => {
+      revealObserver.observe(el);
+    });
+  } else {
+    // Fallback if browser does not support IntersectionObserver
+    revealElements.forEach(el => el.classList.add('active'));
+  }
 
   // Active check on load
   checkActiveSession();
