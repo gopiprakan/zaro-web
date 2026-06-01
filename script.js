@@ -185,6 +185,36 @@ document.addEventListener('DOMContentLoaded', () => {
       innerLogo: 'NIRVANA SPA',
       innerTitle: 'Revitalize Your Hair, Mind & Soul',
       innerDesc: 'Pre-book online today and unlock a flat 15% discount on skincare consultations.'
+    },
+    grocery: {
+      category: 'Grocery Store',
+      title: 'FreshMart Digital',
+      desc: 'A smart grocery ordering platform with categorized aisles, live stock indicators, and scheduled delivery windows. Customers browse daily essentials, add to cart, and place bulk orders delivered to their doorstep within hours.',
+      bgImage: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800')",
+      mobileBgImage: "linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400')",
+      innerLogo: 'FRESHMART',
+      innerTitle: 'Farm Fresh Groceries at Your Door',
+      innerDesc: 'Browse 500+ daily essentials and get same-day home delivery.'
+    },
+    fitness: {
+      category: 'Fitness & Gym',
+      title: 'IronCore Fitness Hub',
+      desc: 'A dynamic fitness studio website with class scheduling, trainer profiles, membership plans, and progress tracking dashboards. Features immersive hero visuals, workout timers, and seamless trial-class booking via WhatsApp.',
+      bgImage: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=800')",
+      mobileBgImage: "linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=400')",
+      innerLogo: 'IRONCORE',
+      innerTitle: 'Transform Your Body & Mind',
+      innerDesc: 'Book free trial sessions and explore membership plans today.'
+    },
+    realestate: {
+      category: 'Real Estate',
+      title: 'PrimeNest Properties',
+      desc: 'An elegant property listing platform with virtual tour integration, interactive floor plans, neighbourhood maps, and instant enquiry forms. Designed for brokers and developers to showcase apartments, villas, and commercial spaces with high-impact visuals.',
+      bgImage: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=800')",
+      mobileBgImage: "linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=400')",
+      innerLogo: 'PRIMENEST',
+      innerTitle: 'Find Your Dream Home Today',
+      innerDesc: 'Browse premium apartments, villas, and plots with virtual tours.'
     }
   };
 
