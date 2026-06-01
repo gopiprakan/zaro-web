@@ -197,10 +197,18 @@ function App() {
   // ── Navigate back to main site ──
   const handleBackToHomepage = (e) => {
     e.preventDefault();
-    if (window.location.port === '5173') {
-      window.location.href = "http://localhost:8080";
+    const hostname = window.location.hostname;
+    const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
+    if (isLocal && window.location.port === '5173') {
+      // Dev mode: landing page is served separately — go to the parent origin
+      // Try common dev ports; fallback to just the hostname root
+      window.location.href = window.location.protocol + '//' + hostname + ':62236';
+    } else if (isLocal) {
+      // Same server, go to root
+      window.location.href = '/';
     } else {
-      window.location.href = "../index.html";
+      // Production / deployed — relative path
+      window.location.href = '../index.html';
     }
   };
 

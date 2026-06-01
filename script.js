@@ -725,6 +725,18 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
         projName = 'Nirvana Salon Calendar Booking Website';
         projCategory = 'Service Showcase & Appointments';
         projPrice = 10000;
+      } else if (activeFilter === 'grocery') {
+        projName = 'FreshMart Digital Storefront';
+        projCategory = 'Online Grocery & Delivery';
+        projPrice = 18500;
+      } else if (activeFilter === 'fitness') {
+        projName = 'IronCore Fitness Membership Portal';
+        projCategory = 'Fitness Studio & Class Booking';
+        projPrice = 14000;
+      } else if (activeFilter === 'realestate') {
+        projName = 'PrimeNest Property Listing Platform';
+        projCategory = 'Real Estate Showcase & Tours';
+        projPrice = 22000;
       }
       
       placeOrder(projName, projCategory, projPrice);

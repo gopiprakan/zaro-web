@@ -1050,12 +1050,13 @@ nav {
 .portfolio-tabs {
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: 12px;
   margin-bottom: 50px;
+  flex-wrap: wrap;
 }
 
 .portfolio-tab {
-  padding: 12px 24px;
+  padding: 10px 20px;
   border-radius: var(--radius-full);
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
@@ -1063,12 +1064,23 @@ nav {
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.portfolio-tab i {
+  font-size: 1.1rem;
 }
 
 .portfolio-tab:hover, .portfolio-tab.active {
   background: var(--primary-color);
   color: white;
   border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px -4px var(--primary-glow);
 }
 
 .portfolio-display-wrapper {
@@ -1093,11 +1105,13 @@ nav {
 .portfolio-info h3 {
   font-size: 2.2rem;
   font-weight: 800;
+  transition: opacity 0.3s ease;
 }
 
 .portfolio-info p {
   color: var(--text-secondary);
   font-size: 1.05rem;
+  transition: opacity 0.3s ease;
 }
 
 .portfolio-meta {
