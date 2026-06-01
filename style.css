@@ -2520,3 +2520,82 @@ footer {
   transition: all 0.75s ease-in-out;
 }
 
+/* 
+================================================================
+   RESPONSIVE DESIGN OPTIMIZATIONS FOR ALL MOBILE & PC MODES
+================================================================
+*/
+
+/* Body Scroll Lock */
+body.no-scroll {
+  overflow: hidden !important;
+}
+
+/* Mobile Nav Overlay Backdrop */
+.nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(10, 14, 26, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 98;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.nav-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Specific selector to hide only the Get Started button on Mobile, keeping the Login button visible! */
+@media (max-width: 768px) {
+  .header-actions .btn-secondary {
+    display: inline-flex;
+  }
+  .header-actions > .btn-secondary {
+    display: none !important;
+  }
+}
+
+/* Small Screens & Mobile Sizing Polish */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 16px !important; /* Extra horizontal room for cards and text grids */
+  }
+
+  .logo {
+    font-size: 1.45rem !important; /* Keeps brand logotype compact and prevents text wrap */
+    gap: 8px !important;
+  }
+
+  .logo-img {
+    width: 32px !important; /* Scale brand icon down in mobile header */
+    height: 32px !important;
+  }
+
+  .section-header h2 {
+    font-size: 1.85rem !important; /* Scale sections titles proportionately */
+    margin-bottom: 12px !important;
+  }
+
+  .section-header p {
+    font-size: 0.95rem !important; /* Readable line lengths */
+    line-height: 1.6 !important;
+  }
+
+  /* Make header elements wrap nicely and keep gap neat */
+  .header-actions {
+    gap: 12px !important;
+  }
+
+  #header-login-btn {
+    padding: 8px 14px !important; /* Compact button styles for mobile navbar */
+    font-size: 0.8rem !important;
+  }
+}
+

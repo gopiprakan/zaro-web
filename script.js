@@ -52,23 +52,34 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileToggle = document.getElementById('mobile-toggle');
   const navMenu = document.getElementById('nav-menu');
   const navLinksList = document.querySelectorAll('.nav-link');
+  const navOverlay = document.getElementById('nav-overlay');
 
-  mobileToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    // Change menu icon between line and close icon
-    if (navMenu.classList.contains('active')) {
+  const toggleMobileMenu = (forceClose = false) => {
+    const isOpen = forceClose ? false : !navMenu.classList.contains('active');
+    
+    navMenu.classList.toggle('active', isOpen);
+    navOverlay.classList.toggle('active', isOpen);
+    document.body.classList.toggle('no-scroll', isOpen);
+    
+    if (isOpen) {
       mobileToggle.className = 'ri-close-line mobile-menu-btn';
     } else {
       mobileToggle.className = 'ri-menu-line mobile-menu-btn';
     }
-  });
+  };
+
+  mobileToggle.addEventListener('click', () => toggleMobileMenu());
 
   // Close mobile menu when nav link is clicked
   navLinksList.forEach(link => {
     link.addEventListener('click', () => {
-      navMenu.classList.remove('active');
-      mobileToggle.className = 'ri-menu-line mobile-menu-btn';
+      toggleMobileMenu(true);
     });
+  });
+
+  // Close mobile menu when clicking the backdrop overlay
+  navOverlay.addEventListener('click', () => {
+    toggleMobileMenu(true);
   });
 
 
