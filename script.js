@@ -558,9 +558,17 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   
   const ordersListContainer = document.getElementById('orders-list-container');
 
-  /* --- 11. MOCK DATA INITIALIZATION & SESSION MANAGEMENT --- */
+  /* --- 11. SUPABASE INITIALIZATION & SESSION MANAGEMENT --- */
   
-  // Retrieve databases from localStorage
+  const supabaseUrl = window.SUPABASE_URL;
+  const supabaseAnonKey = window.SUPABASE_ANON_KEY;
+  const supabase = (supabaseUrl && supabaseAnonKey && window.supabase) 
+    ? window.supabase.createClient(supabaseUrl, supabaseAnonKey) 
+    : null;
+
+  let activeUser = null;
+
+  // Retrieve databases from localStorage (for mock fallback)
   const getUsers = () => JSON.parse(localStorage.getItem('zaro-users')) || {};
   const saveUsers = (users) => localStorage.setItem('zaro-users', JSON.stringify(users));
   
@@ -573,14 +581,12 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
     }
   };
 
-  // Get active user data object
+  // Get active user data object (compatible with original code)
   const getActiveUser = () => {
-    const email = getActiveUserEmail();
-    if (!email) return null;
-    return getUsers()[email] || null;
+    return activeUser;
   };
 
-  // Update specific active user properties
+  // Update specific active user properties (for mock fallback)
   const updateActiveUserData = (updatedFields) => {
     const email = getActiveUserEmail();
     if (!email) return;
@@ -598,27 +604,98 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   };
 
   // Update all header & drawer profile displays based on active session
-  const checkActiveSession = () => {
-    const user = getActiveUser();
+  const checkActiveSession = async () => {
+    if (!supabase) {
+      // Fallback: Local Storage Mock Auth
+      const email = getActiveUserEmail();
+      if (email) {
+        const users = getUsers();
+        activeUser = users[email] || null;
+      } else {
+        activeUser = null;
+      }
+    } else {
+      // Live Supabase Auth
+      try {
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError) throw sessionError;
+
+        if (session && session.user) {
+          const user = session.user;
+          const email = user.email;
+          
+          let username = user.user_metadata?.username || user.user_metadata?.full_name || email.split('@')[0];
+          let shopName = user.user_metadata?.shop || "My Zaro Storefront";
+          
+          // Attempt to query the profiles table in Supabase
+          try {
+            const { data: profile, error: dbError } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', user.id)
+              .single();
+            if (profile && !dbError) {
+              username = profile.username || username;
+            }
+          } catch (dbErr) {
+            console.warn("Could not query profiles table, falling back to metadata:", dbErr.message);
+          }
+          
+          // Retrieve local-only properties (avatar and orders list)
+          const storedAvatar = localStorage.getItem(`zaro-avatar-${email}`) || "";
+          const storedOrders = JSON.parse(localStorage.getItem(`zaro-orders-${email}`)) || [
+            {
+              id: `ZARO-${Math.floor(10000 + Math.random() * 90000)}`,
+              projectName: `${shopName} Launch Concept`,
+              category: 'Consultation & Schema Mapping',
+              price: 3500,
+              date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+              estDelivery: 'Immediate Delivery',
+              status: 'launched'
+            }
+          ];
+          
+          // Save back default order list to localStorage if first time loading
+          if (!localStorage.getItem(`zaro-orders-${email}`)) {
+            localStorage.setItem(`zaro-orders-${email}`, JSON.stringify(storedOrders));
+          }
+
+          activeUser = {
+            id: user.id,
+            name: username,
+            shop: shopName,
+            email: email,
+            avatar: storedAvatar,
+            orders: storedOrders
+          };
+        } else {
+          activeUser = null;
+        }
+      } catch (err) {
+        console.error("Supabase Auth session load failure:", err);
+        activeUser = null;
+      }
+    }
     
-    if (user) {
+    // Update DOM elements
+    if (activeUser) {
       // Logged In view
       headerLoginBtn.style.display = 'none';
       headerProfileBtn.style.display = 'block';
       
-      const initials = getInitials(user.name);
+      const initials = getInitials(activeUser.name);
       
       // Update initials
       headerProfileInitials.textContent = initials;
       drawerAvatarInitials.textContent = initials;
       
       // Update custom uploaded avatars
-      if (user.avatar) {
-        headerProfileImg.src = user.avatar;
+      if (activeUser.avatar) {
+        headerProfileImg.src = activeUser.avatar;
         headerProfileImg.style.display = 'block';
         headerProfileInitials.style.display = 'none';
         
-        drawerAvatarImg.src = user.avatar;
+        drawerAvatarImg.src = activeUser.avatar;
         drawerAvatarImg.style.display = 'block';
         drawerAvatarInitials.style.display = 'none';
       } else {
@@ -630,12 +707,12 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       }
       
       // Update profile drawer fields
-      profileNameInput.value = user.name;
-      profileShopDisplay.value = user.shop;
-      profileEmailDisplay.value = user.email;
+      profileNameInput.value = activeUser.name;
+      profileShopDisplay.value = activeUser.shop;
+      profileEmailDisplay.value = activeUser.email;
       
       // Render orders list
-      renderOrders(user.orders || []);
+      renderOrders(activeUser.orders || []);
     } else {
       // Logged Out view
       headerLoginBtn.style.display = 'block';
@@ -704,9 +781,8 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   };
 
   // Add order function
-  const placeOrder = (projectName, category, price) => {
-    const user = getActiveUser();
-    if (!user) {
+  const placeOrder = async (projectName, category, price) => {
+    if (!activeUser) {
       showToast('Login Required', 'Please log in or register to place website designs orders!', 'warning');
       // Auto open auth modal
       openAuthModal();
@@ -733,12 +809,18 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       status: 'draft' // status stages: draft, development, launched
     };
     
-    const currentOrders = user.orders || [];
+    const currentOrders = activeUser.orders || [];
     currentOrders.push(newOrder);
     
-    // Update db
-    updateActiveUserData({ orders: currentOrders });
-    checkActiveSession();
+    // Update db / localStorage
+    activeUser.orders = currentOrders;
+    localStorage.setItem(`zaro-orders-${activeUser.email}`, JSON.stringify(currentOrders));
+    
+    if (!supabase) {
+      updateActiveUserData({ orders: currentOrders });
+    }
+    
+    await checkActiveSession();
     
     showToast(
       '🚀 Project Draft Placed!', 
@@ -773,7 +855,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       if (originalSector === 'salon') projectDesignPrice = 10000;
       if (originalSector === 'cafe') projectDesignPrice = 11500;
       
-      const projectName = `${getActiveUser() ? getActiveUser().shop : 'My'} Digital Front`;
+      const projectName = `${activeUser ? activeUser.shop : 'My'} Digital Front`;
       
       placeOrder(projectName, businessSector, projectDesignPrice);
     });
@@ -835,7 +917,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       if (sector.includes('Grocery')) priceVal = 18500;
       
       // Trigger order silently
-      if (getActiveUser()) {
+      if (activeUser) {
         setTimeout(() => {
           placeOrder(`${shopName} Storefront mockup`, sector, priceVal);
         }, 1500);
@@ -845,15 +927,11 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
 
   /* --- 14. AUTHENTICATION CONTROLLER FLOWS --- */
 
-  const getPortalURL = () => {
-    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    return isLocal ? 'http://localhost:5173' : './authentication/dist/index.html';
-  };
-
   const openAuthModal = () => {
-    // Store current page URL so the auth portal can navigate back
-    sessionStorage.setItem('zaro-homepage', window.location.href);
-    window.location.href = getPortalURL();
+    authModal.style.display = 'flex';
+    authModal.style.opacity = '1';
+    authLoginView.style.display = 'block';
+    authSignupView.style.display = 'none';
   };
 
   const closeAuthModal = () => {
@@ -864,8 +942,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   };
 
   const openProfileDrawer = () => {
-    sessionStorage.setItem('zaro-homepage', window.location.href);
-    window.location.href = getPortalURL();
+    profileDrawer.style.display = 'flex';
   };
 
   const closeProfileDrawer = () => {
@@ -901,7 +978,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   });
 
   // Register Submit Handlers
-  signupForm.addEventListener('submit', (e) => {
+  signupForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const name = document.getElementById('signup-name').value;
@@ -914,80 +991,203 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       return;
     }
     
-    const users = getUsers();
-    if (users[email]) {
-      showToast('Registration Error', 'An account with this email already exists!', 'danger');
-      return;
-    }
-    
-    // Create new user record with standard mock order to populate history on first login
-    const initialOrders = [
-      {
-        id: `ZARO-${Math.floor(10000 + Math.random() * 90000)}`,
-        projectName: `${shop} Launch Concept`,
-        category: 'Consultation & Schema Mapping',
-        price: 3500,
-        date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
-        estDelivery: 'Immediate Delivery',
-        status: 'launched'
+    if (!supabase) {
+      // Mock signup flow
+      const users = getUsers();
+      if (users[email]) {
+        showToast('Registration Error', 'An account with this email already exists!', 'danger');
+        return;
       }
-    ];
+      
+      const initialOrders = [
+        {
+          id: `ZARO-${Math.floor(10000 + Math.random() * 90000)}`,
+          projectName: `${shop} Launch Concept`,
+          category: 'Consultation & Schema Mapping',
+          price: 3500,
+          date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+          estDelivery: 'Immediate Delivery',
+          status: 'launched'
+        }
+      ];
 
-    users[email] = {
-      name,
-      shop,
-      email,
-      password,
-      avatar: '',
-      orders: initialOrders
-    };
-    
-    saveUsers(users);
-    setActiveUserEmail(email);
-    
-    showToast('Success!', `Welcome to ZARO Agency, ${name}! Your account is now active.`, 'success');
-    
-    signupForm.reset();
-    closeAuthModal();
-    checkActiveSession();
+      users[email] = {
+        name,
+        shop,
+        email,
+        password,
+        avatar: '',
+        orders: initialOrders
+      };
+      
+      saveUsers(users);
+      setActiveUserEmail(email);
+      
+      showToast('Success!', `Welcome to ZARO Agency, ${name}! Your account is now active.`, 'success');
+      
+      signupForm.reset();
+      closeAuthModal();
+      await checkActiveSession();
+    } else {
+      // Supabase signup flow
+      const submitBtn = signupForm.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Registering...';
+      
+      try {
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              username: name,
+              shop: shop
+            }
+          }
+        });
+        if (authError) throw authError;
+        
+        // Save profile data into profiles table
+        if (authData?.user?.id) {
+          try {
+            await supabase.from('profiles').upsert({
+              id: authData.user.id,
+              username: name,
+              email: email,
+              updated_at: new Date().toISOString()
+            });
+          } catch (dbErr) {
+            console.warn("Profiles database table update skipped/failed:", dbErr.message);
+          }
+        }
+        
+        // Initialize default orders list for tracking
+        const initialOrders = [
+          {
+            id: `ZARO-${Math.floor(10000 + Math.random() * 90000)}`,
+            projectName: `${shop} Launch Concept`,
+            category: 'Consultation & Schema Mapping',
+            price: 3500,
+            date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+            estDelivery: 'Immediate Delivery',
+            status: 'launched'
+          }
+        ];
+        localStorage.setItem(`zaro-orders-${email}`, JSON.stringify(initialOrders));
+        
+        showToast('Success!', `Welcome to ZARO! Check your email for a verification link.`, 'success');
+        
+        signupForm.reset();
+        closeAuthModal();
+        await checkActiveSession();
+      } catch (err) {
+        showToast('Registration Error', err.message, 'danger');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+    }
   });
 
   // Login Submit Handlers
-  loginForm.addEventListener('submit', (e) => {
+  loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const email = document.getElementById('login-email').value.toLowerCase().trim();
     const password = document.getElementById('login-password').value;
     
-    const users = getUsers();
-    const user = users[email];
-    
-    if (!user || user.password !== password) {
-      showToast('Auth Failure', 'Incorrect email address or password. Try again.', 'danger');
-      return;
+    if (!supabase) {
+      // Mock login flow
+      const users = getUsers();
+      const user = users[email];
+      
+      if (!user || user.password !== password) {
+        showToast('Auth Failure', 'Incorrect email address or password. Try again.', 'danger');
+        return;
+      }
+      
+      setActiveUserEmail(email);
+      showToast('Signed In Successfully!', `Welcome back, ${user.name}!`, 'success');
+      
+      loginForm.reset();
+      closeAuthModal();
+      await checkActiveSession();
+    } else {
+      // Supabase login flow
+      const submitBtn = loginForm.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Signing In...';
+      
+      try {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+        if (error) throw error;
+        
+        showToast('Signed In Successfully!', 'Welcome back to ZARO Client Workspace!', 'success');
+        
+        loginForm.reset();
+        closeAuthModal();
+        await checkActiveSession();
+      } catch (err) {
+        showToast('Auth Failure', err.message, 'danger');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
     }
-    
-    setActiveUserEmail(email);
-    showToast('Signed In Successfully!', `Welcome back, ${user.name}!`, 'success');
-    
-    loginForm.reset();
-    closeAuthModal();
-    checkActiveSession();
   });
 
   /* --- 15. PROFILE DETAIL SAVING & AVATAR UPLOAD --- */
 
   // Save Display name
-  saveProfileBtn.addEventListener('click', () => {
+  saveProfileBtn.addEventListener('click', async () => {
     const newName = profileNameInput.value.trim();
     if (!newName) {
       showToast('Error', 'Client display name cannot be blank!', 'danger');
       return;
     }
     
-    updateActiveUserData({ name: newName });
-    checkActiveSession();
-    showToast('Profile Updated', 'Your Display Name has been saved successfully!', 'success');
+    if (!supabase) {
+      // Mock save
+      updateActiveUserData({ name: newName });
+      await checkActiveSession();
+      showToast('Profile Updated', 'Your Display Name has been saved successfully!', 'success');
+    } else {
+      // Supabase save
+      saveProfileBtn.disabled = true;
+      saveProfileBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Saving...';
+      try {
+        const { error: authError } = await supabase.auth.updateUser({
+          data: { username: newName }
+        });
+        if (authError) throw authError;
+        
+        if (activeUser && activeUser.id) {
+          try {
+            await supabase.from('profiles').upsert({
+              id: activeUser.id,
+              username: newName,
+              email: activeUser.email,
+              updated_at: new Date().toISOString()
+            });
+          } catch (dbErr) {
+            console.warn("Profiles database table update skipped/failed:", dbErr.message);
+          }
+        }
+        
+        showToast('Profile Updated', 'Your Display Name has been saved successfully!', 'success');
+        await checkActiveSession();
+      } catch (err) {
+        showToast('Update Failed', err.message, 'danger');
+      } finally {
+        saveProfileBtn.disabled = false;
+        saveProfileBtn.innerHTML = '<i class="ri-save-line"></i> Save Profile Details';
+      }
+    }
   });
 
   // Avatar file input listener
@@ -1006,27 +1206,48 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
     }
     
     const reader = new FileReader();
-    reader.onload = function(event) {
+    reader.onload = async function(event) {
       const base64String = event.target.result;
       
-      // Update db
-      updateActiveUserData({ avatar: base64String });
-      checkActiveSession();
-      showToast('Avatar Updated', 'Your profile picture has been customized successfully!', 'success');
+      if (activeUser) {
+        activeUser.avatar = base64String;
+        localStorage.setItem(`zaro-avatar-${activeUser.email}`, base64String);
+        
+        if (!supabase) {
+          updateActiveUserData({ avatar: base64String });
+        }
+        
+        await checkActiveSession();
+        showToast('Avatar Updated', 'Your profile picture has been customized successfully!', 'success');
+      }
     };
     reader.readAsDataURL(file);
   });
 
   // Sign out Handler
-  logoutBtn.addEventListener('click', () => {
-    const user = getActiveUser();
-    const userName = user ? user.name : 'Client';
+  logoutBtn.addEventListener('click', async () => {
+    const userName = activeUser ? activeUser.name : 'Client';
     
-    setActiveUserEmail(null);
-    checkActiveSession();
-    closeProfileDrawer();
-    
-    showToast('Logged Out', `Goodbye, ${userName}! Have a wonderful day!`, 'warning');
+    if (!supabase) {
+      setActiveUserEmail(null);
+      await checkActiveSession();
+      closeProfileDrawer();
+      showToast('Logged Out', `Goodbye, ${userName}! Have a wonderful day!`, 'warning');
+    } else {
+      logoutBtn.disabled = true;
+      logoutBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Signing Out...';
+      try {
+        await supabase.auth.signOut();
+        await checkActiveSession();
+        closeProfileDrawer();
+        showToast('Logged Out', `Goodbye, ${userName}! Have a wonderful day!`, 'warning');
+      } catch (err) {
+        showToast('Logout Error', err.message, 'danger');
+      } finally {
+        logoutBtn.disabled = false;
+        logoutBtn.innerHTML = '<i class="ri-logout-box-r-line"></i> Sign Out';
+      }
+    }
   });
 
   /* --- 9. HIGH-PERFORMANCE SCROLL REVEAL ENGINE --- */
@@ -1051,6 +1272,14 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   } else {
     // Fallback if browser does not support IntersectionObserver
     revealElements.forEach(el => el.classList.add('active'));
+  }
+
+  // Bind session updates
+  if (supabase) {
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log("Supabase Auth change event:", event);
+      await checkActiveSession();
+    });
   }
 
   // Active check on load
