@@ -1696,6 +1696,10 @@ footer {
   box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
 }
 
+.widget-text {
+  display: none;
+}
+
 /* --- MOBILE RESPONSIVENESS & ALIGNMENT --- */
 @media (max-width: 1024px) {
   .hero-grid {
@@ -1750,6 +1754,42 @@ footer {
 }
 
 @media (max-width: 768px) {
+  /* Compact Header styling on mobile view to prevent extra vertical length & wrapping */
+  header {
+    padding: 12px 0 !important;
+  }
+  
+  .logo {
+    font-size: 1.4rem !important;
+    gap: 8px !important;
+  }
+  
+  .logo-img {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  
+  .header-actions {
+    gap: 12px !important;
+  }
+  
+  #header-login-btn {
+    padding: 8px 14px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .theme-toggle {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1.1rem !important;
+  }
+  
+  .header-avatar-circle {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 0.85rem !important;
+  }
+
   /* Hide header CTA on mobile to prevent alignment warp */
   .header-actions .btn-secondary {
     display: none;
@@ -1769,12 +1809,16 @@ footer {
     padding: 100px 32px;
     gap: 40px;
     transform: translateX(100%);
-    transition: transform var(--transition-smooth);
+    transition: transform var(--transition-smooth), visibility var(--transition-smooth);
     z-index: 99;
+    visibility: hidden;
+    pointer-events: none;
   }
   
   nav.active {
     transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
   }
   
   .nav-links {
@@ -1787,6 +1831,35 @@ footer {
   .mobile-menu-btn {
     display: block;
     z-index: 100;
+  }
+
+  /* Add extra padding to footer bottom to make room for sticky bottom widgets on mobile */
+  footer {
+    padding-bottom: 80px !important;
+  }
+
+  /* Horizontal floating widget bar style on tablet/mobile screens */
+  .floating-widget-bar {
+    flex-direction: row !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    gap: 10px !important;
+  }
+  
+  .widget-btn {
+    width: auto !important;
+    height: 44px !important;
+    border-radius: var(--radius-md) !important;
+    padding: 0 16px !important;
+    font-size: 1.1rem !important;
+    gap: 8px !important;
+  }
+  
+  .widget-text {
+    display: inline !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    font-family: var(--font-heading) !important;
   }
   
   /* Flatten 3D tilt on mobile for proper alignment */
@@ -1907,14 +1980,8 @@ footer {
   }
 
   .floating-widget-bar {
-    bottom: 20px;
-    right: 20px;
-  }
-
-  .widget-btn {
-    width: 46px;
-    height: 46px;
-    font-size: 1.25rem;
+    bottom: 16px !important;
+    right: 16px !important;
   }
 }
 
