@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { supabase, checkSupabaseConnection, createProfile, getProfile } from './supabaseClient';
+import { auth, checkFirebaseConnection, createProfile, getProfile } from './firebaseClient';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from 'firebase/auth';
 
 function App() {
   // Auth state
@@ -21,7 +22,7 @@ function App() {
   const [signUpPassword, setSignUpPassword] = useState("");
   const [signUpConfirmPassword, setSignUpConfirmPassword] = useState("");
 
-  const { isConfigured } = checkSupabaseConnection();
+  const { isConfigured } = checkFirebaseConnection();
 
   // ── Toast Notification ──
   const showToast = (title, message, type = 'success') => {
@@ -31,44 +32,28 @@ function App() {
 
   // ── Load session & profile on mount ──
   useEffect(() => {
-    if (!isConfigured || !supabase) {
+    if (!isConfigured || !auth) {
       setLoading(false);
       return;
     }
 
-    async function checkSession() {
-      try {
-        const { data, error } = await supabase.auth.getSession();
-        if (error) throw error;
-        const session = data?.session || null;
-        setUserData(session);
-
-        // Load profile if logged in
-        if (session?.user?.id) {
-          const { data: profile } = await getProfile(session.user.id);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setUserData(user);
+      if (user) {
+        try {
+          const { data: profile } = await getProfile(user.uid);
           if (profile) setUserProfile(profile);
+        } catch (err) {
+          console.error("Error loading user profile:", err.message);
         }
-      } catch (err) {
-        console.error("Auth check error:", err.message);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    checkSession();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, currentSession) => {
-      setUserData(currentSession || null);
-      if (currentSession?.user?.id) {
-        const { data: profile } = await getProfile(currentSession.user.id);
-        if (profile) setUserProfile(profile);
       } else {
         setUserProfile(null);
       }
+      setLoading(false);
     });
 
     return () => {
-      subscription?.unsubscribe();
+      unsubscribe();
     };
   }, [isConfigured]);
 
@@ -79,18 +64,14 @@ function App() {
       showToast('Missing Fields', 'Please fill in both email and password.', 'error');
       return;
     }
-    if (!isConfigured || !supabase) {
-      showToast('Not Connected', 'Supabase is not configured. Add credentials to .env', 'error');
+    if (!isConfigured || !auth) {
+      showToast('Not Connected', 'Firebase is not configured. Add credentials to .env', 'error');
       return;
     }
 
     setFormLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: loginEmail,
-        password: loginPassword
-      });
-      if (error) throw error;
+      await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
       showToast('Welcome Back', 'Successfully logged in.', 'success');
       setLoginEmail("");
       setLoginPassword("");
@@ -130,40 +111,35 @@ function App() {
       showToast('Password Mismatch', 'Passwords do not match. Please re-enter.', 'error');
       return;
     }
-    if (!isConfigured || !supabase) {
-      showToast('Not Connected', 'Supabase is not configured. Add credentials to .env', 'error');
+    if (!isConfigured || !auth) {
+      showToast('Not Connected', 'Firebase is not configured. Add credentials to .env', 'error');
       return;
     }
 
     setFormLoading(true);
     try {
-      // 1. Create the auth user
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: signUpEmail,
-        password: signUpPassword,
-        options: {
-          data: {
-            username: signUpUsername,
-            phone: signUpPhone,
-          }
-        }
-      });
-      if (authError) throw authError;
+      // 1. Create the auth user in Firebase
+      const userCredential = await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword);
+      const user = userCredential.user;
 
-      // 2. Save profile to the profiles table
-      if (authData?.user?.id) {
-        const { error: profileError } = await createProfile(authData.user.id, {
+      // 2. Set username in Firebase Auth profile
+      await updateProfile(user, {
+        displayName: signUpUsername
+      });
+
+      // 3. Save profile to the Firestore profiles collection
+      if (user?.uid) {
+        const { error: profileError } = await createProfile(user.uid, {
           username: signUpUsername,
           phone: signUpPhone,
           email: signUpEmail,
         });
         if (profileError) {
           console.warn("Profile save warning:", profileError.message);
-          // Don't block sign-up if profile save fails — the user is still registered
         }
       }
 
-      showToast('Account Created!', 'Check your email for a verification link.', 'success');
+      showToast('Account Created!', 'Your account has been successfully created.', 'success');
 
       // Clear sign-up fields
       setSignUpUsername("");
@@ -183,10 +159,9 @@ function App() {
 
   // ── Logout ──
   const handleLogout = async () => {
-    if (!supabase) return;
+    if (!auth) return;
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      await signOut(auth);
       setUserProfile(null);
       showToast('Signed Out', 'You have been logged out successfully.', 'success');
     } catch (err) {
@@ -288,11 +263,11 @@ function App() {
         </div>
       )}
 
-      {/* Supabase Not Configured Banner */}
+      {/* Firebase Not Configured Banner */}
       {!isConfigured && (
         <div className="sandbox-banner">
           <i className="ri-alert-line"></i>
-          Supabase not connected — Add your credentials to the .env file
+          Firebase not connected — Add your credentials to the .env file
         </div>
       )}
 
@@ -318,7 +293,7 @@ function App() {
                 marginBottom: '16px',
                 boxShadow: '0 8px 24px -4px var(--primary-glow)'
               }}>
-                {(userProfile?.username || userData.user?.email || 'U').substring(0, 2).toUpperCase()}
+                {(userProfile?.username || userData.email || userData.user?.email || 'U').substring(0, 2).toUpperCase()}
               </div>
               <h2>Welcome, {userProfile?.username || 'User'}</h2>
               <p>Your secure ZARO client workspace</p>
@@ -337,7 +312,7 @@ function App() {
                 <i className="ri-mail-line"></i>
                 <div>
                   <span className="profile-info-label">Email</span>
-                  <span className="profile-info-value">{userData.user?.email || userProfile?.email || '—'}</span>
+                  <span className="profile-info-value">{userData.email || userData.user?.email || userProfile?.email || '—'}</span>
                 </div>
               </div>
               <div className="profile-info-row">
