@@ -1291,4 +1291,65 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   // Active check on load
   checkActiveSession();
 
+
+  /* --- 16. FAQ ACCORDION --- */
+  const faqItems = document.querySelectorAll('.faq-item');
+
+  faqItems.forEach(item => {
+    const questionBtn = item.querySelector('.faq-question');
+    
+    questionBtn.addEventListener('click', () => {
+      const isOpen = item.classList.contains('faq-open');
+      
+      // Close all other FAQ items
+      faqItems.forEach(otherItem => {
+        otherItem.classList.remove('faq-open');
+        const btn = otherItem.querySelector('.faq-question');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      });
+      
+      // Toggle current item
+      if (!isOpen) {
+        item.classList.add('faq-open');
+        questionBtn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+
+  /* --- 17. PRICING BILLING TOGGLE --- */
+  const billingToggle = document.getElementById('billing-toggle');
+  const billingMonthlyLabel = document.getElementById('billing-monthly-label');
+  const billingAnnualLabel = document.getElementById('billing-annual-label');
+  const priceValues = document.querySelectorAll('.price-value');
+  
+  let isAnnual = false;
+
+  if (billingToggle) {
+    billingToggle.addEventListener('click', () => {
+      isAnnual = !isAnnual;
+      billingToggle.classList.toggle('annual-mode', isAnnual);
+      
+      // Update label active states
+      billingMonthlyLabel.classList.toggle('active-label', !isAnnual);
+      billingAnnualLabel.classList.toggle('active-label', isAnnual);
+      
+      // Update prices with animation
+      priceValues.forEach(el => {
+        const monthlyPrice = parseInt(el.getAttribute('data-monthly'));
+        const annualPrice = parseInt(el.getAttribute('data-annual'));
+        const targetPrice = isAnnual ? annualPrice : monthlyPrice;
+        
+        el.style.transform = 'translateY(-6px)';
+        el.style.opacity = '0';
+        
+        setTimeout(() => {
+          el.textContent = targetPrice.toLocaleString('en-IN');
+          el.style.transform = 'translateY(0)';
+          el.style.opacity = '1';
+        }, 200);
+      });
+    });
+  }
+
 });
