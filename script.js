@@ -558,13 +558,31 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   
   const ordersListContainer = document.getElementById('orders-list-container');
 
-  /* --- 11. SUPABASE INITIALIZATION & SESSION MANAGEMENT --- */
+  /* --- 11. FIREBASE INITIALIZATION & SESSION MANAGEMENT --- */
   
-  const supabaseUrl = window.SUPABASE_URL;
-  const supabaseAnonKey = window.SUPABASE_ANON_KEY;
-  const supabase = (supabaseUrl && supabaseAnonKey && window.supabase) 
-    ? window.supabase.createClient(supabaseUrl, supabaseAnonKey) 
-    : null;
+  const firebaseConfigured = window.FIREBASE_API_KEY && 
+                             window.FIREBASE_PROJECT_ID && 
+                             !window.FIREBASE_API_KEY.includes('your_') &&
+                             window.firebase;
+
+  let auth = null;
+  let db = null;
+
+  if (firebaseConfigured) {
+    const firebaseConfig = {
+      apiKey: window.FIREBASE_API_KEY,
+      authDomain: window.FIREBASE_AUTH_DOMAIN,
+      projectId: window.FIREBASE_PROJECT_ID,
+      storageBucket: window.FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: window.FIREBASE_MESSAGING_SENDER_ID,
+      appId: window.FIREBASE_APP_ID
+    };
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    auth = firebase.auth();
+    db = firebase.firestore();
+  }
 
   let activeUser = null;
 
@@ -605,7 +623,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
 
   // Update all header & drawer profile displays based on active session
   const checkActiveSession = async () => {
-    if (!supabase) {
+    if (!firebaseConfigured || !auth) {
       // Fallback: Local Storage Mock Auth
       const email = getActiveUserEmail();
       if (email) {
@@ -615,30 +633,28 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
         activeUser = null;
       }
     } else {
-      // Live Supabase Auth
+      // Live Firebase Auth
       try {
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        if (sessionError) throw sessionError;
+        const user = auth.currentUser;
 
-        if (session && session.user) {
-          const user = session.user;
+        if (user) {
           const email = user.email;
           
-          let username = user.user_metadata?.username || user.user_metadata?.full_name || email.split('@')[0];
-          let shopName = user.user_metadata?.shop || "My Zaro Storefront";
+          let username = user.displayName || email.split('@')[0];
+          let shopName = "My Zaro Storefront";
           
-          // Attempt to query the profiles table in Supabase
+          // Attempt to query the profiles collection in Firestore
           try {
-            const { data: profile, error: dbError } = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('id', user.id)
-              .single();
-            if (profile && !dbError) {
+            const docSnap = await db.collection('profiles').doc(user.uid).get();
+            if (docSnap.exists) {
+              const profile = docSnap.data();
               username = profile.username || username;
+              if (profile.shop_name) {
+                shopName = profile.shop_name;
+              }
             }
           } catch (dbErr) {
-            console.warn("Could not query profiles table, falling back to metadata:", dbErr.message);
+            console.warn("Could not query profiles collection, falling back to auth metadata:", dbErr.message);
           }
           
           // Retrieve local-only properties (avatar and orders list)
@@ -661,7 +677,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
           }
 
           activeUser = {
-            id: user.id,
+            id: user.uid,
             name: username,
             shop: shopName,
             email: email,
@@ -672,7 +688,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
           activeUser = null;
         }
       } catch (err) {
-        console.error("Supabase Auth session load failure:", err);
+        console.error("Firebase Auth session load failure:", err);
         activeUser = null;
       }
     }
@@ -816,7 +832,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
     activeUser.orders = currentOrders;
     localStorage.setItem(`zaro-orders-${activeUser.email}`, JSON.stringify(currentOrders));
     
-    if (!supabase) {
+    if (!firebaseConfigured || !auth) {
       updateActiveUserData({ orders: currentOrders });
     }
     
@@ -991,7 +1007,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       return;
     }
     
-    if (!supabase) {
+    if (!firebaseConfigured || !auth) {
       // Mock signup flow
       const users = getUsers();
       if (users[email]) {
@@ -1029,37 +1045,30 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       closeAuthModal();
       await checkActiveSession();
     } else {
-      // Supabase signup flow
+      // Firebase signup flow
       const submitBtn = signupForm.querySelector('button[type="submit"]');
       const originalText = submitBtn.innerHTML;
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Registering...';
       
       try {
-        const { data: authData, error: authError } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              username: name,
-              shop: shop
-            }
-          }
-        });
-        if (authError) throw authError;
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const user = userCredential.user;
         
-        // Save profile data into profiles table
-        if (authData?.user?.id) {
-          try {
-            await supabase.from('profiles').upsert({
-              id: authData.user.id,
-              username: name,
-              email: email,
-              updated_at: new Date().toISOString()
-            });
-          } catch (dbErr) {
-            console.warn("Profiles database table update skipped/failed:", dbErr.message);
-          }
+        await user.updateProfile({
+          displayName: name
+        });
+        
+        // Save profile data into profiles collection in Firestore
+        try {
+          await db.collection('profiles').doc(user.uid).set({
+            username: name,
+            email: email,
+            shop_name: shop,
+            updated_at: new Date().toISOString()
+          }, { merge: true });
+        } catch (dbErr) {
+          console.warn("Profiles collection update skipped/failed:", dbErr.message);
         }
         
         // Initialize default orders list for tracking
@@ -1076,7 +1085,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
         ];
         localStorage.setItem(`zaro-orders-${email}`, JSON.stringify(initialOrders));
         
-        showToast('Success!', `Welcome to ZARO! Check your email for a verification link.`, 'success');
+        showToast('Success!', `Welcome to ZARO, ${name}! Your account has been registered.`, 'success');
         
         signupForm.reset();
         closeAuthModal();
@@ -1097,7 +1106,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
     const email = document.getElementById('login-email').value.toLowerCase().trim();
     const password = document.getElementById('login-password').value;
     
-    if (!supabase) {
+    if (!firebaseConfigured || !auth) {
       // Mock login flow
       const users = getUsers();
       const user = users[email];
@@ -1114,18 +1123,14 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       closeAuthModal();
       await checkActiveSession();
     } else {
-      // Supabase login flow
+      // Firebase login flow
       const submitBtn = loginForm.querySelector('button[type="submit"]');
       const originalText = submitBtn.innerHTML;
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Signing In...';
       
       try {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password
-        });
-        if (error) throw error;
+        await auth.signInWithEmailAndPassword(email, password);
         
         showToast('Signed In Successfully!', 'Welcome back to ZARO Client Workspace!', 'success');
         
@@ -1151,31 +1156,32 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       return;
     }
     
-    if (!supabase) {
+    if (!firebaseConfigured || !auth) {
       // Mock save
       updateActiveUserData({ name: newName });
       await checkActiveSession();
       showToast('Profile Updated', 'Your Display Name has been saved successfully!', 'success');
     } else {
-      // Supabase save
+      // Firebase save
       saveProfileBtn.disabled = true;
       saveProfileBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Saving...';
       try {
-        const { error: authError } = await supabase.auth.updateUser({
-          data: { username: newName }
+        const user = auth.currentUser;
+        if (!user) throw new Error("No active user found!");
+
+        await user.updateProfile({
+          displayName: newName
         });
-        if (authError) throw authError;
         
         if (activeUser && activeUser.id) {
           try {
-            await supabase.from('profiles').upsert({
-              id: activeUser.id,
+            await db.collection('profiles').doc(activeUser.id).set({
               username: newName,
               email: activeUser.email,
               updated_at: new Date().toISOString()
-            });
+            }, { merge: true });
           } catch (dbErr) {
-            console.warn("Profiles database table update skipped/failed:", dbErr.message);
+            console.warn("Profiles collection update skipped/failed:", dbErr.message);
           }
         }
         
@@ -1213,7 +1219,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
         activeUser.avatar = base64String;
         localStorage.setItem(`zaro-avatar-${activeUser.email}`, base64String);
         
-        if (!supabase) {
+        if (!firebaseConfigured || !auth) {
           updateActiveUserData({ avatar: base64String });
         }
         
@@ -1228,7 +1234,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   logoutBtn.addEventListener('click', async () => {
     const userName = activeUser ? activeUser.name : 'Client';
     
-    if (!supabase) {
+    if (!firebaseConfigured || !auth) {
       setActiveUserEmail(null);
       await checkActiveSession();
       closeProfileDrawer();
@@ -1237,7 +1243,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       logoutBtn.disabled = true;
       logoutBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Signing Out...';
       try {
-        await supabase.auth.signOut();
+        await auth.signOut();
         await checkActiveSession();
         closeProfileDrawer();
         showToast('Logged Out', `Goodbye, ${userName}! Have a wonderful day!`, 'warning');
@@ -1275,9 +1281,9 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   }
 
   // Bind session updates
-  if (supabase) {
-    supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log("Supabase Auth change event:", event);
+  if (firebaseConfigured && auth) {
+    auth.onAuthStateChanged(async (user) => {
+      console.log("Firebase Auth state changed:", user);
       await checkActiveSession();
     });
   }
