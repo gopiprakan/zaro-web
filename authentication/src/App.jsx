@@ -1,82 +1,89 @@
 import React, { useState, useEffect } from 'react';
-import { auth, checkFirebaseConnection, createProfile, getProfile } from './firebaseClient';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from 'firebase/auth';
+import { auth, checkFirebaseConnection } from './firebaseClient';
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+} from 'firebase/auth';
 
 function App() {
   // Auth state
   const [userData, setUserData] = useState(null);
-  const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formLoading, setFormLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
-  const [toast, setToast] = useState(null);
+
+  // Inline error messages (shown below the submit button)
+  const [authError, setAuthError] = useState('');
 
   // Login fields
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
 
   // Sign-up fields
-  const [signUpUsername, setSignUpUsername] = useState("");
-  const [signUpPhone, setSignUpPhone] = useState("");
-  const [signUpEmail, setSignUpEmail] = useState("");
-  const [signUpPassword, setSignUpPassword] = useState("");
-  const [signUpConfirmPassword, setSignUpConfirmPassword] = useState("");
+  const [signUpEmail, setSignUpEmail] = useState('');
+  const [signUpPassword, setSignUpPassword] = useState('');
+  const [signUpConfirmPassword, setSignUpConfirmPassword] = useState('');
 
   const { isConfigured } = checkFirebaseConnection();
 
-  // ── Toast Notification ──
-  const showToast = (title, message, type = 'success') => {
-    setToast({ title, message, type });
-    setTimeout(() => setToast(null), 4500);
-  };
-
-  // ── Load session & profile on mount ──
+  // ── Watch Firebase auth state ──
   useEffect(() => {
     if (!isConfigured || !auth) {
       setLoading(false);
       return;
     }
-
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUserData(user);
-      if (user) {
-        try {
-          const { data: profile } = await getProfile(user.uid);
-          if (profile) setUserProfile(profile);
-        } catch (err) {
-          console.error("Error loading user profile:", err.message);
-        }
-      } else {
-        setUserProfile(null);
-      }
       setLoading(false);
     });
-
-    return () => {
-      unsubscribe();
-    };
+    return () => unsubscribe();
   }, [isConfigured]);
+
+  // ── Map Firebase error codes to user-friendly messages ──
+  const getAuthErrorMessage = (err, mode) => {
+    const code = err?.code || '';
+    if (mode === 'login') {
+      // Wrong email or wrong password
+      if (
+        code === 'auth/wrong-password' ||
+        code === 'auth/user-not-found' ||
+        code === 'auth/invalid-credential' ||
+        code === 'auth/invalid-email'
+      ) {
+        return 'Email or password is incorrect.';
+      }
+    }
+    if (mode === 'signup') {
+      if (code === 'auth/email-already-in-use') {
+        return 'User already exists. Please sign in.';
+      }
+      if (code === 'auth/invalid-email') {
+        return 'Please enter a valid email address.';
+      }
+      if (code === 'auth/weak-password') {
+        return 'Password must be at least 6 characters.';
+      }
+    }
+    return err?.message || 'Something went wrong. Please try again.';
+  };
 
   // ── Handle Login ──
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (!loginEmail.trim() || !loginPassword) {
-      showToast('Missing Fields', 'Please fill in both email and password.', 'error');
-      return;
-    }
+    setAuthError('');
     if (!isConfigured || !auth) {
-      showToast('Not Connected', 'Firebase is not configured. Add credentials to .env', 'error');
+      setAuthError('Firebase is not configured. Check your .env file.');
       return;
     }
-
     setFormLoading(true);
     try {
       await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-      showToast('Welcome Back', 'Successfully logged in.', 'success');
-      setLoginEmail("");
-      setLoginPassword("");
+      setLoginEmail('');
+      setLoginPassword('');
     } catch (err) {
-      showToast('Login Failed', err.message, 'error');
+      setAuthError(getAuthErrorMessage(err, 'login'));
     } finally {
       setFormLoading(false);
     }
@@ -85,73 +92,30 @@ function App() {
   // ── Handle Sign Up ──
   const handleSignUp = async (e) => {
     e.preventDefault();
+    setAuthError('');
 
-    // Validate all fields
-    if (!signUpUsername.trim()) {
-      showToast('Missing Username', 'Please enter a username.', 'error');
-      return;
-    }
-    if (!signUpEmail.trim()) {
-      showToast('Missing Email', 'Please enter your email address.', 'error');
-      return;
-    }
-    if (!signUpPhone.trim()) {
-      showToast('Missing Phone', 'Please enter your phone number.', 'error');
-      return;
-    }
-    if (!signUpPassword) {
-      showToast('Missing Password', 'Please create a password.', 'error');
-      return;
-    }
     if (signUpPassword.length < 6) {
-      showToast('Weak Password', 'Password must be at least 6 characters.', 'error');
+      setAuthError('Password must be at least 6 characters.');
       return;
     }
     if (signUpPassword !== signUpConfirmPassword) {
-      showToast('Password Mismatch', 'Passwords do not match. Please re-enter.', 'error');
+      setAuthError('Passwords do not match. Please re-enter.');
       return;
     }
     if (!isConfigured || !auth) {
-      showToast('Not Connected', 'Firebase is not configured. Add credentials to .env', 'error');
+      setAuthError('Firebase is not configured. Check your .env file.');
       return;
     }
 
     setFormLoading(true);
     try {
-      // 1. Create the auth user in Firebase
-      const userCredential = await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword);
-      const user = userCredential.user;
-
-      // 2. Set username in Firebase Auth profile
-      await updateProfile(user, {
-        displayName: signUpUsername
-      });
-
-      // 3. Save profile to the Firestore profiles collection
-      if (user?.uid) {
-        const { error: profileError } = await createProfile(user.uid, {
-          username: signUpUsername,
-          phone: signUpPhone,
-          email: signUpEmail,
-        });
-        if (profileError) {
-          console.warn("Profile save warning:", profileError.message);
-        }
-      }
-
-      showToast('Account Created!', 'Your account has been successfully created.', 'success');
-
-      // Clear sign-up fields
-      setSignUpUsername("");
-      setSignUpPhone("");
-      setSignUpEmail("");
-      setSignUpPassword("");
-      setSignUpConfirmPassword("");
-
-      // Switch to login view
-      setTimeout(() => setIsSignUp(false), 2000);
+      await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword);
+      // onAuthStateChanged will automatically set userData → show dashboard
+      setSignUpEmail('');
+      setSignUpPassword('');
+      setSignUpConfirmPassword('');
     } catch (err) {
-      showToast('Sign Up Failed', err.message, 'error');
+      setAuthError(getAuthErrorMessage(err, 'signup'));
     } finally {
       setFormLoading(false);
     }
@@ -162,41 +126,30 @@ function App() {
     if (!auth) return;
     try {
       await signOut(auth);
-      setUserProfile(null);
-      showToast('Signed Out', 'You have been logged out successfully.', 'success');
     } catch (err) {
-      showToast('Logout Error', err.message, 'error');
+      console.error('Logout error:', err.message);
     }
   };
 
   // ── Navigate back to main site ──
   const handleBackToHomepage = (e) => {
     e.preventDefault();
-    // If we have a referrer from the main site, go back there
-    if (document.referrer && !document.referrer.includes(':5173')) {
-      window.location.href = document.referrer;
-      return;
-    }
-    // Check if stored in sessionStorage (set by main site before redirect)
-    const storedHome = sessionStorage.getItem('zaro-homepage');
-    if (storedHome) {
-      window.location.href = storedHome;
-      return;
-    }
-    // Fallback: relative path for production or navigate to parent
     const hostname = window.location.hostname;
     const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
     if (isLocal) {
-      // In local dev, go back in history or root
-      if (window.history.length > 1) {
-        window.history.back();
-      } else {
-        window.location.href = '/';
-      }
+      window.location.href = 'http://127.0.0.1:8080';
     } else {
       window.location.href = '../index.html';
     }
   };
+
+  // ── Spinner inside button ──
+  const ButtonSpinner = () => (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+      <span className="btn-spinner" />
+      Processing...
+    </span>
+  );
 
   // ── LOADING STATE ──
   if (loading) {
@@ -214,54 +167,11 @@ function App() {
     );
   }
 
-  // ── Shared Back Link Component ──
-  const BackLink = ({ muted }) => (
-    <a
-      href="#"
-      onClick={handleBackToHomepage}
-      style={{
-        color: muted ? 'var(--text-muted)' : 'var(--text-secondary)',
-        textDecoration: 'none',
-        fontSize: '0.85rem',
-        fontWeight: 500,
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '6px',
-        transition: 'color 0.2s'
-      }}
-      onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-color)'}
-      onMouseLeave={(e) => e.currentTarget.style.color = muted ? 'var(--text-muted)' : 'var(--text-secondary)'}
-    >
-      <i className="ri-arrow-left-line"></i> Back to Homepage
-    </a>
-  );
-
-  // ── Spinner inside button ──
-  const ButtonSpinner = () => (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-      <span className="btn-spinner" />
-      Processing...
-    </span>
-  );
-
   return (
     <div className="portal-container" style={{ position: 'relative', overflow: 'hidden' }}>
       {/* Background Glowing Meshes */}
       <div className="bg-glow glow-top-right"></div>
       <div className="bg-glow glow-bottom-left"></div>
-
-      {/* Toast Notification */}
-      {toast && (
-        <div className={`notification-toast toast-${toast.type}`}>
-          <span className="toast-icon">
-            {toast.type === 'success' ? '✓' : '✕'}
-          </span>
-          <div>
-            <div className="toast-title">{toast.title}</div>
-            <div className="toast-message">{toast.message}</div>
-          </div>
-        </div>
-      )}
 
       {/* Firebase Not Configured Banner */}
       {!isConfigured && (
@@ -273,92 +183,156 @@ function App() {
 
       {userData ? (
         /* ═══════════════════════════════════════════
-           LOGGED IN — Client Workspace Dashboard
+           LOGGED IN — Dashboard
            ═══════════════════════════════════════════ */
         <div className="auth-page">
-          <div className="auth-card" style={{ textAlign: 'center', maxWidth: '480px' }}>
-            <div className="auth-header">
-              {/* Avatar */}
+          <div className="auth-card dashboard-card" style={{ maxWidth: '520px' }}>
+
+            {/* Top Bar */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '32px',
+              paddingBottom: '20px',
+              borderBottom: '1px solid var(--border-color)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{
+                  width: '36px', height: '36px', borderRadius: '10px',
+                  background: 'var(--primary-gradient)',
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                  fontWeight: 800, color: 'white', fontSize: '1.1rem'
+                }}>Z</span>
+                <span style={{ fontWeight: 700, fontSize: '1.1rem', fontFamily: 'var(--font-heading)' }}>
+                  ZARO
+                </span>
+              </div>
+              <span style={{
+                background: 'rgba(16, 185, 129, 0.1)',
+                border: '1px solid rgba(16, 185, 129, 0.25)',
+                color: '#6ee7b7',
+                padding: '4px 12px',
+                borderRadius: '999px',
+                fontSize: '0.78rem',
+                fontWeight: 600
+              }}>
+                ● Authenticated
+              </span>
+            </div>
+
+            {/* Avatar & Welcome */}
+            <div className="auth-header" style={{ marginBottom: '24px' }}>
               <div style={{
-                width: '72px',
-                height: '72px',
-                borderRadius: '50%',
+                width: '80px', height: '80px', borderRadius: '50%',
                 background: 'var(--primary-gradient)',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '1.8rem',
-                color: 'white',
-                fontWeight: 800,
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '2rem', color: 'white', fontWeight: 800,
                 marginBottom: '16px',
                 boxShadow: '0 8px 24px -4px var(--primary-glow)'
               }}>
-                {(userProfile?.username || userData.email || userData.user?.email || 'U').substring(0, 2).toUpperCase()}
+                {(userData.email || 'U').substring(0, 2).toUpperCase()}
               </div>
-              <h2>Welcome, {userProfile?.username || 'User'}</h2>
-              <p>Your secure ZARO client workspace</p>
+              <h2 style={{ marginBottom: '6px' }}>Welcome to Dashboard</h2>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                You are signed in as <strong style={{ color: 'var(--text-primary)' }}>{userData.email}</strong>
+              </p>
             </div>
 
-            {/* Profile Info Card */}
-            <div className="profile-info-card">
-              <div className="profile-info-row">
-                <i className="ri-user-line"></i>
-                <div>
-                  <span className="profile-info-label">Username</span>
-                  <span className="profile-info-value">{userProfile?.username || '—'}</span>
-                </div>
-              </div>
+            {/* Info Row */}
+            <div className="profile-info-card" style={{ marginBottom: '24px' }}>
               <div className="profile-info-row">
                 <i className="ri-mail-line"></i>
                 <div>
-                  <span className="profile-info-label">Email</span>
-                  <span className="profile-info-value">{userData.email || userData.user?.email || userProfile?.email || '—'}</span>
+                  <span className="profile-info-label">Email Address</span>
+                  <span className="profile-info-value">{userData.email}</span>
                 </div>
               </div>
               <div className="profile-info-row">
-                <i className="ri-phone-line"></i>
+                <i className="ri-fingerprint-line"></i>
                 <div>
-                  <span className="profile-info-label">Phone</span>
-                  <span className="profile-info-value">{userProfile?.phone || '—'}</span>
+                  <span className="profile-info-label">User ID</span>
+                  <span className="profile-info-value" style={{ fontSize: '0.78rem', wordBreak: 'break-all' }}>
+                    {userData.uid}
+                  </span>
                 </div>
               </div>
               <div className="profile-info-row">
-                <i className="ri-calendar-line"></i>
+                <i className="ri-shield-check-line"></i>
                 <div>
-                  <span className="profile-info-label">Member Since</span>
-                  <span className="profile-info-value">
-                    {userProfile?.created_at
-                      ? new Date(userProfile.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-                      : '—'}
+                  <span className="profile-info-label">Email Verified</span>
+                  <span className="profile-info-value" style={{
+                    color: userData.emailVerified ? 'var(--accent-color)' : 'var(--text-muted)'
+                  }}>
+                    {userData.emailVerified ? '✓ Verified' : 'Not verified'}
                   </span>
                 </div>
               </div>
             </div>
 
+            {/* Actions */}
             <button
               onClick={handleLogout}
               className="btn btn-danger"
-              style={{ width: '100%', marginBottom: '16px', padding: '14px' }}
+              style={{ width: '100%', padding: '14px', marginBottom: '16px' }}
             >
               <i className="ri-logout-box-r-line"></i> Sign Out
             </button>
 
-            <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '16px', marginTop: '10px' }}>
-              <BackLink />
+            <div style={{ textAlign: 'center' }}>
+              <a
+                href="#"
+                onClick={handleBackToHomepage}
+                style={{
+                  color: 'var(--text-muted)',
+                  textDecoration: 'none',
+                  fontSize: '0.85rem',
+                  fontWeight: 500,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  transition: 'color 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-color)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+              >
+                <i className="ri-arrow-left-line"></i> Back to Homepage
+              </a>
             </div>
           </div>
         </div>
+
       ) : (
         /* ═══════════════════════════════════════════
            LOGGED OUT — Login / Sign Up Forms
            ═══════════════════════════════════════════ */
         <div className="auth-page">
-          <div className="auth-card" style={{ maxWidth: isSignUp ? '500px' : '440px', transition: 'max-width 0.3s ease' }}>
+          <div
+            className="auth-card"
+            style={{ maxWidth: isSignUp ? '480px' : '440px', transition: 'max-width 0.3s ease' }}
+          >
+            {/* Logo */}
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              gap: '10px', marginBottom: '28px'
+            }}>
+              <span style={{
+                width: '38px', height: '38px', borderRadius: '10px',
+                background: 'var(--primary-gradient)',
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                fontWeight: 800, color: 'white', fontSize: '1.2rem',
+                boxShadow: '0 6px 16px -4px var(--primary-glow)'
+              }}>Z</span>
+              <span style={{ fontWeight: 800, fontSize: '1.4rem', fontFamily: 'var(--font-heading)' }}>
+                ZARO
+              </span>
+            </div>
+
             <div className="auth-header">
-              <h2>{isSignUp ? 'Create Your Account' : 'ZARO Client Login'}</h2>
+              <h2>{isSignUp ? 'Create Your Account' : 'Welcome Back'}</h2>
               <p>{isSignUp
-                ? 'Fill in your details to get started'
-                : 'Access your custom storefront tracker'}
+                ? 'Sign up to access your ZARO storefront'
+                : 'Log in to your ZARO client dashboard'}
               </p>
             </div>
 
@@ -373,7 +347,7 @@ function App() {
                       type="email"
                       placeholder="name@shop.com"
                       value={loginEmail}
-                      onChange={(e) => setLoginEmail(e.target.value)}
+                      onChange={(e) => { setLoginEmail(e.target.value); setAuthError(''); }}
                       className="form-input"
                       required
                       autoComplete="email"
@@ -389,13 +363,20 @@ function App() {
                       type="password"
                       placeholder="••••••••"
                       value={loginPassword}
-                      onChange={(e) => setLoginPassword(e.target.value)}
+                      onChange={(e) => { setLoginPassword(e.target.value); setAuthError(''); }}
                       className="form-input"
                       required
                       autoComplete="current-password"
                     />
                   </div>
                 </div>
+
+                {/* Inline error */}
+                {authError && (
+                  <div className="auth-error-msg">
+                    <i className="ri-error-warning-line"></i> {authError}
+                  </div>
+                )}
 
                 <button
                   type="submit"
@@ -412,22 +393,6 @@ function App() {
               /* ── SIGN UP FORM ── */
               <form onSubmit={handleSignUp} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <div className="form-group">
-                  <label>Username</label>
-                  <div className="input-wrapper">
-                    <i className="ri-user-line"></i>
-                    <input
-                      type="text"
-                      placeholder="johndoe"
-                      value={signUpUsername}
-                      onChange={(e) => setSignUpUsername(e.target.value)}
-                      className="form-input"
-                      required
-                      autoComplete="username"
-                    />
-                  </div>
-                </div>
-
-                <div className="form-group">
                   <label>Email Address</label>
                   <div className="input-wrapper">
                     <i className="ri-mail-line"></i>
@@ -435,26 +400,10 @@ function App() {
                       type="email"
                       placeholder="name@shop.com"
                       value={signUpEmail}
-                      onChange={(e) => setSignUpEmail(e.target.value)}
+                      onChange={(e) => { setSignUpEmail(e.target.value); setAuthError(''); }}
                       className="form-input"
                       required
                       autoComplete="email"
-                    />
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label>Phone Number</label>
-                  <div className="input-wrapper">
-                    <i className="ri-phone-line"></i>
-                    <input
-                      type="tel"
-                      placeholder="+91 98765 43210"
-                      value={signUpPhone}
-                      onChange={(e) => setSignUpPhone(e.target.value)}
-                      className="form-input"
-                      required
-                      autoComplete="tel"
                     />
                   </div>
                 </div>
@@ -468,7 +417,7 @@ function App() {
                         type="password"
                         placeholder="Min. 6 chars"
                         value={signUpPassword}
-                        onChange={(e) => setSignUpPassword(e.target.value)}
+                        onChange={(e) => { setSignUpPassword(e.target.value); setAuthError(''); }}
                         className="form-input"
                         required
                         autoComplete="new-password"
@@ -484,7 +433,7 @@ function App() {
                         type="password"
                         placeholder="Re-enter"
                         value={signUpConfirmPassword}
-                        onChange={(e) => setSignUpConfirmPassword(e.target.value)}
+                        onChange={(e) => { setSignUpConfirmPassword(e.target.value); setAuthError(''); }}
                         className="form-input"
                         required
                         autoComplete="new-password"
@@ -503,10 +452,24 @@ function App() {
                     gap: '6px',
                     marginTop: '-4px',
                     marginBottom: '8px',
-                    color: signUpPassword === signUpConfirmPassword ? 'var(--accent-color)' : 'var(--danger-color)'
+                    color: signUpPassword === signUpConfirmPassword
+                      ? 'var(--accent-color)'
+                      : 'var(--danger-color)'
                   }}>
-                    <i className={signUpPassword === signUpConfirmPassword ? 'ri-checkbox-circle-line' : 'ri-close-circle-line'}></i>
-                    {signUpPassword === signUpConfirmPassword ? 'Passwords match' : 'Passwords do not match'}
+                    <i className={signUpPassword === signUpConfirmPassword
+                      ? 'ri-checkbox-circle-line'
+                      : 'ri-close-circle-line'
+                    }></i>
+                    {signUpPassword === signUpConfirmPassword
+                      ? 'Passwords match'
+                      : 'Passwords do not match'}
+                  </div>
+                )}
+
+                {/* Inline error */}
+                {authError && (
+                  <div className="auth-error-msg">
+                    <i className="ri-error-warning-line"></i> {authError}
                   </div>
                 )}
 
@@ -524,7 +487,7 @@ function App() {
             )}
 
             {/* Toggle between Login / Sign Up */}
-            <div className="auth-toggle" style={{
+            <div style={{
               borderTop: '1px solid var(--border-color)',
               paddingTop: '20px',
               marginTop: '24px',
@@ -534,7 +497,7 @@ function App() {
                 {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
               </span>
               <a
-                onClick={() => setIsSignUp(!isSignUp)}
+                onClick={() => { setIsSignUp(!isSignUp); setAuthError(''); }}
                 style={{
                   color: 'var(--primary-color)',
                   cursor: 'pointer',
@@ -547,7 +510,24 @@ function App() {
             </div>
 
             <div style={{ textAlign: 'center', marginTop: '16px' }}>
-              <BackLink muted />
+              <a
+                href="#"
+                onClick={handleBackToHomepage}
+                style={{
+                  color: 'var(--text-muted)',
+                  textDecoration: 'none',
+                  fontSize: '0.85rem',
+                  fontWeight: 500,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  transition: 'color 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-color)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+              >
+                <i className="ri-arrow-left-line"></i> Back to Homepage
+              </a>
             </div>
           </div>
         </div>

@@ -982,3 +982,24 @@ body {
   to { transform: rotate(360deg); }
 }
 
+/* --- INLINE AUTH ERROR MESSAGE --- */
+.auth-error-msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 4px;
+  animation: slideIn 0.25s ease forwards;
+}
+.auth-error-msg i {
+  font-size: 1.05rem;
+  flex-shrink: 0;
+  color: var(--danger-color);
+}
+
