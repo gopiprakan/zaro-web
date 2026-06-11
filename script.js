@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update Slider Labels in UI
     labelFootfall.textContent = footfall;
-    labelSpend.textContent = `Γé╣${spend.toLocaleString('en-IN')}`;
+    labelSpend.textContent = `₹${spend.toLocaleString('en-IN')}`;
 
     // Calculation Models
     let searchMultiplier = 1.5;
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const annualRevenueGain = monthlyRevenueGain * 12;
 
     if (isInitial === true) {
-      resultAnnualRevenue.textContent = `Γé╣${annualRevenueGain.toLocaleString('en-IN')}`;
+      resultAnnualRevenue.textContent = `₹${annualRevenueGain.toLocaleString('en-IN')}`;
       resultWebVisitors.textContent = `${projectedMonthlyVisitors.toLocaleString()}+`;
       resultNewOrders.textContent = `${newMonthlyOrders} New Orders`;
       currentRevValue = annualRevenueGain;
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentRevValue, 
         annualRevenueGain, 
         400, 
-        v => `Γé╣${v.toLocaleString('en-IN')}`, 
+        v => `₹${v.toLocaleString('en-IN')}`, 
         revRef, 
         v => { currentRevValue = v; revAnimId = revRef.id; }
       );
@@ -406,14 +406,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const message = document.getElementById('form-message').value;
 
     // Build elegant, structured text for WhatsApp message
-    const formattedMessage = `Hello ZARO! ≡ƒÜÇ
+    const formattedMessage = `Hello ZARO! 🚀
 I want to take my offline shop online. Here are my details:
 
-ΓÇó *My Name:* ${name}
-ΓÇó *My Phone:* ${phone}
-ΓÇó *Business Name:* ${shopName}
-ΓÇó *Business Type:* ${sector}
-ΓÇó *My Requirements:* ${message}
+• *My Name:* ${name}
+• *My Phone:* ${phone}
+• *Business Name:* ${shopName}
+• *Business Type:* ${sector}
+• *My Requirements:* ${message}
 
 Looking forward to discussing the design concept and pricing outline with ZARO!`;
 
@@ -750,14 +750,14 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
     
     ordersListContainer.innerHTML = sortedOrders.map(order => {
       let statusClass = 'status-draft';
-      let statusLabel = 'ΓÜí Initial Draft';
+      let statusLabel = '⚡ Initial Draft';
       
       if (order.status === 'development') {
         statusClass = 'status-dev';
-        statusLabel = '≡ƒöº In Development';
+        statusLabel = '🔨 In Development';
       } else if (order.status === 'launched') {
         statusClass = 'status-launched';
-        statusLabel = 'Γ£à Launched Store';
+        statusLabel = '✅ Launched Store';
       }
       
       return `
@@ -777,7 +777,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
             </div>
             <div class="order-detail-item">
               <h5>Development Cost</h5>
-              <p>Γé╣${order.price.toLocaleString('en-IN')}</p>
+              <p>₹${order.price.toLocaleString('en-IN')}</p>
             </div>
             <div class="order-detail-item">
               <h5>Est. Delivery</h5>
@@ -832,7 +832,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
     await checkActiveSession();
     
     showToast(
-      '≡ƒÜÇ Project Draft Placed!', 
+      '🚀 Project Draft Placed!', 
       `Your custom ${category} storefront design (ID: ${randId}) is now active in your tracker.`, 
       'success'
     );
