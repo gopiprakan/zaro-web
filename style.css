@@ -6,7 +6,7 @@
 ================================================================
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 /* --- CUSTOM PROPERTIES & THEMES --- */
 :root {
@@ -299,17 +299,19 @@ header {
   left: 0;
   width: 100%;
   z-index: 100;
-  padding: 20px 0;
+  padding: 16px 0;
+  background: rgba(13, 17, 23, 0.75); /* Dark background #0D1117 with transparency */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   transition: all var(--transition-smooth);
 }
 
 header.scrolled {
   padding: 12px 0;
-  background: var(--header-glass);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border-color);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+  background: rgba(13, 17, 23, 0.92);
+  border-bottom: 1px solid rgba(81, 226, 245, 0.2);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
 }
 
 .header-container {
@@ -322,78 +324,95 @@ header.scrolled {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 1.8rem;
-  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-family: 'Inter', sans-serif;
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: var(--text-primary);
+  color: #ffffff !important;
 }
 
-.logo-img {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-  filter: drop-shadow(0 4px 8px rgba(0, 242, 254, 0.35));
+.logo-icon {
+  width: 32px;
+  height: 32px;
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.logo:hover .logo-img {
+.logo:hover .logo-icon {
   transform: rotate(-10deg) scale(1.1);
-}
-
-.logo span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-md);
-  background: var(--primary-gradient);
-  color: white;
-  font-weight: 800;
-  font-size: 1.4rem;
-  box-shadow: 0 8px 16px -4px var(--primary-glow);
 }
 
 nav {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 24px;
 }
 
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 20px;
 }
 
 .nav-link {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--text-secondary);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7) !important;
   position: relative;
-  padding: 8px 0;
+  padding: 6px 0;
+  transition: opacity var(--transition-fast), color var(--transition-fast);
 }
+
 .nav-link::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  bottom: -4px;
   left: 0;
   width: 0%;
   height: 2px;
-  background: var(--primary-gradient);
+  background: #51e2f5; /* Subtle teal accent underline */
   transition: width var(--transition-fast);
   border-radius: var(--radius-full);
 }
+
 .nav-link:hover {
-  color: var(--text-primary);
+  color: #ffffff !important;
+  opacity: 1 !important;
 }
-.nav-link:hover::after, .nav-link.active::after {
+
+.nav-link:hover::after, 
+.nav-link.active::after {
   width: 100%;
 }
+
 .nav-link.active {
-  color: var(--text-primary);
-  font-weight: 600;
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+.nav-theme-toggle-li {
+  display: flex;
+  align-items: center;
+}
+
+.theme-toggle-nav {
+  background: none;
+  border: none;
+  outline: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.15rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  transition: color var(--transition-fast), opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.theme-toggle-nav:hover {
+  color: #51e2f5;
+  opacity: 1;
+  transform: rotate(15deg) scale(1.15);
 }
 
 .header-actions {
@@ -402,31 +421,66 @@ nav {
   gap: 16px;
 }
 
-/* Theme Toggle Button */
-.theme-toggle {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md);
-  background: var(--bg-glass);
-  border: 1px solid var(--border-color);
+/* User Profile & Login Navigation Links */
+.btn-login-nav {
+  background: none;
+  border: none;
+  outline: none;
+  color: #ffffff !important;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 8px;
   cursor: pointer;
-  font-size: 1.2rem;
+  opacity: 0.8;
+  padding: 8px 12px;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.btn-login-nav:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.btn-login-nav i {
+  font-size: 1.1rem;
+}
+
+.btn-get-started-nav {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #ffffff !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  background: transparent;
+  padding: 10px 22px;
+  border-radius: 50px; /* Rounded pill border outline */
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: all var(--transition-smooth);
 }
-.theme-toggle:hover {
-  transform: rotate(15deg) scale(1.05);
-  border-color: var(--primary-color);
-  background: var(--bg-tertiary);
+
+.btn-get-started-nav:hover {
+  border-color: #51e2f5;
+  background: rgba(81, 226, 245, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(81, 226, 245, 0.15);
 }
 
 .mobile-menu-btn {
   display: none;
-  font-size: 1.5rem;
-  color: var(--text-primary);
+  font-size: 1.6rem;
+  color: #ffffff !important;
   cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.mobile-menu-btn:hover {
+  color: #51e2f5;
 }
 
 /* --- HERO SECTION --- */
@@ -2173,49 +2227,14 @@ footer {
   }
 }
 
-@media (max-width: 768px) {
-  /* Compact Header styling on mobile view to prevent extra vertical length & wrapping */
-  header {
-    padding: 12px 0 !important;
-  }
-  
-  .logo {
-    font-size: 1.4rem !important;
-    gap: 8px !important;
-  }
-  
-  .logo-img {
-    width: 32px !important;
-    height: 32px !important;
-  }
-  
-  .header-actions {
-    gap: 12px !important;
-  }
-  
-  #header-login-btn {
-    padding: 8px 14px !important;
-    font-size: 0.8rem !important;
-  }
-  
-  .theme-toggle {
-    width: 38px !important;
-    height: 38px !important;
-    font-size: 1.1rem !important;
-  }
-  
-  .header-avatar-circle {
-    width: 36px !important;
-    height: 36px !important;
-    font-size: 0.85rem !important;
+/* --- TABLET/SMALL DESKTOP RESPONSIVE DRAWER --- */
+@media (max-width: 1150px) {
+  /* Show hamburger button and slide-in drawer layout at tablet/small desktop widths */
+  .mobile-menu-btn {
+    display: block !important;
+    z-index: 100;
   }
 
-  /* Hide header CTA on mobile to prevent alignment warp */
-  .header-actions .btn-secondary {
-    display: none;
-  }
-
-  /* Premium Sliding Navigation Drawer instead of display:none popup */
   nav {
     display: flex;
     position: fixed;
@@ -2223,8 +2242,8 @@ footer {
     right: 0;
     width: 280px;
     height: 100vh;
-    background: var(--bg-secondary);
-    border-left: 1px solid var(--border-color);
+    background: #0d1622;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
     flex-direction: column;
     padding: 100px 32px;
     gap: 40px;
@@ -2247,10 +2266,47 @@ footer {
     width: 100%;
     align-items: flex-start;
   }
+
+  .nav-theme-toggle-li {
+    margin-left: 0 !important;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Compact Header styling on mobile view to prevent extra vertical length & wrapping */
+  header {
+    padding: 12px 0 !important;
+  }
   
-  .mobile-menu-btn {
-    display: block;
-    z-index: 100;
+  .logo {
+    font-size: 1.4rem !important;
+    gap: 8px !important;
+  }
+  
+  .logo-icon {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  
+  .header-actions {
+    gap: 12px !important;
+  }
+  
+  .btn-login-nav {
+    padding: 6px 10px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .header-avatar-circle {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 0.85rem !important;
+  }
+
+  /* Hide header CTA on mobile to prevent alignment warp */
+  .btn-get-started-nav {
+    display: none !important;
   }
 
   /* Add extra padding to footer bottom to make room for sticky bottom widgets on mobile */
@@ -3040,16 +3096,6 @@ body.no-scroll {
   pointer-events: auto;
 }
 
-/* Specific selector to hide only the Get Started button on Mobile, keeping the Login button visible! */
-@media (max-width: 768px) {
-  .header-actions .btn-secondary {
-    display: inline-flex;
-  }
-  .header-actions > .btn-secondary {
-    display: none !important;
-  }
-}
-
 /* Small Screens & Mobile Sizing Polish */
 @media (max-width: 480px) {
   .container {
@@ -3061,9 +3107,9 @@ body.no-scroll {
     gap: 8px !important;
   }
 
-  .logo-img {
-    width: 32px !important; /* Scale brand icon down in mobile header */
-    height: 32px !important;
+  .logo-icon {
+    width: 28px !important; /* Scale brand icon down in mobile header */
+    height: 28px !important;
   }
 
   .section-header h2 {
@@ -3081,8 +3127,8 @@ body.no-scroll {
     gap: 12px !important;
   }
 
-  #header-login-btn {
-    padding: 8px 14px !important; /* Compact button styles for mobile navbar */
+  .btn-login-nav {
+    padding: 6px 12px !important; /* Compact button styles for mobile navbar */
     font-size: 0.8rem !important;
   }
 }

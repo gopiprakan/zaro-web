@@ -31,7 +31,17 @@
     <div class="container header-container">
       <!-- Brand Logo -->
       <a href="#" class="logo">
-        <img src="logo.png" alt="ZARO Logo" class="logo-img">ZARO
+        <svg class="logo-icon" viewBox="0 0 32 32" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#51e2f5" />
+              <stop offset="100%" stop-color="#9df9ef" />
+            </linearGradient>
+          </defs>
+          <rect x="2" y="2" width="28" height="28" rx="8" fill="rgba(81, 226, 245, 0.15)" stroke="url(#logo-grad)" stroke-width="2" />
+          <path d="M10 10h12L10 22h12" stroke="url(#logo-grad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+        </svg>
+        ZARCO
       </a>
 
       <!-- Nav Links -->
@@ -46,18 +56,19 @@
           <li><a href="#reviews" class="nav-link">Reviews</a></li>
           <li><a href="#faq" class="nav-link">FAQ</a></li>
           <li><a href="#contact" class="nav-link">Contact</a></li>
+          <li class="nav-theme-toggle-li">
+            <button id="theme-toggle-btn" class="theme-toggle-nav" aria-label="Toggle Theme">
+              <i class="ri-sun-line" id="theme-icon-element"></i>
+            </button>
+          </li>
         </ul>
       </nav>
 
-      <!-- Header CTA & Theme Toggle -->
+      <!-- Header CTA Actions -->
       <div class="header-actions">
-        <button id="theme-toggle-btn" class="theme-toggle" aria-label="Toggle Theme">
-          <i class="ri-sun-line" id="theme-icon-element"></i>
-        </button>
-
         <!-- Login & Profile Actions -->
         <div id="auth-actions-wrapper" style="display: flex; align-items: center; gap: 12px;">
-          <button id="header-login-btn" class="btn btn-secondary" style="padding: 10px 20px; font-size: 0.9rem;">
+          <button id="header-login-btn" class="btn-login-nav">
             <i class="ri-user-line"></i> Login
           </button>
 
@@ -70,7 +81,7 @@
           </button>
         </div>
 
-        <a href="#contact" class="btn btn-secondary" style="padding: 10px 20px; font-size: 0.9rem;">Get Started</a>
+        <a href="#contact" class="btn-get-started-nav">Get Started</a>
         <i class="ri-menu-line mobile-menu-btn" id="mobile-toggle"></i>
       </div>
     </div>
