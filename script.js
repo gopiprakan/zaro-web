@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update Slider Labels in UI
     labelFootfall.textContent = footfall;
-    labelSpend.textContent = `₹${spend.toLocaleString('en-IN')}`;
+    labelSpend.textContent = `Γé╣${spend.toLocaleString('en-IN')}`;
 
     // Calculation Models
     let searchMultiplier = 1.5;
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const annualRevenueGain = monthlyRevenueGain * 12;
 
     if (isInitial === true) {
-      resultAnnualRevenue.textContent = `₹${annualRevenueGain.toLocaleString('en-IN')}`;
+      resultAnnualRevenue.textContent = `Γé╣${annualRevenueGain.toLocaleString('en-IN')}`;
       resultWebVisitors.textContent = `${projectedMonthlyVisitors.toLocaleString()}+`;
       resultNewOrders.textContent = `${newMonthlyOrders} New Orders`;
       currentRevValue = annualRevenueGain;
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentRevValue, 
         annualRevenueGain, 
         400, 
-        v => `₹${v.toLocaleString('en-IN')}`, 
+        v => `Γé╣${v.toLocaleString('en-IN')}`, 
         revRef, 
         v => { currentRevValue = v; revAnimId = revRef.id; }
       );
@@ -406,14 +406,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const message = document.getElementById('form-message').value;
 
     // Build elegant, structured text for WhatsApp message
-    const formattedMessage = `Hello ZARO! 🚀
+    const formattedMessage = `Hello ZARO! ≡ƒÜÇ
 I want to take my offline shop online. Here are my details:
 
-• *My Name:* ${name}
-• *My Phone:* ${phone}
-• *Business Name:* ${shopName}
-• *Business Type:* ${sector}
-• *My Requirements:* ${message}
+ΓÇó *My Name:* ${name}
+ΓÇó *My Phone:* ${phone}
+ΓÇó *Business Name:* ${shopName}
+ΓÇó *Business Type:* ${sector}
+ΓÇó *My Requirements:* ${message}
 
 Looking forward to discussing the design concept and pricing outline with ZARO!`;
 
@@ -581,7 +581,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       firebase.initializeApp(firebaseConfig);
     }
     auth = firebase.auth();
-    db = firebase.firestore();
+    // db (Firestore) not initialised — Auth only at this stage
   }
 
   let activeUser = null;
@@ -643,19 +643,12 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
           let username = user.displayName || email.split('@')[0];
           let shopName = "My Zaro Storefront";
           
-          // Attempt to query the profiles collection in Firestore
-          try {
-            const docSnap = await db.collection('profiles').doc(user.uid).get();
-            if (docSnap.exists) {
-              const profile = docSnap.data();
-              username = profile.username || username;
-              if (profile.shop_name) {
-                shopName = profile.shop_name;
-              }
-            }
-          } catch (dbErr) {
-            console.warn("Could not query profiles collection, falling back to auth metadata:", dbErr.message);
-          }
+          // Firestore profile lookup skipped (not enabled at this stage)
+          // username and shopName fall back to Auth displayName and localStorage
+          const storedName = localStorage.getItem(`zaro-name-${user.uid}`);
+          const storedShop = localStorage.getItem(`zaro-shop-${user.uid}`);
+          if (storedName) username = storedName;
+          if (storedShop) shopName = storedShop;
           
           // Retrieve local-only properties (avatar and orders list)
           const storedAvatar = localStorage.getItem(`zaro-avatar-${email}`) || "";
@@ -757,14 +750,14 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
     
     ordersListContainer.innerHTML = sortedOrders.map(order => {
       let statusClass = 'status-draft';
-      let statusLabel = '⚡ Initial Draft';
+      let statusLabel = 'ΓÜí Initial Draft';
       
       if (order.status === 'development') {
         statusClass = 'status-dev';
-        statusLabel = '🔧 In Development';
+        statusLabel = '≡ƒöº In Development';
       } else if (order.status === 'launched') {
         statusClass = 'status-launched';
-        statusLabel = '✅ Launched Store';
+        statusLabel = 'Γ£à Launched Store';
       }
       
       return `
@@ -784,7 +777,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
             </div>
             <div class="order-detail-item">
               <h5>Development Cost</h5>
-              <p>₹${order.price.toLocaleString('en-IN')}</p>
+              <p>Γé╣${order.price.toLocaleString('en-IN')}</p>
             </div>
             <div class="order-detail-item">
               <h5>Est. Delivery</h5>
@@ -839,7 +832,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
     await checkActiveSession();
     
     showToast(
-      '🚀 Project Draft Placed!', 
+      '≡ƒÜÇ Project Draft Placed!', 
       `Your custom ${category} storefront design (ID: ${randId}) is now active in your tracker.`, 
       'success'
     );
@@ -1059,17 +1052,9 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
           displayName: name
         });
         
-        // Save profile data into profiles collection in Firestore
-        try {
-          await db.collection('profiles').doc(user.uid).set({
-            username: name,
-            email: email,
-            shop_name: shop,
-            updated_at: new Date().toISOString()
-          }, { merge: true });
-        } catch (dbErr) {
-          console.warn("Profiles collection update skipped/failed:", dbErr.message);
-        }
+        // Save name & shop to localStorage (Firestore not enabled at this stage)
+        localStorage.setItem(`zaro-name-${user.uid}`, name);
+        localStorage.setItem(`zaro-shop-${user.uid}`, shop);
         
         // Initialize default orders list for tracking
         const initialOrders = [
@@ -1091,7 +1076,12 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
         closeAuthModal();
         await checkActiveSession();
       } catch (err) {
-        showToast('Registration Error', err.message, 'danger');
+        const code = err.code || '';
+        let errMsg = 'Registration failed. Please try again.';
+        if (code === 'auth/email-already-in-use') errMsg = 'User already exists. Please sign in.';
+        else if (code === 'auth/invalid-email') errMsg = 'Please enter a valid email address.';
+        else if (code === 'auth/weak-password') errMsg = 'Password must be at least 6 characters.';
+        showToast('Registration Error', errMsg, 'danger');
       } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalText;
@@ -1138,7 +1128,15 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
         closeAuthModal();
         await checkActiveSession();
       } catch (err) {
-        showToast('Auth Failure', err.message, 'danger');
+        const code = err.code || '';
+        let errMsg = 'Login failed. Please try again.';
+        if (
+          code === 'auth/wrong-password' ||
+          code === 'auth/user-not-found' ||
+          code === 'auth/invalid-credential' ||
+          code === 'auth/invalid-email'
+        ) { errMsg = 'Email or password is incorrect.'; }
+        showToast('Auth Failure', errMsg, 'danger');
       } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalText;
@@ -1173,17 +1171,8 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
           displayName: newName
         });
         
-        if (activeUser && activeUser.id) {
-          try {
-            await db.collection('profiles').doc(activeUser.id).set({
-              username: newName,
-              email: activeUser.email,
-              updated_at: new Date().toISOString()
-            }, { merge: true });
-          } catch (dbErr) {
-            console.warn("Profiles collection update skipped/failed:", dbErr.message);
-          }
-        }
+        // Save name to localStorage (Firestore not enabled at this stage)
+        localStorage.setItem(`zaro-name-${user.uid}`, newName);
         
         showToast('Profile Updated', 'Your Display Name has been saved successfully!', 'success');
         await checkActiveSession();
