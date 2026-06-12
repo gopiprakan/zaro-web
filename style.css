@@ -2314,28 +2314,11 @@ footer {
     padding-bottom: 80px !important;
   }
 
-  /* Horizontal floating widget bar style on tablet/mobile screens */
+  /* Floating widget bar style on tablet/mobile screens - keeps round button icons only */
   .floating-widget-bar {
-    flex-direction: row !important;
     bottom: 20px !important;
     right: 20px !important;
     gap: 10px !important;
-  }
-  
-  .widget-btn {
-    width: auto !important;
-    height: 44px !important;
-    border-radius: var(--radius-md) !important;
-    padding: 0 16px !important;
-    font-size: 1.1rem !important;
-    gap: 8px !important;
-  }
-  
-  .widget-text {
-    display: inline !important;
-    font-size: 0.9rem !important;
-    font-weight: 600 !important;
-    font-family: var(--font-heading) !important;
   }
   
   /* Flatten 3D tilt on mobile for proper alignment */
