@@ -1091,14 +1091,18 @@
   <!-- --- TOAST ALERTS CONTAINER --- -->
   <div id="toast-container" class="toast-wrapper"></div>
 
-  <!-- Firebase Integration (Compat SDK) -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-  <script src="firebase-config.js"></script>
+  <!-- Import Map for Firebase Modular SDK -->
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"
+      }
+    }
+  </script>
 
-  <!-- Link Custom Script -->
-  <script src="script.js"></script>
+  <!-- Link Custom Script as a Module -->
+  <script type="module" src="script.js"></script>
 </body>
 
 </html>

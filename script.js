@@ -6,6 +6,15 @@
 ================================================================
 */
 
+import { auth } from './firebase-config.js';
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  updateProfile
+} from 'firebase/auth';
+
 document.addEventListener('DOMContentLoaded', () => {
 
   /* --- 1. DARK & LIGHT THEME ENGINE --- */
@@ -560,29 +569,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
 
   /* --- 11. FIREBASE INITIALIZATION & SESSION MANAGEMENT --- */
   
-  const firebaseConfigured = window.FIREBASE_API_KEY && 
-                             window.FIREBASE_PROJECT_ID && 
-                             !window.FIREBASE_API_KEY.includes('your_') &&
-                             window.firebase;
-
-  let auth = null;
-  let db = null;
-
-  if (firebaseConfigured) {
-    const firebaseConfig = {
-      apiKey: window.FIREBASE_API_KEY,
-      authDomain: window.FIREBASE_AUTH_DOMAIN,
-      projectId: window.FIREBASE_PROJECT_ID,
-      storageBucket: window.FIREBASE_STORAGE_BUCKET,
-      messagingSenderId: window.FIREBASE_MESSAGING_SENDER_ID,
-      appId: window.FIREBASE_APP_ID
-    };
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    auth = firebase.auth();
-    // db (Firestore) not initialised — Auth only at this stage
-  }
+  const firebaseConfigured = auth && auth.app && auth.app.options && auth.app.options.apiKey && !auth.app.options.apiKey.includes('your_');
 
   let activeUser = null;
 
@@ -1045,10 +1032,10 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       submitBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Registering...';
       
       try {
-        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         
-        await user.updateProfile({
+        await updateProfile(user, {
           displayName: name
         });
         
@@ -1120,7 +1107,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       submitBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Signing In...';
       
       try {
-        await auth.signInWithEmailAndPassword(email, password);
+        await signInWithEmailAndPassword(auth, email, password);
         
         showToast('Signed In Successfully!', 'Welcome back to ZARO Client Workspace!', 'success');
         
@@ -1167,7 +1154,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
         const user = auth.currentUser;
         if (!user) throw new Error("No active user found!");
 
-        await user.updateProfile({
+        await updateProfile(user, {
           displayName: newName
         });
         
@@ -1232,7 +1219,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       logoutBtn.disabled = true;
       logoutBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Signing Out...';
       try {
-        await auth.signOut();
+        await signOut(auth);
         await checkActiveSession();
         closeProfileDrawer();
         showToast('Logged Out', `Goodbye, ${userName}! Have a wonderful day!`, 'warning');
@@ -1271,7 +1258,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
 
   // Bind session updates
   if (firebaseConfigured && auth) {
-    auth.onAuthStateChanged(async (user) => {
+    onAuthStateChanged(auth, async (user) => {
       console.log("Firebase Auth state changed:", user);
       await checkActiveSession();
     });
