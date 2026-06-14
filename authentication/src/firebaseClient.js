@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -20,13 +21,15 @@ const isConfigured =
 
 let app = null;
 let auth = null;
+let db = null;
 
 if (isConfigured) {
   app = initializeApp(firebaseConfig);
   auth = getAuth(app);
+  db = getFirestore(app);
 }
 
-export { auth, isConfigured };
+export { auth, db, isConfigured };
 
 export const checkFirebaseConnection = () => {
   return {
