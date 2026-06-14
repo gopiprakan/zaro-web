@@ -12,7 +12,9 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  updateProfile
+  updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup
 } from 'firebase/auth';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -1130,6 +1132,42 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       }
     }
   });
+
+  // Google Sign-In Handler
+  const googleSignInBtn = document.getElementById('google-signin-btn');
+  if (googleSignInBtn) {
+    googleSignInBtn.addEventListener('click', async () => {
+      if (!firebaseConfigured || !auth) {
+        showToast('Auth Error', 'Firebase is not configured for Google Sign-In.', 'danger');
+        return;
+      }
+      
+      const provider = new GoogleAuthProvider();
+      const originalText = googleSignInBtn.innerHTML;
+      googleSignInBtn.disabled = true;
+      googleSignInBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Loading...';
+      
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        
+        if (user.displayName) {
+          localStorage.setItem(`zaro-name-${user.uid}`, user.displayName);
+        }
+        
+        showToast('Signed In Successfully!', `Welcome to ZARO, ${user.displayName || 'User'}!`, 'success');
+        
+        closeAuthModal();
+        await checkActiveSession();
+      } catch (err) {
+        console.error(err);
+        showToast('Auth Failure', 'Google Sign-In failed or was cancelled.', 'danger');
+      } finally {
+        googleSignInBtn.disabled = false;
+        googleSignInBtn.innerHTML = originalText;
+      }
+    });
+  }
 
   /* --- 15. PROFILE DETAIL SAVING & AVATAR UPLOAD --- */
 
