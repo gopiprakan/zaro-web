@@ -26,6 +26,24 @@ function App() {
   const [signUpPassword, setSignUpPassword] = useState('');
   const [signUpConfirmPassword, setSignUpConfirmPassword] = useState('');
 
+  // Theme state synced with landing page preference
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('zaro-theme');
+    if (saved) return saved;
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return systemPrefersDark ? 'dark' : 'light';
+  });
+
+  // Apply theme to document element
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('zaro-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
+
   const { isConfigured } = checkFirebaseConnection();
 
   // ── Watch Firebase auth state ──
@@ -208,17 +226,41 @@ function App() {
                   ZARO
                 </span>
               </div>
-              <span style={{
-                background: 'rgba(16, 185, 129, 0.1)',
-                border: '1px solid rgba(16, 185, 129, 0.25)',
-                color: '#6ee7b7',
-                padding: '4px 12px',
-                borderRadius: '999px',
-                fontSize: '0.78rem',
-                fontWeight: 600
-              }}>
-                ● Authenticated
-              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <button
+                  onClick={toggleTheme}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--text-primary)',
+                    cursor: 'pointer',
+                    fontSize: '1.25rem',
+                    padding: '6px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '50%',
+                    transition: 'background-color 0.2s',
+                    width: '36px',
+                    height: '36px'
+                  }}
+                  title="Toggle Theme"
+                  aria-label="Toggle Theme"
+                >
+                  <i className={theme === 'dark' ? 'ri-sun-line' : 'ri-moon-line'}></i>
+                </button>
+                <span style={{
+                  background: 'rgba(16, 185, 129, 0.1)',
+                  border: '1px solid rgba(16, 185, 129, 0.25)',
+                  color: 'var(--accent-color)',
+                  padding: '4px 12px',
+                  borderRadius: '999px',
+                  fontSize: '0.78rem',
+                  fontWeight: 600
+                }}>
+                  ● Authenticated
+                </span>
+              </div>
             </div>
 
             {/* Avatar & Welcome */}
@@ -309,8 +351,33 @@ function App() {
         <div className="auth-page">
           <div
             className="auth-card"
-            style={{ maxWidth: isSignUp ? '480px' : '440px', transition: 'max-width 0.3s ease' }}
+            style={{ maxWidth: isSignUp ? '480px' : '440px', transition: 'max-width 0.3s ease', position: 'relative' }}
           >
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              style={{
+                position: 'absolute',
+                top: '24px',
+                right: '24px',
+                background: 'var(--bg-tertiary)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '50%',
+                width: '36px',
+                height: '36px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--text-primary)',
+                cursor: 'pointer',
+                transition: 'all var(--transition-fast)'
+              }}
+              title="Toggle Theme"
+              aria-label="Toggle Theme"
+            >
+              <i className={theme === 'dark' ? 'ri-sun-line' : 'ri-moon-line'}></i>
+            </button>
+
             {/* Logo */}
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center',
