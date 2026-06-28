@@ -1500,6 +1500,7 @@ nav {
   border-radius: 50%;
   bottom: -100px;
   right: -100px;
+  pointer-events: none;
 }
 
 .info-header h3 {
@@ -1551,6 +1552,8 @@ nav {
 .info-text a {
   font-size: 1.1rem;
   font-weight: 600;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .info-text a:hover {
@@ -2301,22 +2304,38 @@ footer {
     /* Fix empty gaps on mobile */
   }
 
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 1250px) {
+  .contact-container {
+    gap: 30px;
+  }
+
+  .contact-info-panel,
+  .contact-form-panel {
+    padding: 40px 30px;
+  }
+
+  .info-list {
+    margin: 32px 0;
+    gap: 20px;
+  }
+}
+
+/* --- TABLET/SMALL DESKTOP RESPONSIVE DRAWER --- */
+@media (max-width: 1150px) {
+
   .contact-container {
     grid-template-columns: 1fr;
   }
 
   .contact-info-panel,
   .contact-form-panel {
-    padding: 32px 24px;
+    padding: 40px 24px;
   }
-
-  .footer-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-/* --- TABLET/SMALL DESKTOP RESPONSIVE DRAWER --- */
-@media (max-width: 1150px) {
 
   /* Show hamburger button and slide-in drawer layout at tablet/small desktop widths */
   .mobile-menu-btn {
