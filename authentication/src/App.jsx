@@ -5,6 +5,10 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
+  sendPasswordResetEmail,
+  updateProfile,
 } from 'firebase/auth';
 
 function App() {
@@ -22,9 +26,24 @@ function App() {
   const [loginPassword, setLoginPassword] = useState('');
 
   // Sign-up fields
+  const [signUpName, setSignUpName] = useState('');
   const [signUpEmail, setSignUpEmail] = useState('');
   const [signUpPassword, setSignUpPassword] = useState('');
   const [signUpConfirmPassword, setSignUpConfirmPassword] = useState('');
+
+  // Password visibility toggles
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showSignUpPassword, setShowSignUpPassword] = useState(false);
+  const [showSignUpConfirm, setShowSignUpConfirm] = useState(false);
+
+  // Forgot password state
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotMessage, setForgotMessage] = useState('');
+  const [forgotLoading, setForgotLoading] = useState(false);
+
+  // Google sign-in loading
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   // Theme state synced with landing page preference
   const [theme, setTheme] = useState(() => {
@@ -100,6 +119,7 @@ function App() {
       await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
       setLoginEmail('');
       setLoginPassword('');
+      setShowLoginPassword(false);
     } catch (err) {
       setAuthError(getAuthErrorMessage(err, 'login'));
     } finally {
@@ -127,11 +147,20 @@ function App() {
 
     setFormLoading(true);
     try {
-      await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword);
+      const userCredential = await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword);
+      
+      // Set display name if provided
+      if (signUpName.trim()) {
+        await updateProfile(userCredential.user, { displayName: signUpName.trim() });
+      }
+      
       // onAuthStateChanged will automatically set userData → show dashboard
+      setSignUpName('');
       setSignUpEmail('');
       setSignUpPassword('');
       setSignUpConfirmPassword('');
+      setShowSignUpPassword(false);
+      setShowSignUpConfirm(false);
     } catch (err) {
       setAuthError(getAuthErrorMessage(err, 'signup'));
     } finally {
@@ -158,6 +187,50 @@ function App() {
       window.location.href = 'http://127.0.0.1:8080';
     } else {
       window.location.href = '../index.html';
+    }
+  };
+
+  // ── Handle Google Sign-In ──
+  const handleGoogleSignIn = async () => {
+    if (!isConfigured || !auth) {
+      setAuthError('Firebase is not configured for Google Sign-In.');
+      return;
+    }
+    setGoogleLoading(true);
+    setAuthError('');
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+    } catch (err) {
+      if (err.code !== 'auth/popup-closed-by-user') {
+        setAuthError('Google Sign-In failed. Please try again.');
+      }
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
+
+  // ── Handle Forgot Password ──
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setForgotMessage('');
+    if (!forgotEmail.trim()) {
+      setForgotMessage('Please enter your email address.');
+      return;
+    }
+    if (!isConfigured || !auth) {
+      setForgotMessage('Firebase is not configured.');
+      return;
+    }
+    setForgotLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, forgotEmail.trim());
+      setForgotMessage('✓ Password reset email sent! Check your inbox.');
+    } catch (err) {
+      // For security, show success even if user doesn't exist
+      setForgotMessage('✓ If an account exists, a reset link has been sent.');
+    } finally {
+      setForgotLoading(false);
     }
   };
 
@@ -273,9 +346,9 @@ function App() {
                 marginBottom: '16px',
                 boxShadow: '0 8px 24px -4px var(--primary-glow)'
               }}>
-                {(userData.email || 'U').substring(0, 2).toUpperCase()}
+                {(userData.displayName || userData.email || 'U').substring(0, 2).toUpperCase()}
               </div>
-              <h2 style={{ marginBottom: '6px' }}>Welcome to Dashboard</h2>
+              <h2 style={{ marginBottom: '6px' }}>Welcome{userData.displayName ? `, ${userData.displayName}` : ''}</h2>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
                 You are signed in as <strong style={{ color: 'var(--text-primary)' }}>{userData.email}</strong>
               </p>
@@ -396,14 +469,74 @@ function App() {
             </div>
 
             <div className="auth-header">
-              <h2>{isSignUp ? 'Create Your Account' : 'Welcome Back'}</h2>
-              <p>{isSignUp
-                ? 'Sign up to access your ZARO storefront'
-                : 'Log in to your ZARO client dashboard'}
+              <h2>{showForgotPassword ? 'Reset Password' : (isSignUp ? 'Create Your Account' : 'Welcome Back')}</h2>
+              <p>{showForgotPassword
+                ? 'Enter your email to receive a password reset link'
+                : (isSignUp
+                  ? 'Sign up to access your ZARO storefront'
+                  : 'Log in to your ZARO client dashboard')}
               </p>
             </div>
 
-            {!isSignUp ? (
+            {/* Forgot Password Panel */}
+            {showForgotPassword ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label>Email Address</label>
+                  <div className="input-wrapper">
+                    <i className="ri-mail-line"></i>
+                    <input
+                      type="email"
+                      placeholder="name@shop.com"
+                      value={forgotEmail}
+                      onChange={(e) => { setForgotEmail(e.target.value); setForgotMessage(''); }}
+                      className="form-input"
+                      required
+                      autoComplete="email"
+                    />
+                  </div>
+                </div>
+
+                {forgotMessage && (
+                  <div style={{
+                    fontSize: '0.88rem',
+                    fontWeight: 500,
+                    padding: '12px 16px',
+                    borderRadius: 'var(--radius-md)',
+                    background: forgotMessage.startsWith('✓')
+                      ? 'rgba(16, 185, 129, 0.08)'
+                      : 'rgba(239, 68, 68, 0.08)',
+                    border: `1px solid ${forgotMessage.startsWith('✓')
+                      ? 'rgba(16, 185, 129, 0.2)'
+                      : 'rgba(239, 68, 68, 0.2)'}`,
+                    color: forgotMessage.startsWith('✓')
+                      ? 'var(--accent-color)'
+                      : '#fca5a5'
+                  }}>
+                    {forgotMessage}
+                  </div>
+                )}
+
+                <button
+                  onClick={handleForgotPassword}
+                  className="btn btn-primary"
+                  disabled={forgotLoading}
+                  style={{ width: '100%', padding: '14px' }}
+                >
+                  {forgotLoading ? <ButtonSpinner /> : (
+                    <><i className="ri-mail-send-line"></i> Send Reset Link</>
+                  )}
+                </button>
+
+                <button
+                  onClick={() => { setShowForgotPassword(false); setForgotMessage(''); }}
+                  className="btn btn-secondary"
+                  style={{ width: '100%', padding: '12px' }}
+                >
+                  <i className="ri-arrow-left-line"></i> Back to Login
+                </button>
+              </div>
+            ) : !isSignUp ? (
               /* ── LOGIN FORM ── */
               <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <div className="form-group">
@@ -427,15 +560,44 @@ function App() {
                   <div className="input-wrapper">
                     <i className="ri-lock-line"></i>
                     <input
-                      type="password"
+                      type={showLoginPassword ? 'text' : 'password'}
                       placeholder="••••••••"
                       value={loginPassword}
                       onChange={(e) => { setLoginPassword(e.target.value); setAuthError(''); }}
                       className="form-input"
                       required
                       autoComplete="current-password"
+                      style={{ paddingRight: '48px' }}
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowLoginPassword(!showLoginPassword)}
+                      style={{
+                        position: 'absolute', right: '12px',
+                        background: 'none', border: 'none',
+                        color: 'var(--text-muted)', cursor: 'pointer',
+                        fontSize: '1.15rem', padding: '4px',
+                        display: 'flex', alignItems: 'center'
+                      }}
+                      tabIndex={-1}
+                      aria-label="Toggle password visibility"
+                    >
+                      <i className={showLoginPassword ? 'ri-eye-line' : 'ri-eye-off-line'}></i>
+                    </button>
                   </div>
+                  <a
+                    onClick={(e) => { e.preventDefault(); setShowForgotPassword(true); setAuthError(''); setForgotMessage(''); setForgotEmail(loginEmail); }}
+                    style={{
+                      fontSize: '0.85rem', fontWeight: 500,
+                      color: 'var(--text-muted)', cursor: 'pointer',
+                      textAlign: 'right', marginTop: '4px', display: 'block',
+                      transition: 'color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-color)'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+                  >
+                    Forgot Password?
+                  </a>
                 </div>
 
                 {/* Inline error */}
@@ -455,10 +617,51 @@ function App() {
                     <><i className="ri-login-box-line"></i> Log In</>
                   )}
                 </button>
+
+                {/* Divider */}
+                <div style={{ display: 'flex', alignItems: 'center', margin: '14px 0 6px' }}>
+                  <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
+                  <span style={{ padding: '0 12px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>or</span>
+                  <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
+                </div>
+
+                {/* Google Sign-In */}
+                <button
+                  type="button"
+                  onClick={handleGoogleSignIn}
+                  className="btn btn-secondary"
+                  disabled={googleLoading}
+                  style={{
+                    width: '100%', padding: '12px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px'
+                  }}
+                >
+                  {googleLoading ? <ButtonSpinner /> : (
+                    <>
+                      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: '18px' }} />
+                      Sign in with Google
+                    </>
+                  )}
+                </button>
               </form>
             ) : (
               /* ── SIGN UP FORM ── */
               <form onSubmit={handleSignUp} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div className="form-group">
+                  <label>Full Name</label>
+                  <div className="input-wrapper">
+                    <i className="ri-user-line"></i>
+                    <input
+                      type="text"
+                      placeholder="e.g. Rajesh Kumar"
+                      value={signUpName}
+                      onChange={(e) => { setSignUpName(e.target.value); setAuthError(''); }}
+                      className="form-input"
+                      autoComplete="name"
+                    />
+                  </div>
+                </div>
+
                 <div className="form-group">
                   <label>Email Address</label>
                   <div className="input-wrapper">
@@ -481,7 +684,7 @@ function App() {
                     <div className="input-wrapper">
                       <i className="ri-lock-line"></i>
                       <input
-                        type="password"
+                        type={showSignUpPassword ? 'text' : 'password'}
                         placeholder="Min. 6 chars"
                         value={signUpPassword}
                         onChange={(e) => { setSignUpPassword(e.target.value); setAuthError(''); }}
@@ -489,7 +692,22 @@ function App() {
                         required
                         autoComplete="new-password"
                         minLength={6}
+                        style={{ paddingRight: '48px' }}
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowSignUpPassword(!showSignUpPassword)}
+                        style={{
+                          position: 'absolute', right: '12px',
+                          background: 'none', border: 'none',
+                          color: 'var(--text-muted)', cursor: 'pointer',
+                          fontSize: '1.15rem', padding: '4px',
+                          display: 'flex', alignItems: 'center'
+                        }}
+                        tabIndex={-1}
+                      >
+                        <i className={showSignUpPassword ? 'ri-eye-line' : 'ri-eye-off-line'}></i>
+                      </button>
                     </div>
                   </div>
                   <div className="form-group">
@@ -497,14 +715,29 @@ function App() {
                     <div className="input-wrapper">
                       <i className="ri-lock-check-line"></i>
                       <input
-                        type="password"
+                        type={showSignUpConfirm ? 'text' : 'password'}
                         placeholder="Re-enter"
                         value={signUpConfirmPassword}
                         onChange={(e) => { setSignUpConfirmPassword(e.target.value); setAuthError(''); }}
                         className="form-input"
                         required
                         autoComplete="new-password"
+                        style={{ paddingRight: '48px' }}
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowSignUpConfirm(!showSignUpConfirm)}
+                        style={{
+                          position: 'absolute', right: '12px',
+                          background: 'none', border: 'none',
+                          color: 'var(--text-muted)', cursor: 'pointer',
+                          fontSize: '1.15rem', padding: '4px',
+                          display: 'flex', alignItems: 'center'
+                        }}
+                        tabIndex={-1}
+                      >
+                        <i className={showSignUpConfirm ? 'ri-eye-line' : 'ri-eye-off-line'}></i>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -550,10 +783,37 @@ function App() {
                     <><i className="ri-user-add-line"></i> Create Account</>
                   )}
                 </button>
+
+                {/* Divider */}
+                <div style={{ display: 'flex', alignItems: 'center', margin: '14px 0 6px' }}>
+                  <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
+                  <span style={{ padding: '0 12px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>or</span>
+                  <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
+                </div>
+
+                {/* Google Sign-In */}
+                <button
+                  type="button"
+                  onClick={handleGoogleSignIn}
+                  className="btn btn-secondary"
+                  disabled={googleLoading}
+                  style={{
+                    width: '100%', padding: '12px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px'
+                  }}
+                >
+                  {googleLoading ? <ButtonSpinner /> : (
+                    <>
+                      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: '18px' }} />
+                      Sign up with Google
+                    </>
+                  )}
+                </button>
               </form>
             )}
 
             {/* Toggle between Login / Sign Up */}
+            {!showForgotPassword && (
             <div style={{
               borderTop: '1px solid var(--border-color)',
               paddingTop: '20px',
@@ -564,7 +824,7 @@ function App() {
                 {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
               </span>
               <a
-                onClick={() => { setIsSignUp(!isSignUp); setAuthError(''); }}
+                onClick={() => { setIsSignUp(!isSignUp); setAuthError(''); setShowForgotPassword(false); }}
                 style={{
                   color: 'var(--primary-color)',
                   cursor: 'pointer',
@@ -575,6 +835,7 @@ function App() {
                 {isSignUp ? 'Log In' : 'Sign Up'}
               </a>
             </div>
+            )}
 
             <div style={{ textAlign: 'center', marginTop: '16px' }}>
               <a

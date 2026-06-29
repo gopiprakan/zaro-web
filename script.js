@@ -14,7 +14,8 @@ import {
   onAuthStateChanged,
   updateProfile,
   GoogleAuthProvider,
-  signInWithPopup
+  signInWithPopup,
+  sendPasswordResetEmail
 } from 'firebase/auth';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -110,9 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentVisitorsValue = 0;
   let currentOrdersValue = 0;
   
-  let revAnimId = null;
-  let visitorsAnimId = null;
-  let ordersAnimId = null;
+  const revRef = { id: null };
+  const visitorsRef = { id: null };
+  const ordersRef = { id: null };
 
   // Optimized smooth cubic interpolation counter
   const animateCounter = (element, start, end, duration, formatFn, animIdRef, setRef) => {
@@ -178,7 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
       currentOrdersValue = newMonthlyOrders;
     } else {
       // Animate with micro-deceleration curve
-      const revRef = { id: revAnimId };
       animateCounter(
         resultAnnualRevenue, 
         currentRevValue, 
@@ -186,10 +186,9 @@ document.addEventListener('DOMContentLoaded', () => {
         400, 
         v => `₹${v.toLocaleString('en-IN')}`, 
         revRef, 
-        v => { currentRevValue = v; revAnimId = revRef.id; }
+        v => { currentRevValue = v; }
       );
 
-      const visitorsRef = { id: visitorsAnimId };
       animateCounter(
         resultWebVisitors, 
         currentVisitorsValue, 
@@ -197,10 +196,9 @@ document.addEventListener('DOMContentLoaded', () => {
         400, 
         v => `${v.toLocaleString()}+`, 
         visitorsRef, 
-        v => { currentVisitorsValue = v; visitorsAnimId = visitorsRef.id; }
+        v => { currentVisitorsValue = v; }
       );
 
-      const ordersRef = { id: ordersAnimId };
       animateCounter(
         resultNewOrders, 
         currentOrdersValue, 
@@ -208,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
         400, 
         v => `${v.toLocaleString()} New Orders`, 
         ordersRef, 
-        v => { currentOrdersValue = v; ordersAnimId = ordersRef.id; }
+        v => { currentOrdersValue = v; }
       );
     }
   };
@@ -902,9 +900,11 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   });
 
   // Hook 3: Consultation Form Submit integrates dynamic mock order!
-  const consultationFormElement = document.getElementById('consultation-form');
-  if (consultationFormElement) {
-    consultationFormElement.addEventListener('submit', () => {
+  // (Merged into the primary consultation form handler above to avoid duplicate listeners)
+  // Orders are placed silently when a logged-in user submits the consultation form
+  const originalConsultationSubmitHandler = consultationForm.onsubmit;
+  consultationForm.addEventListener('submit', () => {
+    if (activeUser) {
       const shopName = document.getElementById('form-shop-name').value;
       const sector = document.getElementById('form-business-type').value;
       
@@ -914,14 +914,11 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       if (sector.includes('Salon')) priceVal = 10000;
       if (sector.includes('Grocery')) priceVal = 18500;
       
-      // Trigger order silently
-      if (activeUser) {
-        setTimeout(() => {
-          placeOrder(`${shopName} Storefront mockup`, sector, priceVal);
-        }, 1500);
-      }
-    });
-  }
+      setTimeout(() => {
+        placeOrder(`${shopName} Storefront mockup`, sector, priceVal);
+      }, 1500);
+    }
+  });
 
   /* --- 14. AUTHENTICATION CONTROLLER FLOWS --- */
 
@@ -1365,5 +1362,81 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       });
     });
   }
+
+
+  /* --- 18. PASSWORD VISIBILITY TOGGLES --- */
+  const passwordToggleBtns = document.querySelectorAll('.password-toggle-btn');
+  passwordToggleBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.getAttribute('data-target');
+      const targetInput = document.getElementById(targetId);
+      if (!targetInput) return;
+      
+      const icon = btn.querySelector('i');
+      if (targetInput.type === 'password') {
+        targetInput.type = 'text';
+        icon.className = 'ri-eye-line';
+      } else {
+        targetInput.type = 'password';
+        icon.className = 'ri-eye-off-line';
+      }
+    });
+  });
+
+
+  /* --- 19. FORGOT PASSWORD FLOW --- */
+  const forgotPasswordLink = document.getElementById('forgot-password-link');
+  if (forgotPasswordLink) {
+    forgotPasswordLink.addEventListener('click', async (e) => {
+      e.preventDefault();
+      
+      const loginEmailInput = document.getElementById('login-email');
+      const email = loginEmailInput ? loginEmailInput.value.trim().toLowerCase() : '';
+      
+      if (!email) {
+        showToast('Email Required', 'Please enter your email address first, then click Forgot Password.', 'warning');
+        if (loginEmailInput) loginEmailInput.focus();
+        return;
+      }
+      
+      if (!firebaseConfigured || !auth) {
+        // Mock fallback — can't send real emails
+        showToast('Reset Sent!', `If an account exists for ${email}, a password reset link has been sent.`, 'success');
+        return;
+      }
+      
+      try {
+        await sendPasswordResetEmail(auth, email);
+        showToast('Reset Email Sent!', `A password reset link has been sent to ${email}. Check your inbox.`, 'success');
+      } catch (err) {
+        const code = err.code || '';
+        if (code === 'auth/user-not-found' || code === 'auth/invalid-email') {
+          // For security, show the same success message
+          showToast('Reset Sent!', `If an account exists for ${email}, a password reset link has been sent.`, 'success');
+        } else {
+          showToast('Error', 'Failed to send reset email. Please try again later.', 'danger');
+        }
+      }
+    });
+  }
+
+
+  /* --- 20. ESCAPE KEY TO CLOSE MODALS & DRAWERS --- */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      // Close auth modal if open
+      if (authModal && authModal.style.display !== 'none') {
+        closeAuthModal();
+      }
+      // Close profile drawer if open
+      if (profileDrawer && profileDrawer.style.display !== 'none') {
+        closeProfileDrawer();
+      }
+      // Close mobile menu if open
+      if (navMenu && navMenu.classList.contains('active')) {
+        toggleMobileMenu(true);
+      }
+    }
+  });
 
 });
