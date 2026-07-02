@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { auth, checkFirebaseConnection } from './firebaseClient';
 import {
   signInWithEmailAndPassword,
@@ -44,6 +44,9 @@ function App() {
 
   // Google sign-in loading
   const [googleLoading, setGoogleLoading] = useState(false);
+
+  // Form animation key — forces re-mount for transition
+  const [formKey, setFormKey] = useState(0);
 
   // Theme state synced with landing page preference
   const [theme, setTheme] = useState(() => {
@@ -234,12 +237,43 @@ function App() {
     }
   };
 
+  // ── Toggle form mode with animation ──
+  const switchForm = useCallback(() => {
+    setIsSignUp(prev => !prev);
+    setAuthError('');
+    setShowForgotPassword(false);
+    setFormKey(prev => prev + 1);
+  }, []);
+
   // ── Spinner inside button ──
   const ButtonSpinner = () => (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
       <span className="btn-spinner" />
       Processing...
     </span>
+  );
+
+  // ── Eye Toggle Button ──
+  const EyeToggle = ({ show, onToggle }) => (
+    <button
+      type="button"
+      onClick={onToggle}
+      style={{
+        position: 'absolute', right: '12px',
+        background: 'none', border: 'none',
+        color: 'var(--text-muted)', cursor: 'pointer',
+        fontSize: '1.1rem', padding: '4px',
+        display: 'flex', alignItems: 'center',
+        transition: 'color 0.2s',
+        zIndex: 1,
+      }}
+      onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-color)'}
+      onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+      tabIndex={-1}
+      aria-label="Toggle password visibility"
+    >
+      <i className={show ? 'ri-eye-line' : 'ri-eye-off-line'}></i>
+    </button>
   );
 
   // ── LOADING STATE ──
@@ -279,59 +313,37 @@ function App() {
         <div className="auth-page">
           <div className="auth-card dashboard-card" style={{ maxWidth: '520px' }}>
 
+            {/* Floating Particles */}
+            <div className="floating-particle"></div>
+            <div className="floating-particle"></div>
+            <div className="floating-particle"></div>
+
             {/* Top Bar */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              marginBottom: '32px',
-              paddingBottom: '20px',
+              marginBottom: '28px',
+              paddingBottom: '18px',
               borderBottom: '1px solid var(--border-color)'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{
-                  width: '36px', height: '36px', borderRadius: '10px',
-                  background: 'var(--primary-gradient)',
-                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                  fontWeight: 800, color: 'white', fontSize: '1.1rem'
-                }}>Z</span>
-                <span style={{ fontWeight: 700, fontSize: '1.1rem', fontFamily: 'var(--font-heading)' }}>
+                <span className="zaro-logo-badge">Z</span>
+                <span style={{ fontWeight: 800, fontSize: '1.15rem', fontFamily: 'var(--font-heading)', letterSpacing: '-0.02em' }}>
                   ZARO
                 </span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <button
                   onClick={toggleTheme}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: 'var(--text-primary)',
-                    cursor: 'pointer',
-                    fontSize: '1.25rem',
-                    padding: '6px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: '50%',
-                    transition: 'background-color 0.2s',
-                    width: '36px',
-                    height: '36px'
-                  }}
+                  className="theme-toggle-btn"
                   title="Toggle Theme"
                   aria-label="Toggle Theme"
                 >
                   <i className={theme === 'dark' ? 'ri-sun-line' : 'ri-moon-line'}></i>
                 </button>
-                <span style={{
-                  background: 'rgba(16, 185, 129, 0.1)',
-                  border: '1px solid rgba(16, 185, 129, 0.25)',
-                  color: 'var(--accent-color)',
-                  padding: '4px 12px',
-                  borderRadius: '999px',
-                  fontSize: '0.78rem',
-                  fontWeight: 600
-                }}>
-                  ● Authenticated
+                <span className="auth-status-badge">
+                  Authenticated
                 </span>
               </div>
             </div>
@@ -344,7 +356,7 @@ function App() {
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: '2rem', color: 'white', fontWeight: 800,
                 marginBottom: '16px',
-                boxShadow: '0 8px 24px -4px var(--primary-glow)'
+                boxShadow: '0 8px 28px -4px rgba(14, 165, 233, 0.35)'
               }}>
                 {(userData.displayName || userData.email || 'U').substring(0, 2).toUpperCase()}
               </div>
@@ -398,18 +410,7 @@ function App() {
               <a
                 href="#"
                 onClick={handleBackToHomepage}
-                style={{
-                  color: 'var(--text-muted)',
-                  textDecoration: 'none',
-                  fontSize: '0.85rem',
-                  fontWeight: 500,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  transition: 'color 0.2s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-color)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+                className="back-link"
               >
                 <i className="ri-arrow-left-line"></i> Back to Homepage
               </a>
@@ -424,27 +425,18 @@ function App() {
         <div className="auth-page">
           <div
             className="auth-card"
-            style={{ maxWidth: isSignUp ? '480px' : '440px', transition: 'max-width 0.3s ease', position: 'relative' }}
+            style={{ maxWidth: isSignUp ? '480px' : '440px', transition: 'max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1)', position: 'relative' }}
           >
+            {/* Floating Particles */}
+            <div className="floating-particle"></div>
+            <div className="floating-particle"></div>
+            <div className="floating-particle"></div>
+
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
-              style={{
-                position: 'absolute',
-                top: '24px',
-                right: '24px',
-                background: 'var(--bg-tertiary)',
-                border: '1px solid var(--border-color)',
-                borderRadius: '50%',
-                width: '36px',
-                height: '36px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--text-primary)',
-                cursor: 'pointer',
-                transition: 'all var(--transition-fast)'
-              }}
+              className="theme-toggle-btn"
+              style={{ position: 'absolute', top: '24px', right: '24px', zIndex: 2 }}
               title="Toggle Theme"
               aria-label="Toggle Theme"
             >
@@ -456,14 +448,8 @@ function App() {
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               gap: '10px', marginBottom: '28px'
             }}>
-              <span style={{
-                width: '38px', height: '38px', borderRadius: '10px',
-                background: 'var(--primary-gradient)',
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                fontWeight: 800, color: 'white', fontSize: '1.2rem',
-                boxShadow: '0 6px 16px -4px var(--primary-glow)'
-              }}>Z</span>
-              <span style={{ fontWeight: 800, fontSize: '1.4rem', fontFamily: 'var(--font-heading)' }}>
+              <span className="zaro-logo-badge">Z</span>
+              <span style={{ fontWeight: 800, fontSize: '1.4rem', fontFamily: 'var(--font-heading)', letterSpacing: '-0.02em' }}>
                 ZARO
               </span>
             </div>
@@ -480,7 +466,7 @@ function App() {
 
             {/* Forgot Password Panel */}
             {showForgotPassword ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div key="forgot" className="form-transition" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div className="form-group" style={{ marginBottom: 0 }}>
                   <label>Email Address</label>
                   <div className="input-wrapper">
@@ -498,21 +484,7 @@ function App() {
                 </div>
 
                 {forgotMessage && (
-                  <div style={{
-                    fontSize: '0.88rem',
-                    fontWeight: 500,
-                    padding: '12px 16px',
-                    borderRadius: 'var(--radius-md)',
-                    background: forgotMessage.startsWith('✓')
-                      ? 'rgba(16, 185, 129, 0.08)'
-                      : 'rgba(239, 68, 68, 0.08)',
-                    border: `1px solid ${forgotMessage.startsWith('✓')
-                      ? 'rgba(16, 185, 129, 0.2)'
-                      : 'rgba(239, 68, 68, 0.2)'}`,
-                    color: forgotMessage.startsWith('✓')
-                      ? 'var(--accent-color)'
-                      : '#fca5a5'
-                  }}>
+                  <div className={`forgot-message ${forgotMessage.startsWith('✓') ? 'success' : 'error'}`}>
                     {forgotMessage}
                   </div>
                 )}
@@ -538,7 +510,7 @@ function App() {
               </div>
             ) : !isSignUp ? (
               /* ── LOGIN FORM ── */
-              <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <form key={`login-${formKey}`} onSubmit={handleLogin} className="form-transition" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <div className="form-group">
                   <label>Email Address</label>
                   <div className="input-wrapper">
@@ -569,28 +541,14 @@ function App() {
                       autoComplete="current-password"
                       style={{ paddingRight: '48px' }}
                     />
-                    <button
-                      type="button"
-                      onClick={() => setShowLoginPassword(!showLoginPassword)}
-                      style={{
-                        position: 'absolute', right: '12px',
-                        background: 'none', border: 'none',
-                        color: 'var(--text-muted)', cursor: 'pointer',
-                        fontSize: '1.15rem', padding: '4px',
-                        display: 'flex', alignItems: 'center'
-                      }}
-                      tabIndex={-1}
-                      aria-label="Toggle password visibility"
-                    >
-                      <i className={showLoginPassword ? 'ri-eye-line' : 'ri-eye-off-line'}></i>
-                    </button>
+                    <EyeToggle show={showLoginPassword} onToggle={() => setShowLoginPassword(!showLoginPassword)} />
                   </div>
                   <a
                     onClick={(e) => { e.preventDefault(); setShowForgotPassword(true); setAuthError(''); setForgotMessage(''); setForgotEmail(loginEmail); }}
                     style={{
-                      fontSize: '0.85rem', fontWeight: 500,
+                      fontSize: '0.83rem', fontWeight: 500,
                       color: 'var(--text-muted)', cursor: 'pointer',
-                      textAlign: 'right', marginTop: '4px', display: 'block',
+                      textAlign: 'right', marginTop: '2px', display: 'block',
                       transition: 'color 0.2s'
                     }}
                     onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-color)'}
@@ -611,7 +569,7 @@ function App() {
                   type="submit"
                   className="btn btn-primary"
                   disabled={formLoading}
-                  style={{ width: '100%', padding: '14px', marginTop: '16px' }}
+                  style={{ width: '100%', padding: '14px', marginTop: '12px' }}
                 >
                   {formLoading ? <ButtonSpinner /> : (
                     <><i className="ri-login-box-line"></i> Log In</>
@@ -619,17 +577,15 @@ function App() {
                 </button>
 
                 {/* Divider */}
-                <div style={{ display: 'flex', alignItems: 'center', margin: '14px 0 6px' }}>
-                  <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
-                  <span style={{ padding: '0 12px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>or</span>
-                  <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
+                <div className="auth-divider">
+                  <span>or</span>
                 </div>
 
                 {/* Google Sign-In */}
                 <button
                   type="button"
                   onClick={handleGoogleSignIn}
-                  className="btn btn-secondary"
+                  className="btn google-btn"
                   disabled={googleLoading}
                   style={{
                     width: '100%', padding: '12px',
@@ -638,7 +594,7 @@ function App() {
                 >
                   {googleLoading ? <ButtonSpinner /> : (
                     <>
-                      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: '18px' }} />
+                      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: '18px', display: 'inline-block' }} />
                       Sign in with Google
                     </>
                   )}
@@ -646,7 +602,7 @@ function App() {
               </form>
             ) : (
               /* ── SIGN UP FORM ── */
-              <form onSubmit={handleSignUp} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <form key={`signup-${formKey}`} onSubmit={handleSignUp} className="form-transition" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <div className="form-group">
                   <label>Full Name</label>
                   <div className="input-wrapper">
@@ -692,22 +648,9 @@ function App() {
                         required
                         autoComplete="new-password"
                         minLength={6}
-                        style={{ paddingRight: '48px' }}
+                        style={{ paddingRight: '44px' }}
                       />
-                      <button
-                        type="button"
-                        onClick={() => setShowSignUpPassword(!showSignUpPassword)}
-                        style={{
-                          position: 'absolute', right: '12px',
-                          background: 'none', border: 'none',
-                          color: 'var(--text-muted)', cursor: 'pointer',
-                          fontSize: '1.15rem', padding: '4px',
-                          display: 'flex', alignItems: 'center'
-                        }}
-                        tabIndex={-1}
-                      >
-                        <i className={showSignUpPassword ? 'ri-eye-line' : 'ri-eye-off-line'}></i>
-                      </button>
+                      <EyeToggle show={showSignUpPassword} onToggle={() => setShowSignUpPassword(!showSignUpPassword)} />
                     </div>
                   </div>
                   <div className="form-group">
@@ -722,40 +665,16 @@ function App() {
                         className="form-input"
                         required
                         autoComplete="new-password"
-                        style={{ paddingRight: '48px' }}
+                        style={{ paddingRight: '44px' }}
                       />
-                      <button
-                        type="button"
-                        onClick={() => setShowSignUpConfirm(!showSignUpConfirm)}
-                        style={{
-                          position: 'absolute', right: '12px',
-                          background: 'none', border: 'none',
-                          color: 'var(--text-muted)', cursor: 'pointer',
-                          fontSize: '1.15rem', padding: '4px',
-                          display: 'flex', alignItems: 'center'
-                        }}
-                        tabIndex={-1}
-                      >
-                        <i className={showSignUpConfirm ? 'ri-eye-line' : 'ri-eye-off-line'}></i>
-                      </button>
+                      <EyeToggle show={showSignUpConfirm} onToggle={() => setShowSignUpConfirm(!showSignUpConfirm)} />
                     </div>
                   </div>
                 </div>
 
                 {/* Password match indicator */}
                 {signUpConfirmPassword && (
-                  <div style={{
-                    fontSize: '0.8rem',
-                    fontWeight: 500,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    marginTop: '-4px',
-                    marginBottom: '8px',
-                    color: signUpPassword === signUpConfirmPassword
-                      ? 'var(--accent-color)'
-                      : 'var(--danger-color)'
-                  }}>
+                  <div className={`password-match-indicator ${signUpPassword === signUpConfirmPassword ? 'match' : 'no-match'}`}>
                     <i className={signUpPassword === signUpConfirmPassword
                       ? 'ri-checkbox-circle-line'
                       : 'ri-close-circle-line'
@@ -785,17 +704,15 @@ function App() {
                 </button>
 
                 {/* Divider */}
-                <div style={{ display: 'flex', alignItems: 'center', margin: '14px 0 6px' }}>
-                  <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
-                  <span style={{ padding: '0 12px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>or</span>
-                  <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }}></div>
+                <div className="auth-divider">
+                  <span>or</span>
                 </div>
 
                 {/* Google Sign-In */}
                 <button
                   type="button"
                   onClick={handleGoogleSignIn}
-                  className="btn btn-secondary"
+                  className="btn google-btn"
                   disabled={googleLoading}
                   style={{
                     width: '100%', padding: '12px',
@@ -804,7 +721,7 @@ function App() {
                 >
                   {googleLoading ? <ButtonSpinner /> : (
                     <>
-                      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: '18px' }} />
+                      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: '18px', display: 'inline-block' }} />
                       Sign up with Google
                     </>
                   )}
@@ -814,24 +731,11 @@ function App() {
 
             {/* Toggle between Login / Sign Up */}
             {!showForgotPassword && (
-            <div style={{
-              borderTop: '1px solid var(--border-color)',
-              paddingTop: '20px',
-              marginTop: '24px',
-              textAlign: 'center'
-            }}>
-              <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+            <div className="auth-footer-toggle">
+              <span>
                 {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
               </span>
-              <a
-                onClick={() => { setIsSignUp(!isSignUp); setAuthError(''); setShowForgotPassword(false); }}
-                style={{
-                  color: 'var(--primary-color)',
-                  cursor: 'pointer',
-                  fontWeight: 600,
-                  fontSize: '0.9rem'
-                }}
-              >
+              <a onClick={switchForm}>
                 {isSignUp ? 'Log In' : 'Sign Up'}
               </a>
             </div>
@@ -841,18 +745,7 @@ function App() {
               <a
                 href="#"
                 onClick={handleBackToHomepage}
-                style={{
-                  color: 'var(--text-muted)',
-                  textDecoration: 'none',
-                  fontSize: '0.85rem',
-                  fontWeight: 500,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  transition: 'color 0.2s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-color)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+                className="back-link"
               >
                 <i className="ri-arrow-left-line"></i> Back to Homepage
               </a>

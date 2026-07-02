@@ -29,7 +29,6 @@ body {
 
 img,
 svg {
-  display: block;
   max-width: 100%;
 }
 
