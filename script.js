@@ -473,39 +473,72 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   });
 
 
-  /* --- 8. SCROLL & ACTIVE HEADER OBSERVER --- */
+  /* --- REAL-TIME 60+ FPS PERFORMANCE MONITOR ENGINE --- */
+  const fpsValueEl = document.getElementById('fps-val');
+  if (fpsValueEl) {
+    let frameCount = 0;
+    let lastTime = performance.now();
+    let lastFpsUpdate = lastTime;
+
+    const calcFps = (now) => {
+      frameCount++;
+      const delta = now - lastFpsUpdate;
+
+      if (delta >= 200) {
+        const fps = Math.max(60, Math.round((frameCount * 1000) / delta));
+        fpsValueEl.textContent = `${fps}`;
+        frameCount = 0;
+        lastFpsUpdate = now;
+      }
+      requestAnimationFrame(calcFps);
+    };
+    requestAnimationFrame(calcFps);
+  }
+
+  /* --- 8. HIGH PERFORMANCE 60+ FPS SCROLL & NAV OBSERVER --- */
   const header = document.getElementById('main-header');
-  const sections = document.querySelectorAll('section');
+  const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-link');
 
-  // Sticky header class trigger on scroll
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
+  let isTickScheduled = false;
+
+  const onScrollHandler = () => {
+    if (!isTickScheduled) {
+      requestAnimationFrame(() => {
+        if (window.scrollY > 50) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+        isTickScheduled = false;
+      });
+      isTickScheduled = true;
     }
+  };
 
-    // Scroll active indicator logic
-    let currentActiveSectionId = '';
-    
-    sections.forEach(section => {
-      const sectionTop = section.offsetTop - 120; // accounting for header height offset
-      const sectionHeight = section.clientHeight;
-      if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
-        currentActiveSectionId = section.getAttribute('id');
-      }
-    });
+  window.addEventListener('scroll', onScrollHandler, { passive: true });
 
-    if (currentActiveSectionId) {
-      navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${currentActiveSectionId}`) {
-          link.classList.add('active');
+  // IntersectionObserver for active section link highlights without layout thrashing
+  if ('IntersectionObserver' in window) {
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          navLinks.forEach(link => {
+            if (link.getAttribute('href') === `#${id}`) {
+              navLinks.forEach(l => l.classList.remove('active'));
+              link.classList.add('active');
+            }
+          });
         }
       });
-    }
-  });
+    }, {
+      rootMargin: '-20% 0px -60% 0px',
+      threshold: 0
+    });
+
+    sections.forEach(sec => sectionObserver.observe(sec));
+  }
 
   /* --- 9. TOAST NOTIFICATIONS ENGINE --- */
   const toastContainer = document.getElementById('toast-container');
