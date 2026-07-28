@@ -777,6 +777,14 @@ function App() {
           </div>
         </div>
       )}
+
+      {/* 60+ FPS LIVE PERFORMANCE BADGE WIDGET */}
+      <div className="fps-badge" title="Real-time Website 60+ FPS Performance Engine">
+        <div className="fps-pulse-dot"></div>
+        <span className="fps-label">FPS</span>
+        <span className="fps-value">{fps}</span>
+        <span className="fps-tag">ULTRA FAST</span>
+      </div>
     </div>
   );
 }
