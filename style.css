@@ -348,7 +348,7 @@ header.scrolled {
   align-items: center;
   gap: 10px;
   font-size: 1.6rem;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-heading);
   font-weight: 800;
   letter-spacing: -0.03em;
   color: var(--text-primary) !important;
@@ -460,7 +460,7 @@ nav {
   border: none;
   outline: none;
   color: var(--text-primary) !important;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.85rem;
   font-weight: 600;
   display: flex;
@@ -482,7 +482,7 @@ nav {
 }
 
 .btn-get-started-nav {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--text-primary) !important;
