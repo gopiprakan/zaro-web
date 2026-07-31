@@ -48,30 +48,6 @@ function App() {
   // Form animation key — forces re-mount for transition
   const [formKey, setFormKey] = useState(0);
 
-  // Real-time 60+ FPS performance counter state
-  const [fps, setFps] = useState(60);
-
-  useEffect(() => {
-    let frameCount = 0;
-    let lastFpsUpdate = performance.now();
-    let animId;
-
-    const calcFps = (now) => {
-      frameCount++;
-      const delta = now - lastFpsUpdate;
-      if (delta >= 200) {
-        const measuredFps = Math.max(60, Math.round((frameCount * 1000) / delta));
-        setFps(measuredFps);
-        frameCount = 0;
-        lastFpsUpdate = now;
-      }
-      animId = requestAnimationFrame(calcFps);
-    };
-
-    animId = requestAnimationFrame(calcFps);
-    return () => cancelAnimationFrame(animId);
-  }, []);
-
   // Theme state synced with landing page preference
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('zaro-theme');
@@ -778,13 +754,6 @@ function App() {
         </div>
       )}
 
-      {/* 60+ FPS LIVE PERFORMANCE BADGE WIDGET */}
-      <div className="fps-badge" title="Real-time Website 60+ FPS Performance Engine">
-        <div className="fps-pulse-dot"></div>
-        <span className="fps-label">FPS</span>
-        <span className="fps-value">{fps}</span>
-        <span className="fps-tag">ULTRA FAST</span>
-      </div>
     </div>
   );
 }
