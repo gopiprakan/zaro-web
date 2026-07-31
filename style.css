@@ -1220,6 +1220,8 @@ nav {
   padding: 50px;
   box-shadow: var(--card-shadow);
   min-height: 520px;
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .portfolio-info {
