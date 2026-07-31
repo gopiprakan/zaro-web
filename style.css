@@ -3132,6 +3132,40 @@ footer {
 
 /* --- RESPONSIVE STYLE OVERRIDES --- */
 @media (max-width: 991px) {
+  .portfolio-display-wrapper {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding: 32px 24px;
+    min-height: auto;
+  }
+
+  .portfolio-showcase-view {
+    width: 100%;
+    overflow: hidden;
+    padding: 10px 0;
+    justify-content: center;
+  }
+
+  .desktop-device {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .desktop-screen {
+    border-width: 8px;
+  }
+
+  .desktop-base::after {
+    left: -20px;
+    width: 180px;
+  }
+
+  .mobile-device {
+    width: 200px;
+    height: 380px;
+    margin: 0 auto;
+  }
+
   .drawer-content {
     max-width: 100%;
     padding: 60px 24px 24px;
@@ -3154,6 +3188,57 @@ footer {
   .order-details-grid {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .portfolio-display-wrapper {
+    padding: 24px 16px;
+    gap: 24px;
+    border-radius: var(--radius-md);
+  }
+
+  .portfolio-meta {
+    gap: 8px;
+  }
+
+  .meta-tag {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+  }
+
+  .device-toggle-container {
+    flex-direction: row;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .device-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  .desktop-screen {
+    border-width: 6px;
+  }
+
+  .desktop-base {
+    height: 10px;
+    width: 100px;
+  }
+
+  .desktop-base::after {
+    left: -15px;
+    width: 130px;
+    height: 4px;
+    bottom: -4px;
+  }
+
+  .mobile-device {
+    width: 170px;
+    height: 340px;
   }
 }
 
