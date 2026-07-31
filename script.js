@@ -473,28 +473,6 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   });
 
 
-  /* --- REAL-TIME 60+ FPS PERFORMANCE MONITOR ENGINE --- */
-  const fpsValueEl = document.getElementById('fps-val');
-  if (fpsValueEl) {
-    let frameCount = 0;
-    let lastTime = performance.now();
-    let lastFpsUpdate = lastTime;
-
-    const calcFps = (now) => {
-      frameCount++;
-      const delta = now - lastFpsUpdate;
-
-      if (delta >= 200) {
-        const fps = Math.max(60, Math.round((frameCount * 1000) / delta));
-        fpsValueEl.textContent = `${fps}`;
-        frameCount = 0;
-        lastFpsUpdate = now;
-      }
-      requestAnimationFrame(calcFps);
-    };
-    requestAnimationFrame(calcFps);
-  }
-
   /* --- 8. HIGH PERFORMANCE 60+ FPS SCROLL & NAV OBSERVER --- */
   const header = document.getElementById('main-header');
   const sections = document.querySelectorAll('section[id]');
