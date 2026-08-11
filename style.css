@@ -212,6 +212,114 @@ section {
   transform: translateY(-2px);
 }
 
+/* --- GPU HARDWARE ACCELERATION & RENDER CONTAINMENT (60+ FPS ENGINE) --- */
+.hero-particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.75;
+  transform: translateZ(0);
+  will-change: opacity;
+}
+
+/* Composite layer isolation for cards & interactive elements */
+.hero-glass-card,
+.review-card,
+.service-card,
+.pricing-card,
+.portfolio-device-frame,
+.calculator-box,
+.order-card,
+.toast-card {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  contain: paint layout;
+}
+
+/* High-Performance 60+ FPS Badge */
+.badge-fps {
+  background: rgba(37, 211, 102, 0.12) !important;
+  border-color: rgba(37, 211, 102, 0.3) !important;
+  color: #25d366 !important;
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(37, 211, 102, 0.15);
+  animation: pulseFpsBadge 2s infinite ease-in-out;
+}
+
+@keyframes pulseFpsBadge {
+  0%, 100% { transform: translateZ(0) scale(1); box-shadow: 0 0 12px rgba(37, 211, 102, 0.15); }
+  50% { transform: translateZ(0) scale(1.04); box-shadow: 0 0 20px rgba(37, 211, 102, 0.35); }
+}
+
+/* Live FPS Performance Monitor Widget */
+.fps-meter-widget {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--header-glass);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  pointer-events: auto;
+  user-select: none;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+  transform: translateZ(0);
+}
+
+.fps-meter-widget:hover {
+  border-color: var(--primary-color);
+  transform: translateZ(0) translateY(-2px);
+}
+
+.fps-indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981; /* Default emerald green for 60+ FPS */
+  box-shadow: 0 0 8px #10b981;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.fps-indicator-dot.fps-warning {
+  background: #f59e0b;
+  box-shadow: 0 0 8px #f59e0b;
+}
+
+.fps-indicator-dot.fps-danger {
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+}
+
+.fps-value {
+  color: var(--primary-color);
+  font-weight: 800;
+  font-size: 0.95rem;
+  min-width: 22px;
+}
+
+.fps-label {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
 /* --- GLOW EFFECTS --- */
 .bg-glow {
   position: absolute;
@@ -223,6 +331,10 @@ section {
   opacity: var(--glow-opacity);
   z-index: -1;
   pointer-events: none;
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  contain: strict;
   transition: opacity var(--transition-smooth), background var(--transition-smooth);
 }
 
