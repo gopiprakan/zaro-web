@@ -21,7 +21,8 @@
 
 <body>
 
-  <!-- Background Decorative Glowing Meshes -->
+  <!-- Background Decorative Glowing Meshes & Particle Canvas -->
+  <canvas id="hero-particle-canvas" class="hero-particle-canvas"></canvas>
   <div class="bg-glow glow-top-right"></div>
   <div class="bg-glow glow-bottom-left"></div>
   <div class="nav-overlay" id="nav-overlay"></div>
@@ -83,8 +84,13 @@
     <div class="container hero-grid">
       <!-- Hero Left: Headlines & CTA -->
       <div class="hero-content reveal-element">
-        <div class="badge">
-          <i class="ri-rocket-2-fill"></i> Taking Local Businesses Online
+        <div class="badge-group" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+          <div class="badge">
+            <i class="ri-rocket-2-fill"></i> Taking Local Businesses Online
+          </div>
+          <div class="badge badge-fps">
+            <i class="ri-speed-up-line"></i> 60+ FPS Engine
+          </div>
         </div>
         <h1 class="hero-title">
           Turn Local Footfall Into <span class="gradient-text">Global Sales.</span>
@@ -1106,6 +1112,13 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Live FPS Performance Meter Widget -->
+  <div id="fps-meter-widget" class="fps-meter-widget" title="Real-time rendering performance monitor">
+    <div class="fps-indicator-dot"></div>
+    <span id="fps-value-text" class="fps-value">60</span>
+    <span class="fps-label">FPS • Ultra Fluid</span>
   </div>
 
   <!-- --- TOAST ALERTS CONTAINER --- -->
