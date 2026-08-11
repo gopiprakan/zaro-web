@@ -1450,4 +1450,168 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
     }
   });
 
+
+  /* --- 21. HIGH-PERFORMANCE 60+ FPS MONITOR & PARTICLE ENGINE --- */
+  
+  // Real-time FPS Monitor Engine
+  const fpsValueText = document.getElementById('fps-value-text');
+  const fpsMeterWidget = document.getElementById('fps-meter-widget');
+  const fpsIndicatorDot = fpsMeterWidget ? fpsMeterWidget.querySelector('.fps-indicator-dot') : null;
+  
+  let frameCount = 0;
+  let lastFpsTime = performance.now();
+  let currentFps = 60;
+
+  const updateFpsMeter = (now) => {
+    frameCount++;
+    const delta = now - lastFpsTime;
+    
+    if (delta >= 500) { // Update FPS display twice per second for stability
+      currentFps = Math.round((frameCount * 1000) / delta);
+      frameCount = 0;
+      lastFpsTime = now;
+
+      if (fpsValueText) {
+        fpsValueText.textContent = currentFps;
+      }
+
+      if (fpsIndicatorDot) {
+        if (currentFps >= 55) {
+          fpsIndicatorDot.className = 'fps-indicator-dot'; // Green 60+ FPS
+        } else if (currentFps >= 35) {
+          fpsIndicatorDot.className = 'fps-indicator-dot fps-warning';
+        } else {
+          fpsIndicatorDot.className = 'fps-indicator-dot fps-danger';
+        }
+      }
+    }
+  };
+
+  // Interactive 60 FPS Canvas Particle Mesh Background
+  const particleCanvas = document.getElementById('hero-particle-canvas');
+  if (particleCanvas) {
+    const ctx = particleCanvas.getContext('2d', { alpha: true });
+    let width = (particleCanvas.width = window.innerWidth);
+    let height = (particleCanvas.height = window.innerHeight);
+
+    let mouse = { x: width / 2, y: height / 2, active: false };
+
+    window.addEventListener('resize', () => {
+      width = particleCanvas.width = window.innerWidth;
+      height = particleCanvas.height = window.innerHeight;
+    }, { passive: true });
+
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      mouse.active = true;
+    }, { passive: true });
+
+    window.addEventListener('mouseleave', () => {
+      mouse.active = false;
+    }, { passive: true });
+
+    // Node count optimized for high framerate
+    const particleCount = Math.min(Math.floor((width * height) / 22000), 45);
+    const particles = [];
+
+    const getThemeColors = () => {
+      const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+      return {
+        nodeColor: isDark ? 'rgba(217, 34, 67, 0.5)' : 'rgba(192, 29, 58, 0.35)',
+        lineColor: isDark ? 'rgba(246, 157, 57, 0.09)' : 'rgba(232, 130, 46, 0.07)',
+        accentColor: isDark ? 'rgba(224, 195, 117, 0.5)' : 'rgba(201, 168, 76, 0.4)'
+      };
+    };
+
+    let themeColors = getThemeColors();
+
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', () => {
+        setTimeout(() => {
+          themeColors = getThemeColors();
+        }, 50);
+      });
+    }
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 0.8;
+        this.vy = (Math.random() - 0.5) * 0.8;
+        this.radius = Math.random() * 2 + 1;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0 || this.x > width) this.vx *= -1;
+        if (this.y < 0 || this.y > height) this.vy *= -1;
+
+        // Subtle cursor attraction
+        if (mouse.active) {
+          const dx = mouse.x - this.x;
+          const dy = mouse.y - this.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 150) {
+            this.x += (dx / dist) * 0.4;
+            this.y += (dy / dist) * 0.4;
+          }
+        }
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = themeColors.nodeColor;
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+
+    // Single master RAF loop for 60+ FPS canvas rendering and FPS monitor
+    const renderLoop = (now) => {
+      updateFpsMeter(now);
+
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw particle connections
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 130) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = themeColors.lineColor;
+            ctx.lineWidth = 1 - dist / 130;
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(renderLoop);
+    };
+
+    requestAnimationFrame(renderLoop);
+  } else {
+    // Fallback if particle canvas is not present
+    const renderFpsOnly = (now) => {
+      updateFpsMeter(now);
+      requestAnimationFrame(renderFpsOnly);
+    };
+    requestAnimationFrame(renderFpsOnly);
+  }
+
 });
