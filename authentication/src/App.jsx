@@ -776,6 +776,8 @@ function App() {
             </div>
           </div>
         </div>
+      )}
+
       {/* Live 60+ FPS Real-time Monitor Badge */}
       <div className="fps-badge" title="Real-time rendering performance monitor">
         <div className="fps-pulse-dot"></div>
@@ -787,5 +789,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;
