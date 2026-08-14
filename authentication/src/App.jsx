@@ -66,6 +66,26 @@ function App() {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
+  // Real-time 60+ FPS performance monitor
+  const [fps, setFps] = useState(60);
+  useEffect(() => {
+    let frameCount = 0;
+    let lastTime = performance.now();
+    let animId;
+    const updateFps = (now) => {
+      frameCount++;
+      const delta = now - lastTime;
+      if (delta >= 500) {
+        setFps(Math.round((frameCount * 1000) / delta));
+        frameCount = 0;
+        lastTime = now;
+      }
+      animId = requestAnimationFrame(updateFps);
+    };
+    animId = requestAnimationFrame(updateFps);
+    return () => cancelAnimationFrame(animId);
+  }, []);
+
   const { isConfigured } = checkFirebaseConnection();
 
   // ── Watch Firebase auth state ──
@@ -80,6 +100,7 @@ function App() {
     });
     return () => unsubscribe();
   }, [isConfigured]);
+
 
   // ── Map Firebase error codes to user-friendly messages ──
   const getAuthErrorMessage = (err, mode) => {
@@ -184,10 +205,13 @@ function App() {
   // ── Navigate back to main site ──
   const handleBackToHomepage = (e) => {
     e.preventDefault();
-    const hostname = window.location.hostname;
-    const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
-    if (isLocal) {
-      window.location.href = 'http://127.0.0.1:8080';
+    if (window.opener) {
+      window.close();
+      return;
+    }
+    const path = window.location.pathname;
+    if (path.includes('/authentication')) {
+      window.location.href = path.replace(/\/authentication.*$/, '/index.html');
     } else {
       window.location.href = '../index.html';
     }
@@ -752,7 +776,13 @@ function App() {
             </div>
           </div>
         </div>
-      )}
+      {/* Live 60+ FPS Real-time Monitor Badge */}
+      <div className="fps-badge" title="Real-time rendering performance monitor">
+        <div className="fps-pulse-dot"></div>
+        <span className="fps-value">{fps}</span>
+        <span className="fps-label">FPS</span>
+        <span className="fps-tag">Ultra Fluid</span>
+      </div>
 
     </div>
   );
