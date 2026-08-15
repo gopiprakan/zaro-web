@@ -1518,9 +1518,9 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
     const getThemeColors = () => {
       const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
       return {
-        nodeColor: isDark ? 'rgba(217, 34, 67, 0.5)' : 'rgba(192, 29, 58, 0.35)',
-        lineColor: isDark ? 'rgba(246, 157, 57, 0.09)' : 'rgba(232, 130, 46, 0.07)',
-        accentColor: isDark ? 'rgba(224, 195, 117, 0.5)' : 'rgba(201, 168, 76, 0.4)'
+        nodeColor: isDark ? 'rgba(99, 102, 241, 0.45)' : 'rgba(79, 70, 229, 0.35)',
+        lineColor: isDark ? 'rgba(6, 182, 212, 0.08)' : 'rgba(59, 130, 246, 0.07)',
+        accentColor: isDark ? 'rgba(16, 185, 129, 0.45)' : 'rgba(5, 150, 105, 0.35)'
       };
     };
 
