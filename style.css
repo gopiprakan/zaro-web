@@ -339,13 +339,13 @@ section {
 }
 
 .badge-fps {
-  background: rgba(16, 185, 129, 0.12);
-  border-color: rgba(16, 185, 129, 0.3);
-  color: #10b981;
+  background: rgba(144, 174, 173, 0.15);
+  border-color: rgba(144, 174, 173, 0.35);
+  color: #90AEAD;
 }
 
 .badge-fps i {
-  color: #10b981;
+  color: #90AEAD;
 }
 
 /* --- BUTTONS --- */
