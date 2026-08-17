@@ -567,45 +567,77 @@
 
           <!-- CSS Desktop Frame Container -->
           <div class="desktop-device" id="showcase-desktop">
+            <div class="desktop-top-bar">
+              <div class="desktop-dots">
+                <span class="desktop-dot dot-red"></span>
+                <span class="desktop-dot dot-yellow"></span>
+                <span class="desktop-dot dot-green"></span>
+              </div>
+              <div class="desktop-url-bar">
+                <i class="ri-lock-2-line"></i>
+                <span id="inner-desktop-url">https://bellachic.shop</span>
+              </div>
+              <div class="desktop-window-actions">
+                <i class="ri-refresh-line"></i>
+              </div>
+            </div>
             <div class="desktop-screen">
-              <!-- Render beautiful customized inside frames via dynamic CSS grids -->
               <div class="desktop-content" id="desktop-bg-frame"
                 style="background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=800');">
-                <div style="padding: 20px; color: white;">
-                  <h4 id="inner-desktop-logo"
-                    style="font-family: var(--font-heading); font-size: 0.9rem; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 6px; margin-bottom: 20px;">
-                    BELLA CHIC</h4>
-                  <h2 id="inner-desktop-title"
-                    style="font-size: clamp(1.1rem, 2.5vw, 1.8rem); line-height: 1.2; font-family: var(--font-heading);">Exclusive Summer
-                    Styles</h2>
-                  <p id="inner-desktop-desc"
-                    style="font-size: 0.8rem; opacity: 0.85; margin: 10px 0 16px; max-width: 250px;">Handpicked clothing
-                    styles available for quick checkout.</p>
-                  <span
-                    style="background: white; color: black; font-size: 0.75rem; padding: 6px 12px; border-radius: 4px; font-weight: 600; display: inline-block;">Shop
-                    Inventory</span>
+                <div class="mock-inner-glass-card">
+                  <div class="mock-nav-row">
+                    <div class="mock-logo-badge" id="inner-desktop-logo">BELLA CHIC</div>
+                    <div class="mock-status-chip" id="inner-desktop-status">● ACTIVE STORE</div>
+                  </div>
+                  <h3 class="mock-hero-heading" id="inner-desktop-title">Exclusive Summer Styles</h3>
+                  <p class="mock-hero-caption" id="inner-desktop-desc">Handpicked designer fashion ready for instant delivery.</p>
+                  <div class="mock-features-pills" id="inner-desktop-pills">
+                    <span>👗 Premium Fabric</span>
+                    <span>⚡ Instant Delivery</span>
+                    <span>💳 Fast Checkout</span>
+                  </div>
+                  <div class="mock-actions-row">
+                    <button class="mock-action-btn" id="inner-desktop-btn">
+                      <i id="inner-desktop-btn-icon" class="ri-shopping-bag-3-line"></i>
+                      <span id="inner-desktop-btn-text">Shop Collection</span>
+                    </button>
+                    <span class="mock-live-badge"><i class="ri-shield-check-line"></i> Verified ZARO Partner</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="desktop-base"></div>
           </div>
 
-          <!-- CSS Mobile Phone Frame Container (Hidden initially by javascript unless selected) -->
+          <!-- CSS Mobile Phone Frame Container (Shown when toggled) -->
           <div class="mobile-device" id="showcase-mobile" style="display: none;">
-            <div class="mobile-notch"></div>
+            <div class="mobile-speaker-bar">
+              <div class="mobile-camera"></div>
+              <div class="mobile-speaker"></div>
+            </div>
+            <div class="mobile-status-row">
+              <span>9:41</span>
+              <div class="mobile-icons">
+                <i class="ri-signal-tower-fill"></i>
+                <i class="ri-wifi-line"></i>
+                <i class="ri-battery-charge-line"></i>
+              </div>
+            </div>
             <div class="mobile-content" id="mobile-bg-frame"
               style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=400');">
-              <div
-                style="padding: 30px 15px 15px 15px; color: white; display: flex; flex-direction: column; justify-content: space-between; height: calc(100% - 45px);">
-                <div style="font-size: 0.75rem; font-weight: 700; font-family: var(--font-heading);" id="inner-mobile-logo">BELLA CHIC</div>
-                <div>
-                  <h3 id="inner-mobile-title"
-                    style="font-size: clamp(0.95rem, 2.5vw, 1.25rem); font-family: var(--font-heading); line-height: 1.2;">Exclusive Summer
-                    Styles</h3>
-                  <span
-                    style="background: var(--primary-color); display: inline-block; font-size: 0.65rem; padding: 6px 12px; border-radius: 4px; font-weight: 600; margin-top: 10px;">Order
-                    Now</span>
+              <div class="mobile-inner-card">
+                <div class="mobile-brand-row">
+                  <div class="mobile-logo-text" id="inner-mobile-logo">BELLA CHIC</div>
+                  <span class="mobile-tag" id="inner-mobile-category">Boutique</span>
                 </div>
+                <div class="mobile-hero-body">
+                  <h3 id="inner-mobile-title">Exclusive Summer Styles</h3>
+                  <p id="inner-mobile-desc">Order online or book a store visit via WhatsApp.</p>
+                </div>
+                <button class="mobile-cta-btn" id="inner-mobile-btn">
+                  <i id="inner-mobile-btn-icon" class="ri-whatsapp-line"></i>
+                  <span id="inner-mobile-btn-text">Order via WhatsApp</span>
+                </button>
               </div>
             </div>
           </div>
