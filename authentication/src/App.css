@@ -21,63 +21,63 @@
   --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   --max-width: 1200px;
 
-  /* DEFAULT DARK THEME — Deep Teal, Warm Coral & Cream Beige */
-  --bg-primary: #172c34;
-  --bg-secondary: #1d3742;
-  --bg-tertiary: #244855;
-  --bg-glass: rgba(23, 44, 52, 0.85);
-  --bg-glass-card: rgba(36, 72, 85, 0.72);
-  --border-color: rgba(144, 174, 173, 0.2);
-  --border-hover: rgba(230, 72, 51, 0.5);
+  /* DEFAULT DARK THEME — Ultra-Glassy Deep Teal & Warm Coral / Cream Beige */
+  --bg-primary: #111f26;
+  --bg-secondary: #162a33;
+  --bg-tertiary: #1e3a45;
+  --bg-glass: rgba(23, 44, 52, 0.52);
+  --bg-glass-card: rgba(36, 72, 85, 0.35);
+  --border-color: rgba(144, 174, 173, 0.22);
+  --border-hover: rgba(230, 72, 51, 0.65);
   --text-primary: #FBE9D0;
   --text-secondary: #E4EDED;
   --text-muted: #90AEAD;
   --primary-color: #E64833;
   --primary-light: #f06a58;
-  --primary-glow: rgba(230, 72, 51, 0.3);
+  --primary-glow: rgba(230, 72, 51, 0.4);
   --primary-gradient: linear-gradient(135deg, #E64833 0%, #874F41 50%, #244855 100%);
   --secondary-color: #90AEAD;
   --secondary-gradient: linear-gradient(135deg, #90AEAD 0%, #244855 100%);
   --accent-color: #874F41;
   --accent-light: #a36555;
-  --card-shadow: 0 24px 48px -12px rgba(10, 20, 25, 0.75), 0 0 0 1px rgba(144, 174, 173, 0.12);
-  --card-glow: 0 0 80px -20px rgba(230, 72, 51, 0.18);
+  --card-shadow: 0 20px 48px -10px rgba(5, 12, 16, 0.7), inset 0 1px 1px 0 rgba(251, 233, 208, 0.24), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.25);
+  --card-glow: 0 0 80px -20px rgba(230, 72, 51, 0.25);
   --theme-icon: '☀️';
-  --glow-opacity: 0.3;
-  --badge-bg: rgba(230, 72, 51, 0.12);
+  --glow-opacity: 0.35;
+  --badge-bg: rgba(230, 72, 51, 0.18);
   --danger-color: #E64833;
-  --danger-bg: rgba(230, 72, 51, 0.12);
-  --input-bg: rgba(23, 44, 52, 0.75);
+  --danger-bg: rgba(230, 72, 51, 0.15);
+  --input-bg: rgba(23, 44, 52, 0.45);
   --overlay-pattern: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23E64833' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
-/* --- LIGHT THEME — Cream Beige & Deep Teal --- */
+/* --- LIGHT THEME — Frosted Cream Beige & Glossy Deep Teal --- */
 [data-theme="light"] {
   --bg-primary: #FBE9D0;
   --bg-secondary: #FFF6EA;
   --bg-tertiary: #F2DEC3;
-  --bg-glass: rgba(255, 246, 234, 0.9);
-  --bg-glass-card: rgba(255, 255, 255, 0.92);
-  --border-color: rgba(36, 72, 85, 0.14);
-  --border-hover: rgba(230, 72, 51, 0.45);
+  --bg-glass: rgba(255, 246, 234, 0.68);
+  --bg-glass-card: rgba(255, 255, 255, 0.58);
+  --border-color: rgba(36, 72, 85, 0.18);
+  --border-hover: rgba(230, 72, 51, 0.5);
   --text-primary: #244855;
   --text-secondary: #425B65;
   --text-muted: #874F41;
   --primary-color: #E64833;
   --primary-light: #f06a58;
-  --primary-glow: rgba(230, 72, 51, 0.18);
+  --primary-glow: rgba(230, 72, 51, 0.28);
   --primary-gradient: linear-gradient(135deg, #E64833 0%, #874F41 50%, #244855 100%);
   --secondary-color: #244855;
   --secondary-gradient: linear-gradient(135deg, #244855 0%, #90AEAD 100%);
   --accent-color: #874F41;
   --accent-light: #a36555;
-  --card-shadow: 0 24px 48px -12px rgba(36, 72, 85, 0.12), 0 0 0 1px rgba(36, 72, 85, 0.08);
-  --card-glow: 0 0 80px -20px rgba(230, 72, 51, 0.12);
-  --glow-opacity: 0.2;
-  --badge-bg: rgba(230, 72, 51, 0.1);
+  --card-shadow: 0 16px 40px -12px rgba(36, 72, 85, 0.14), inset 0 1px 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 1px 0 rgba(36, 72, 85, 0.05);
+  --card-glow: 0 0 80px -20px rgba(230, 72, 51, 0.15);
+  --glow-opacity: 0.25;
+  --badge-bg: rgba(230, 72, 51, 0.12);
   --danger-color: #E64833;
-  --danger-bg: rgba(230, 72, 51, 0.08);
-  --input-bg: rgba(255, 255, 255, 0.85);
+  --danger-bg: rgba(230, 72, 51, 0.1);
+  --input-bg: rgba(255, 255, 255, 0.6);
   --overlay-pattern: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23244855' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
