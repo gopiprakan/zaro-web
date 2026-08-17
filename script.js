@@ -235,73 +235,131 @@ document.addEventListener('DOMContentLoaded', () => {
   const portfolioTitle = document.getElementById('portfolio-title');
   const portfolioDesc = document.getElementById('portfolio-desc');
   
+  const innerDesktopUrl = document.getElementById('inner-desktop-url');
   const innerDesktopLogo = document.getElementById('inner-desktop-logo');
+  const innerDesktopStatus = document.getElementById('inner-desktop-status');
   const innerDesktopTitle = document.getElementById('inner-desktop-title');
   const innerDesktopDesc = document.getElementById('inner-desktop-desc');
+  const innerDesktopPills = document.getElementById('inner-desktop-pills');
+  const innerDesktopBtnText = document.getElementById('inner-desktop-btn-text');
+  const innerDesktopBtnIcon = document.getElementById('inner-desktop-btn-icon');
+  
   const innerMobileLogo = document.getElementById('inner-mobile-logo');
+  const innerMobileCategory = document.getElementById('inner-mobile-category');
   const innerMobileTitle = document.getElementById('inner-mobile-title');
+  const innerMobileDesc = document.getElementById('inner-mobile-desc');
+  const innerMobileBtnText = document.getElementById('inner-mobile-btn-text');
+  const innerMobileBtnIcon = document.getElementById('inner-mobile-btn-icon');
 
   // Portfolio items data bank
   const portfolioData = {
     boutique: {
-      category: 'Boutique',
+      category: 'Fashion Boutique',
+      status: 'Active E-Commerce',
+      url: 'https://bellachic.shop',
       title: 'Bella Chic Boutique',
-      desc: 'A gorgeous, image-heavy digital store setup tailored for upscale designer clothing labels. Features smooth item preview shifts, sizes drawers, fast loading tags, and integrated direct WhatsApp order triggers.',
+      desc: 'A gorgeous, image-heavy digital store setup tailored for upscale designer clothing labels. Features smooth item preview shifts, sizing drawers, instant checkout, and direct WhatsApp order triggers.',
       bgImage: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=800')",
       mobileBgImage: "linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=400')",
       innerLogo: 'BELLA CHIC',
-      innerTitle: 'Exclusive Premium Dress Collections',
-      innerDesc: 'Explore elegant, custom-tailored summer styles ready for home delivery.'
+      innerStatus: '● ACTIVE STORE',
+      innerTitle: 'Exclusive Summer Styles',
+      innerDesc: 'Handpicked designer fashion ready for instant delivery across the city.',
+      pills: ['👗 Summer 2026', '⚡ 2-Hour Delivery', '💳 1-Tap Pay'],
+      btnText: 'Shop Collection',
+      btnIcon: 'ri-shopping-bag-3-line',
+      mobileBtnText: 'Order via WhatsApp',
+      mobileBtnIcon: 'ri-whatsapp-line'
     },
     cafe: {
       category: 'Gourmet Cafe',
+      status: 'Online QR Menu',
+      url: 'https://thearomacup.cafe/menu',
       title: 'The Aroma Cup',
       desc: 'A super-fast, clean digital QR Menu layout designed for cafes and food joints. Table-scanned codes let patrons load the menu in 0.5s, view interactive plates, toggle vegetarian choices, and place orders directly to the kitchen counter.',
       bgImage: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=800')",
       mobileBgImage: "linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=400')",
       innerLogo: 'AROMA CUP',
-      innerTitle: 'Fresh Brewed Coffee & Warm Bakery',
-      innerDesc: 'Skip the counter lines. Scan, pick, tap, and enjoy your fresh orders.'
+      innerStatus: '● OPEN NOW',
+      innerTitle: 'Fresh Brewed Coffee & Bakery',
+      innerDesc: 'Skip the counter lines. Scan, pick, tap, and enjoy artisan coffees & warm bakes.',
+      pills: ['☕ Artisan Roasts', '🥐 Fresh Bakery', '⚡ Table Scan 0.5s'],
+      btnText: 'Browse Live Menu',
+      btnIcon: 'ri-restaurant-line',
+      mobileBtnText: 'View Digital Menu',
+      mobileBtnIcon: 'ri-cup-line'
     },
     services: {
       category: 'Spa & Salon',
+      status: 'Automated Booking',
+      url: 'https://nirvanaspa.com/book',
       title: 'Nirvana Salon & Spa',
       desc: 'A high-end service showcase & calendar system built for beauty clinics. Includes aesthetic service galleries, live time-slot selectors, automated calendar booking syncing, and prefilled staff coordinator triggers.',
       bgImage: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=800')",
       mobileBgImage: "linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=400')",
       innerLogo: 'NIRVANA SPA',
-      innerTitle: 'Revitalize Your Hair, Mind & Soul',
-      innerDesc: 'Pre-book online today and unlock a flat 15% discount on skincare consultations.'
+      innerStatus: '● 8 SLOTS TODAY',
+      innerTitle: 'Revitalize Your Body & Mind',
+      innerDesc: 'Pre-book luxury skincare & hair spa sessions online with 15% promotional discount.',
+      pills: ['💆 Aromatherapy', '📅 Instant Slot Booking', '⭐ 4.9 Rating'],
+      btnText: 'Book Appointment',
+      btnIcon: 'ri-calendar-check-line',
+      mobileBtnText: 'Book Slot on WhatsApp',
+      mobileBtnIcon: 'ri-calendar-line'
     },
     grocery: {
       category: 'Grocery Store',
+      status: 'Same-Day Delivery',
+      url: 'https://freshmart-groceries.in',
       title: 'FreshMart Digital',
       desc: 'A smart grocery ordering platform with categorized aisles, live stock indicators, and scheduled delivery windows. Customers browse daily essentials, add to cart, and place bulk orders delivered to their doorstep within hours.',
       bgImage: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800')",
       mobileBgImage: "linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400')",
       innerLogo: 'FRESHMART',
-      innerTitle: 'Farm Fresh Groceries at Your Door',
-      innerDesc: 'Browse 500+ daily essentials and get same-day home delivery.'
+      innerStatus: '● LIVE INVENTORY',
+      innerTitle: 'Farm Fresh Groceries to Doorstep',
+      innerDesc: 'Browse 500+ daily essentials and organic produce with 30-minute delivery guarantee.',
+      pills: ['🥬 Organic Certified', '⚡ 30-Min Delivery', '📦 Bulk Savings'],
+      btnText: 'Order Essentials',
+      btnIcon: 'ri-shopping-basket-2-line',
+      mobileBtnText: 'Quick WhatsApp Order',
+      mobileBtnIcon: 'ri-shopping-bag-line'
     },
     fitness: {
       category: 'Fitness & Gym',
+      status: 'Class Memberships',
+      url: 'https://ironcorefitness.club',
       title: 'IronCore Fitness Hub',
       desc: 'A dynamic fitness studio website with class scheduling, trainer profiles, membership plans, and progress tracking dashboards. Features immersive hero visuals, workout timers, and seamless trial-class booking via WhatsApp.',
       bgImage: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=800')",
       mobileBgImage: "linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=400')",
-      innerLogo: 'IRONCORE',
-      innerTitle: 'Transform Your Body & Mind',
-      innerDesc: 'Book free trial sessions and explore membership plans today.'
+      innerLogo: 'IRONCORE GYM',
+      innerStatus: '● FREE TRIAL ACTIVE',
+      innerTitle: 'Transform Body, Mind & Strength',
+      innerDesc: 'Claim a free 3-day personal training pass and access state-of-the-art gym amenities.',
+      pills: ['🔥 High-Tech Gym', '🏋️ Certified Coaches', '🎟️ 3-Day Free Pass'],
+      btnText: 'Claim Free Pass',
+      btnIcon: 'ri-flashlight-line',
+      mobileBtnText: 'Claim Trial Pass',
+      mobileBtnIcon: 'ri-boxing-line'
     },
     realestate: {
       category: 'Real Estate',
+      status: 'Virtual Property Hub',
+      url: 'https://primenestproperties.com',
       title: 'PrimeNest Properties',
       desc: 'An elegant property listing platform with virtual tour integration, interactive floor plans, neighbourhood maps, and instant enquiry forms. Designed for brokers and developers to showcase apartments, villas, and commercial spaces with high-impact visuals.',
       bgImage: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=800')",
       mobileBgImage: "linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=400')",
       innerLogo: 'PRIMENEST',
-      innerTitle: 'Find Your Dream Home Today',
-      innerDesc: 'Browse premium apartments, villas, and plots with virtual tours.'
+      innerStatus: '● 40+ PROPERTIES',
+      innerTitle: 'Luxury Villas & City Homes',
+      innerDesc: 'Discover high-return properties and premium residences with interactive 3D tours.',
+      pills: ['🏡 3D Virtual Tours', '📍 Prime Localities', '📑 Verified Titles'],
+      btnText: 'Explore Listings',
+      btnIcon: 'ri-building-2-line',
+      mobileBtnText: 'Enquire on WhatsApp',
+      mobileBtnIcon: 'ri-home-4-line'
     }
   };
 
@@ -311,29 +369,42 @@ document.addEventListener('DOMContentLoaded', () => {
   const updateShowcaseContent = (filter) => {
     activeFilter = filter;
     const data = portfolioData[filter];
+    if (!data) return;
     
     // Update textual contents with animations
     portfolioTitle.style.opacity = 0;
     portfolioDesc.style.opacity = 0;
     
     setTimeout(() => {
-      metaCategory.textContent = data.category;
-      portfolioTitle.textContent = data.title;
-      portfolioDesc.textContent = data.desc;
+      if (metaCategory) metaCategory.textContent = data.category;
+      if (portfolioTitle) portfolioTitle.textContent = data.title;
+      if (portfolioDesc) portfolioDesc.textContent = data.desc;
       
-      innerDesktopLogo.textContent = data.innerLogo;
-      innerDesktopTitle.textContent = data.innerTitle;
-      innerDesktopDesc.textContent = data.innerDesc;
+      if (innerDesktopUrl) innerDesktopUrl.textContent = data.url;
+      if (innerDesktopLogo) innerDesktopLogo.textContent = data.innerLogo;
+      if (innerDesktopStatus) innerDesktopStatus.textContent = data.innerStatus;
+      if (innerDesktopTitle) innerDesktopTitle.textContent = data.innerTitle;
+      if (innerDesktopDesc) innerDesktopDesc.textContent = data.innerDesc;
+      if (innerDesktopBtnText) innerDesktopBtnText.textContent = data.btnText;
+      if (innerDesktopBtnIcon) innerDesktopBtnIcon.className = data.btnIcon;
       
-      innerMobileLogo.textContent = data.innerLogo;
-      innerMobileTitle.textContent = data.innerTitle;
+      if (innerDesktopPills && data.pills) {
+        innerDesktopPills.innerHTML = data.pills.map(pill => `<span>${pill}</span>`).join('');
+      }
       
-      desktopBgFrame.style.backgroundImage = data.bgImage;
-      mobileBgFrame.style.backgroundImage = data.mobileBgImage;
+      if (innerMobileLogo) innerMobileLogo.textContent = data.innerLogo;
+      if (innerMobileCategory) innerMobileCategory.textContent = data.category;
+      if (innerMobileTitle) innerMobileTitle.textContent = data.innerTitle;
+      if (innerMobileDesc) innerMobileDesc.textContent = data.innerDesc;
+      if (innerMobileBtnText) innerMobileBtnText.textContent = data.mobileBtnText;
+      if (innerMobileBtnIcon) innerMobileBtnIcon.className = data.mobileBtnIcon;
+      
+      if (desktopBgFrame) desktopBgFrame.style.backgroundImage = data.bgImage;
+      if (mobileBgFrame) mobileBgFrame.style.backgroundImage = data.mobileBgImage;
       
       portfolioTitle.style.opacity = 1;
       portfolioDesc.style.opacity = 1;
-    }, 200);
+    }, 150);
   };
 
   // Listen to portfolio tabs click
@@ -349,21 +420,23 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Toggle Screen Device Modes (Desktop vs Mobile)
-  btnDeviceDesktop.addEventListener('click', () => {
-    btnDeviceDesktop.classList.add('active');
-    btnDeviceMobile.classList.remove('active');
-    
-    showcaseDesktop.style.display = 'block';
-    showcaseMobile.style.display = 'none';
-  });
+  if (btnDeviceDesktop && btnDeviceMobile && showcaseDesktop && showcaseMobile) {
+    btnDeviceDesktop.addEventListener('click', () => {
+      btnDeviceDesktop.classList.add('active');
+      btnDeviceMobile.classList.remove('active');
+      
+      showcaseDesktop.style.display = 'block';
+      showcaseMobile.style.display = 'none';
+    });
 
-  btnDeviceMobile.addEventListener('click', () => {
-    btnDeviceMobile.classList.add('active');
-    btnDeviceDesktop.classList.remove('active');
-    
-    showcaseMobile.style.display = 'block';
-    showcaseDesktop.style.display = 'none';
-  });
+    btnDeviceMobile.addEventListener('click', () => {
+      btnDeviceMobile.classList.add('active');
+      btnDeviceDesktop.classList.remove('active');
+      
+      showcaseMobile.style.display = 'block';
+      showcaseDesktop.style.display = 'none';
+    });
+  }
 
 
   /* --- 5. TESTIMONIALS & REVIEWS FILTER SYSTEM --- */
