@@ -1,0 +1,14 @@
+{
+  "name": "sample-zaro",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ZARO Web Application",
+  "scripts": {
+    "dev": "npx --yes serve . -l 3000",
+    "start": "npx --yes serve . -l 3000",
+    "dev:auth": "npm --prefix authentication run dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
