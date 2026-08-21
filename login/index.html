@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZARO - Login & Access Your Account</title>
+  <meta name="description"
+    content="Login to ZARO to explore curated creative showcases, connect with top designers, and manage your account.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- Ambient Backdrop with deep cosmic canvas effect -->
+  <div class="ambient-backdrop">
+    <div class="glow-orb glow-1"></div>
+    <div class="glow-orb glow-2"></div>
+    <div class="star-field" id="starField"></div>
+  </div>
+
+  <main class="page-container">
+    <!-- Master Showcase & Auth Card -->
+    <div class="auth-card" id="authCard">
+
+      <!-- LEFT PANEL: Artwork Showcase (Inspired by reference UI) -->
+      <section class="showcase-panel" id="showcasePanel" aria-label="Featured Works Showcase">
+        <!-- Background Slider Images -->
+        <div class="showcase-slides" id="showcaseSlides">
+          <div class="slide active" style="background-image: url('assets/artwork-1.jpg');">
+            <div class="slide-overlay"></div>
+          </div>
+          <div class="slide" style="background-image: url('assets/artwork-2.jpg');">
+            <div class="slide-overlay"></div>
+          </div>
+        </div>
+
+        <!-- Top Navigation in Showcase -->
+        <header class="showcase-header">
+          <div class="showcase-tag">
+            <span class="pulse-dot"></span>
+            <span class="tag-text">Selected Works</span>
+          </div>
+          <nav class="showcase-nav">
+            <button type="button" class="nav-text-btn" id="showcaseSignUpBtn">Sign Up</button>
+            <button type="button" class="btn-pill-outline" id="showcaseJoinBtn">Join Us</button>
+          </nav>
+        </header>
+
+        <!-- Bottom Showcase Author Details & Slider Controls -->
+        <footer class="showcase-footer">
+          <div class="author-badge" id="authorBadge">
+            <div class="avatar-ring">
+              <img src="assets/avatar.jpg" alt="Featured Creator Avatar" class="author-avatar" id="authorAvatar">
+            </div>
+            <div class="author-info">
+              <h4 class="author-name" id="authorName">Andrew.ui</h4>
+              <p class="author-role" id="authorRole">UI & Illustration</p>
+            </div>
+          </div>
+
+          <!-- Carousel Controls (Prev / Next) -->
+          <div class="slider-controls">
+            <button type="button" class="slider-btn" id="prevSlideBtn" aria-label="Previous artwork">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+            </button>
+            <button type="button" class="slider-btn" id="nextSlideBtn" aria-label="Next artwork">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+        </footer>
+      </section>
+
+      <!-- RIGHT PANEL: Login Form Area -->
+      <section class="form-panel" aria-label="Login Form">
+        <!-- Top bar: Logo & Language Selector -->
+        <header class="form-header">
+          <div class="brand-logo" id="brandLogo" style="cursor: pointer;" onclick="window.location.href='../index.html'">
+            <div class="brand-symbol">
+              <span>Z</span>
+            </div>
+            <span class="brand-text">ZARO</span>
+          </div>
+
+          <!-- Language Selector -->
+          <div class="lang-selector-wrapper">
+            <button type="button" class="lang-btn" id="langDropdownBtn" aria-expanded="false" aria-haspopup="listbox">
+              <span class="lang-flag" id="currentFlag">🇬🇧</span>
+              <span class="lang-code" id="currentLangCode">EN</span>
+              <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="lang-menu" id="langMenu" role="listbox">
+              <div class="lang-item active" data-lang="EN" data-flag="🇬🇧" role="option">
+                <span>🇬🇧 English (EN)</span>
+              </div>
+              <div class="lang-item" data-lang="ES" data-flag="🇪🇸" role="option">
+                <span>🇪🇸 Español (ES)</span>
+              </div>
+              <div class="lang-item" data-lang="FR" data-flag="🇫🇷" role="option">
+                <span>🇫🇷 Français (FR)</span>
+              </div>
+              <div class="lang-item" data-lang="DE" data-flag="🇩🇪" role="option">
+                <span>🇩🇪 Deutsch (DE)</span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Main Form Content -->
+        <div class="form-body">
+          <div class="heading-group">
+            <h1 class="main-title" id="welcomeTitle">Welcome Back</h1>
+            <p class="sub-title" id="welcomeSubtitle">Login to access your account</p>
+          </div>
+
+          <!-- Auth Form -->
+          <form class="auth-form" id="loginForm" novalidate>
+
+            <!-- Email / Username Input Group -->
+            <div class="input-group" id="emailGroup">
+              <label for="emailInput" class="input-label">Email or Username</label>
+              <div class="input-wrapper">
+                <span class="field-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L1 7"></path>
+                  </svg>
+                </span>
+                <input type="text" id="emailInput" name="email" class="text-input"
+                  placeholder="name@company.com or username" autocomplete="username" required>
+              </div>
+              <div class="field-error-msg" id="emailError">Please enter a valid email or username</div>
+            </div>
+
+            <!-- Password Input Group -->
+            <div class="input-group" id="passwordGroup">
+              <label for="passwordInput" class="input-label">Password</label>
+              <div class="input-wrapper">
+                <span class="field-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                </span>
+                <input type="password" id="passwordInput" name="password" class="text-input"
+                  placeholder="Enter your password" autocomplete="current-password" required>
+                <!-- Show / Hide Password Button -->
+                <button type="button" class="toggle-password-btn" id="togglePasswordBtn"
+                  aria-label="Toggle password visibility" title="Show/Hide password">
+                  <!-- Eye Icon (hidden by default) -->
+                  <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  <!-- Eye Off Icon -->
+                  <svg class="eye-closed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                    <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
+                    <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+                    <line x1="2" y1="2" x2="22" y2="22"></line>
+                  </svg>
+                </button>
+              </div>
+              <div class="field-error-msg" id="passwordError">Password must be at least 6 characters</div>
+            </div>
+
+            <!-- Options Row: Remember Me & Forgot Password -->
+            <div class="form-options-row">
+              <label class="custom-checkbox" for="rememberMeCheckbox">
+                <input type="checkbox" id="rememberMeCheckbox" name="rememberMe" checked>
+                <span class="checkmark">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </span>
+                <span class="checkbox-label">Remember me</span>
+              </label>
+
+              <button type="button" class="forgot-password-link" id="forgotPasswordBtn">
+                Forgot password ?
+              </button>
+            </div>
+
+            <!-- Divider with OR -->
+            <div class="or-divider">
+              <span class="line"></span>
+              <span class="or-text">or</span>
+              <span class="line"></span>
+            </div>
+
+            <!-- Social Login: Google -->
+            <button type="button" class="social-login-btn google-btn" id="googleLoginBtn">
+              <svg class="social-icon" width="18" height="18" viewBox="0 0 24 24">
+                <path fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                <path fill="#34A853"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                <path fill="#FBBC05"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                <path fill="#EA4335"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+              </svg>
+              <span>Login with Google</span>
+            </button>
+
+            <!-- Primary Login Submit Button -->
+            <button type="submit" class="submit-login-btn" id="submitLoginBtn">
+              <span class="btn-text">Login</span>
+              <div class="btn-loader" id="btnLoader">
+                <span class="spinner"></span>
+              </div>
+            </button>
+
+            <!-- Form Error Message Display -->
+            <div class="form-error-alert" id="formErrorAlert" role="alert" style="display: none;"></div>
+
+            <!-- Create Account / Sign Up Link -->
+            <div class="signup-prompt">
+              <span>Don't have an account?</span>
+              <button type="button" class="signup-link" id="signUpToggleBtn">Sign up</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Form Footer: Social Icons & Terms/Privacy -->
+        <footer class="form-footer">
+          <div class="social-links" aria-label="Social media channels">
+            <a href="#facebook" class="social-icon-link" aria-label="Facebook" title="Facebook">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+              </svg>
+            </a>
+            <a href="#twitter" class="social-icon-link" aria-label="Twitter / X" title="Twitter / X">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+            </a>
+            <a href="#linkedin" class="social-icon-link" aria-label="LinkedIn" title="LinkedIn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+              </svg>
+            </a>
+            <a href="#instagram" class="social-icon-link" aria-label="Instagram" title="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+            </a>
+          </div>
+
+          <div class="legal-links">
+            <button type="button" class="legal-link-btn" id="termsLink">Terms of Service</button>
+            <span class="dot-separator">•</span>
+            <button type="button" class="legal-link-btn" id="privacyLink">Privacy Policy</button>
+          </div>
+        </footer>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Interactive Modal: Forgot Password -->
+  <div class="modal-backdrop" id="forgotModalBackdrop">
+    <div class="modal-card">
+      <button type="button" class="modal-close-btn" id="closeForgotModal" aria-label="Close modal">&times;</button>
+      <div class="modal-header">
+        <div class="modal-icon-badge">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <h3>Reset Password</h3>
+        <p>Enter your registered email address to receive password recovery instructions.</p>
+      </div>
+      <form id="forgotPasswordForm">
+        <div class="input-group">
+          <label for="resetEmailInput" class="input-label">Email Address</label>
+          <div class="input-wrapper">
+            <span class="field-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L1 7"></path>
+              </svg>
+            </span>
+            <input type="email" id="resetEmailInput" class="text-input" placeholder="you@example.com" required>
+          </div>
+        </div>
+        <button type="submit" class="submit-login-btn modal-submit">Send Reset Link</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Interactive Modal: Terms / Privacy -->
+  <div class="modal-backdrop" id="legalModalBackdrop">
+    <div class="modal-card legal-modal">
+      <button type="button" class="modal-close-btn" id="closeLegalModal" aria-label="Close modal">&times;</button>
+      <div class="modal-header">
+        <h3 id="legalModalTitle">Terms of Service</h3>
+        <p id="legalModalDate">Last updated: August 2026</p>
+      </div>
+      <div class="legal-body" id="legalModalContent">
+        <p>Welcome to <strong>ZARO</strong>. By accessing or using our platform, you agree to comply with our community
+          guidelines, secure access policies, and terms of creative content distribution.</p>
+        <h4>1. Account Security</h4>
+        <p>Users are responsible for maintaining the confidentiality of their login credentials and account actions.</p>
+        <h4>2. Showcase & Intellectual Property</h4>
+        <p>All featured design artworks showcased on ZARO belong to their respective creators and verified contributors.
+        </p>
+        <h4>3. Privacy & Cookies</h4>
+        <p>We respect your privacy. Preferences saved locally (such as Remember Me and Language) are kept strictly on
+          your client device.</p>
+      </div>
+      <button type="button" class="btn-pill-outline modal-confirm-btn" id="legalAcknowledgeBtn">Understood</button>
+    </div>
+  </div>
+
+  <!-- Toast Notification System -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <script type="module" src="script.js"></script>
+</body>
+
+</html>

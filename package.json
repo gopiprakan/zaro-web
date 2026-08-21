@@ -4,13 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "npm --prefix frontend/portal install && npm --prefix frontend/portal run build",
-    "dev": "npx --yes serve frontend -l 3000",
-    "dev:frontend": "npx --yes serve frontend -l 3000",
-    "dev:portal": "npm --prefix frontend/portal run dev",
+    "build": "npm --prefix portal install && npm --prefix portal run build",
+    "dev": "npx --yes serve . -l 3000",
+    "start": "npx --yes serve . -l 3000",
+    "dev:portal": "npm --prefix portal run dev",
     "dev:backend": "npm --prefix backend run dev",
     "start:backend": "npm --prefix backend start",
-    "build:portal": "npm --prefix frontend/portal run build"
+    "build:portal": "npm --prefix portal run build"
   },
   "dependencies": {
     "cors": "^2.8.5",

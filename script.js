@@ -6,6 +6,8 @@
 ================================================================
 */
 
+import { supabase } from './src/supabaseClient.js';
+
 document.addEventListener('DOMContentLoaded', () => {
 
   /* --- 1. DARK & LIGHT THEME ENGINE --- */
@@ -680,12 +682,60 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
 
   // Update all header & drawer profile displays based on active session
   const checkActiveSession = async () => {
-    const email = getActiveUserEmail();
-    if (email) {
-      const users = getUsers();
-      activeUser = users[email] || null;
+    // 1. Check Supabase active session
+    if (supabase && supabase.auth) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session && session.user) {
+          const email = session.user.email;
+          const name = session.user.user_metadata?.name || session.user.user_metadata?.full_name || email.split('@')[0];
+          const storedAvatar = localStorage.getItem(`zaro-avatar-${email}`) || "";
+          const storedOrders = JSON.parse(localStorage.getItem(`zaro-orders-${email}`)) || [
+            {
+              id: `ZARO-${Math.floor(10000 + Math.random() * 90000)}`,
+              projectName: `Custom Storefront Launch Concept`,
+              category: 'Consultation & Schema Mapping',
+              price: 3500,
+              date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+              estDelivery: 'Immediate Delivery',
+              status: 'launched'
+            }
+          ];
+          activeUser = {
+            id: session.user.id,
+            name: name,
+            shop: 'My Zaro Storefront',
+            email: email,
+            avatar: storedAvatar,
+            orders: storedOrders
+          };
+        } else {
+          const email = getActiveUserEmail();
+          if (email) {
+            const users = getUsers();
+            activeUser = users[email] || null;
+          } else {
+            activeUser = null;
+          }
+        }
+      } catch (err) {
+        console.error('Supabase session check error:', err);
+        const email = getActiveUserEmail();
+        if (email) {
+          const users = getUsers();
+          activeUser = users[email] || null;
+        } else {
+          activeUser = null;
+        }
+      }
     } else {
-      activeUser = null;
+      const email = getActiveUserEmail();
+      if (email) {
+        const users = getUsers();
+        activeUser = users[email] || null;
+      } else {
+        activeUser = null;
+      }
     }
     
     // Update DOM elements
@@ -957,7 +1007,12 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   };
 
   // Event Listeners for openers
-  headerLoginBtn.addEventListener('click', openAuthModal);
+  if (headerLoginBtn) {
+    headerLoginBtn.addEventListener('click', (e) => {
+      // Navigate to standalone login page
+      window.location.href = 'login/index.html';
+    });
+  }
   headerProfileBtn.addEventListener('click', openProfileDrawer);
   
   authModalClose.addEventListener('click', closeAuthModal);
@@ -1141,7 +1196,15 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   // Sign out Handler
   logoutBtn.addEventListener('click', async () => {
     const userName = activeUser ? activeUser.name : 'Client';
+    if (supabase && supabase.auth) {
+      try {
+        await supabase.auth.signOut();
+      } catch (e) {
+        console.error('Supabase signOut error:', e);
+      }
+    }
     setActiveUserEmail(null);
+    localStorage.removeItem('zaro_portal_user');
     await checkActiveSession();
     closeProfileDrawer();
     showToast('Logged Out', `Goodbye, ${userName}! Have a wonderful day!`, 'warning');

@@ -1,7 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm --prefix frontend/portal install && npm --prefix frontend/portal run build",
-  "outputDirectory": "frontend",
+  "buildCommand": "npm --prefix portal install && npm --prefix portal run build",
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -9,19 +8,23 @@
     },
     {
       "source": "/portal/assets/(.*)",
-      "destination": "/frontend/portal/dist/assets/$1"
+      "destination": "/portal/dist/assets/$1"
     },
     {
       "source": "/portal/(.*)",
-      "destination": "/frontend/portal/dist/index.html"
+      "destination": "/portal/dist/index.html"
     },
     {
       "source": "/portal",
-      "destination": "/frontend/portal/dist/index.html"
+      "destination": "/portal/dist/index.html"
     },
     {
-      "source": "/(.*)",
-      "destination": "/frontend/$1"
+      "source": "/login/(.*)",
+      "destination": "/login/$1"
+    },
+    {
+      "source": "/login",
+      "destination": "/login/index.html"
     }
   ]
 }
