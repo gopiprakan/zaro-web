@@ -1,0 +1,102 @@
+{
+  "users": [
+    {
+      "id": "USR-001",
+      "email": "client@zaro.dev",
+      "password": "password123",
+      "name": "Elena Rostova",
+      "role": "client",
+      "company": "Luxe Botanica Retail",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+      "balance": 14250,
+      "totalSpent": 42500,
+      "status": "Active",
+      "verified": true,
+      "joined": "2026-01-14"
+    },
+    {
+      "id": "USR-002",
+      "email": "freelancer@zaro.dev",
+      "password": "password123",
+      "name": "Marcus Sterling",
+      "role": "freelancer",
+      "title": "Senior Full-Stack & UI/UX Specialist",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+      "balance": 8940,
+      "totalEarned": 68500,
+      "rating": 4.98,
+      "status": "Active",
+      "verified": true,
+      "joined": "2025-11-20"
+    },
+    {
+      "id": "USR-003",
+      "email": "admin@zaro.dev",
+      "password": "password123",
+      "name": "Alexander Vance",
+      "role": "admin",
+      "title": "Platform Master Director",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
+      "permissions": "Full System Access",
+      "status": "Active",
+      "verified": true,
+      "joined": "2025-09-01"
+    }
+  ],
+  "projects": [
+    {
+      "id": "PRJ-1082",
+      "title": "Luxury Boutique E-Commerce Redesign",
+      "clientName": "Elena Rostova",
+      "clientEmail": "client@zaro.dev",
+      "freelancerName": "Marcus Sterling",
+      "freelancerEmail": "freelancer@zaro.dev",
+      "category": "Full-Stack Web",
+      "budget": 6800,
+      "paid": 3400,
+      "status": "In Progress",
+      "progress": 68,
+      "deadline": "2026-09-15",
+      "description": "High-conversion Shopify + Headless React storefront with 3D garment visualizer and Stripe integrated checkout.",
+      "milestones": [
+        { "name": "Wireframing & UI Kit Design", "amount": 1800, "status": "Completed" },
+        { "name": "Frontend React Development", "amount": 2400, "status": "In Progress" },
+        { "name": "Backend API & Stripe Connect", "amount": 1600, "status": "Pending" },
+        { "name": "SEO Optimization & Deploy", "amount": 1000, "status": "Pending" }
+      ]
+    },
+    {
+      "id": "PRJ-1083",
+      "title": "Gourmet Artisanal Cafe Landing & Ordering System",
+      "clientName": "Elena Rostova",
+      "clientEmail": "client@zaro.dev",
+      "freelancerName": "Sarah Jenkins",
+      "freelancerEmail": "sarah@zaro.dev",
+      "category": "UI/UX & Web App",
+      "budget": 4200,
+      "paid": 4200,
+      "status": "Under Review",
+      "progress": 95,
+      "deadline": "2026-08-30",
+      "description": "Dynamic table-booking, WhatsApp order sync, and custom live order tracking dashboard.",
+      "milestones": [
+        { "name": "Design System & Branding", "amount": 1200, "status": "Completed" },
+        { "name": "Interactive Menu & Cart", "amount": 1800, "status": "Completed" },
+        { "name": "WhatsApp & SMS Webhooks", "amount": 1200, "status": "Completed" }
+      ]
+    }
+  ],
+  "orders": [
+    {
+      "id": "ZARO-84912",
+      "userEmail": "client@zaro.dev",
+      "projectName": "Luxe Botanica Storefront Launch Concept",
+      "category": "Full-Stack E-Commerce",
+      "price": 4500,
+      "date": "2026-08-15",
+      "estDelivery": "Immediate Delivery",
+      "status": "launched"
+    }
+  ],
+  "inquiries": []
+}
