@@ -4,10 +4,28 @@ A modern web application ecosystem featuring a high-conversion agency landing pa
 
 ---
 
+## ☁️ 1-Click Vercel Deployment (Unified Full-Stack App)
+
+This repository is pre-configured with [`vercel.json`](file:///c:/Users/GOPIPRAKAN/OneDrive/Desktop/sample%20zaro/vercel.json) and [`api/index.js`](file:///c:/Users/GOPIPRAKAN/OneDrive/Desktop/sample%20zaro/api/index.js) so Vercel deploys the **entire full-stack application as a single unified project**:
+
+- **Root URL (`/`)**: Main Agency Landing Page (`index.html`, `style.css`, `script.js`)
+- **Portal URL (`/portal`)**: Client, Freelancer & Admin React Portal
+- **API Endpoints (`/api/*`)**: Serverless Express REST API Backend
+
+### How to Deploy to Vercel:
+1. Push your changes to your GitHub repository (`gopiprakan/zaro-web`).
+2. Go to [Vercel Dashboard](https://vercel.com/new).
+3. Import the repository (`gopiprakan/zaro-web`) as the **Root Project** (leave root directory as `./`).
+4. Click **Deploy** — Vercel will automatically build the portal and deploy the landing page + serverless backend in one go!
+
+---
+
 ## 📁 Project Architecture
 
 ```
 sample zaro/
+├── api/
+│   └── index.js                 # Vercel Serverless Function entrypoint
 ├── frontend/
 │   ├── index.html               # Main ZARO agency landing page
 │   ├── style.css                # Custom responsive CSS design system
@@ -20,19 +38,20 @@ sample zaro/
 │       └── vite.config.js
 │
 ├── backend/
-│   ├── server.js                # Express REST API entry point
+│   ├── server.js                # Express REST API entry point (local dev)
 │   ├── package.json             # Backend dependencies (express, cors, dotenv, morgan)
 │   ├── .env                     # Server environment configuration
 │   ├── routes/                  # API routes (auth, projects, orders, users, contact)
 │   ├── controllers/             # Request handlers and business logic
 │   └── data/                    # JSON database store & helpers
 │
+├── vercel.json                  # Vercel unified routing and build configuration
 └── package.json                 # Unified root orchestration scripts
 ```
 
 ---
 
-## 🚀 Quick Start Commands
+## 🚀 Quick Start Commands (Local Development)
 
 ### 1. Run the Main Landing Page (Frontend)
 ```bash

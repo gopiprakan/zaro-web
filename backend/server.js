@@ -55,3 +55,6 @@ app.listen(PORT, () => {
   console.log(`🚀 ZARO REST API Server running on http://localhost:${PORT}`);
   console.log(`📡 Health Check: http://localhost:${PORT}/api/health`);
 });
+
+export default app;
+

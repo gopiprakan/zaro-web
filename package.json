@@ -2,14 +2,21 @@
   "name": "sample-zaro",
   "version": "1.0.0",
   "private": true,
-  "description": "ZARO Web Application",
+  "type": "module",
   "scripts": {
+    "build": "npm --prefix frontend/portal install && npm --prefix frontend/portal run build",
     "dev": "npx --yes serve frontend -l 3000",
     "dev:frontend": "npx --yes serve frontend -l 3000",
     "dev:portal": "npm --prefix frontend/portal run dev",
     "dev:backend": "npm --prefix backend run dev",
     "start:backend": "npm --prefix backend start",
     "build:portal": "npm --prefix frontend/portal run build"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "morgan": "^1.10.0"
   },
   "keywords": [],
   "author": "",
