@@ -1,14 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { auth, isConfigured } from '../firebaseClient';
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  GoogleAuthProvider,
-  signInWithPopup,
-  updateProfile,
-} from 'firebase/auth';
+
+const isConfigured = true;
 
 const AuthContext = createContext(null);
 
@@ -296,41 +288,9 @@ export function AuthProvider({ children }) {
     localStorage.setItem('zaro_users_list', JSON.stringify(usersList));
   }, [usersList]);
 
-  // Sync Firebase Auth if configured
+  // Initialize auth state on mount
   useEffect(() => {
-    if (!isConfigured || !auth) {
-      setLoading(false);
-      return;
-    }
-
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      if (firebaseUser) {
-        // Resolve user role
-        const storedRole = localStorage.getItem(`zaro_user_role_${firebaseUser.uid}`) || 'client';
-        const userObj = {
-          uid: firebaseUser.uid,
-          email: firebaseUser.email,
-          displayName: firebaseUser.displayName || firebaseUser.email.split('@')[0],
-          role: storedRole,
-          avatar: firebaseUser.photoURL || `https://api.dicebear.com/7.x/shapes/svg?seed=${firebaseUser.email}`,
-          balance: 5000,
-        };
-        setCurrentUser(userObj);
-        setRole(storedRole);
-        localStorage.setItem('zaro_portal_user', JSON.stringify(userObj));
-        localStorage.setItem('zaro_portal_role', storedRole);
-      } else {
-        // Check if demo user is active
-        const savedDemo = localStorage.getItem('zaro_portal_user');
-        if (!savedDemo || !savedDemo.includes('demo-')) {
-          setCurrentUser(null);
-          localStorage.removeItem('zaro_portal_user');
-        }
-      }
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
+    setLoading(false);
   }, []);
 
   // Quick 1-click Demo Login
@@ -345,92 +305,42 @@ export function AuthProvider({ children }) {
 
   // Standard Login
   const login = async (email, password, desiredRole = 'client') => {
-    if (!isConfigured || !auth) {
-      // Offline / Demo fallback
-      const mockUser = {
-        uid: `user-${Date.now()}`,
-        email: email.toLowerCase(),
-        displayName: email.split('@')[0],
-        role: desiredRole,
-        avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${email}`,
-        balance: 5000,
-      };
-      setCurrentUser(mockUser);
-      setRole(desiredRole);
-      localStorage.setItem('zaro_portal_user', JSON.stringify(mockUser));
-      localStorage.setItem('zaro_portal_role', desiredRole);
-      return mockUser;
-    }
-
-    const cred = await signInWithEmailAndPassword(auth, email, password);
-    const storedRole = localStorage.getItem(`zaro_user_role_${cred.user.uid}`) || desiredRole;
+    const matchedUser = usersList.find(u => u.email.toLowerCase() === email.toLowerCase());
+    const resolvedRole = matchedUser ? matchedUser.role : desiredRole;
+    
     const userObj = {
-      uid: cred.user.uid,
-      email: cred.user.email,
-      displayName: cred.user.displayName || cred.user.email.split('@')[0],
-      role: storedRole,
-      avatar: cred.user.photoURL || `https://api.dicebear.com/7.x/shapes/svg?seed=${cred.user.email}`,
+      uid: matchedUser ? matchedUser.id : `user-${Date.now()}`,
+      email: email.toLowerCase(),
+      displayName: matchedUser ? matchedUser.name : email.split('@')[0],
+      role: resolvedRole,
+      avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${email}`,
       balance: 5000,
     };
     setCurrentUser(userObj);
-    setRole(storedRole);
+    setRole(resolvedRole);
     localStorage.setItem('zaro_portal_user', JSON.stringify(userObj));
-    localStorage.setItem('zaro_portal_role', storedRole);
+    localStorage.setItem('zaro_portal_role', resolvedRole);
     return userObj;
   };
 
   // Standard Sign Up
   const signup = async (email, password, displayName, assignedRole = 'client', extraInfo = {}) => {
-    if (!isConfigured || !auth) {
-      const newUser = {
-        uid: `user-${Date.now()}`,
-        email: email.toLowerCase(),
-        displayName: displayName || email.split('@')[0],
-        role: assignedRole,
-        avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${displayName || email}`,
-        company: extraInfo.company || 'ZARO Member',
-        title: extraInfo.title || 'Freelance Specialist',
-        balance: 0,
-      };
-      setCurrentUser(newUser);
-      setRole(assignedRole);
-      localStorage.setItem('zaro_portal_user', JSON.stringify(newUser));
-      localStorage.setItem('zaro_portal_role', assignedRole);
-
-      // Add to users list
-      setUsersList(prev => [
-        {
-          id: `USR-${Date.now().toString().slice(-4)}`,
-          name: displayName || email.split('@')[0],
-          email: email.toLowerCase(),
-          role: assignedRole,
-          status: 'Active',
-          verified: false,
-          joined: 'Today'
-        },
-        ...prev
-      ]);
-      return newUser;
-    }
-
-    const cred = await createUserWithEmailAndPassword(auth, email, password);
-    if (displayName.trim()) {
-      await updateProfile(cred.user, { displayName: displayName.trim() });
-    }
-    localStorage.setItem(`zaro_user_role_${cred.user.uid}`, assignedRole);
-    const userObj = {
-      uid: cred.user.uid,
-      email: cred.user.email,
-      displayName: displayName || cred.user.email.split('@')[0],
+    const newUser = {
+      uid: `user-${Date.now()}`,
+      email: email.toLowerCase(),
+      displayName: displayName || email.split('@')[0],
       role: assignedRole,
       avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${displayName || email}`,
+      company: extraInfo.company || 'ZARO Member',
+      title: extraInfo.title || 'Freelance Specialist',
       balance: 0,
     };
-    setCurrentUser(userObj);
+    setCurrentUser(newUser);
     setRole(assignedRole);
-    localStorage.setItem('zaro_portal_user', JSON.stringify(userObj));
+    localStorage.setItem('zaro_portal_user', JSON.stringify(newUser));
     localStorage.setItem('zaro_portal_role', assignedRole);
 
+    // Add to users list
     setUsersList(prev => [
       {
         id: `USR-${Date.now().toString().slice(-4)}`,
@@ -443,30 +353,12 @@ export function AuthProvider({ children }) {
       },
       ...prev
     ]);
-    return userObj;
+    return newUser;
   };
 
   // Google Sign-In
   const loginWithGoogle = async (preferredRole = 'client') => {
-    if (!isConfigured || !auth) {
-      return loginAsDemo(preferredRole);
-    }
-    const provider = new GoogleAuthProvider();
-    const cred = await signInWithPopup(auth, provider);
-    const storedRole = localStorage.getItem(`zaro_user_role_${cred.user.uid}`) || preferredRole;
-    const userObj = {
-      uid: cred.user.uid,
-      email: cred.user.email,
-      displayName: cred.user.displayName,
-      role: storedRole,
-      avatar: cred.user.photoURL,
-      balance: 5000,
-    };
-    setCurrentUser(userObj);
-    setRole(storedRole);
-    localStorage.setItem('zaro_portal_user', JSON.stringify(userObj));
-    localStorage.setItem('zaro_portal_role', storedRole);
-    return userObj;
+    return loginAsDemo(preferredRole);
   };
 
   // Switch Active Role for easy testing
@@ -482,15 +374,9 @@ export function AuthProvider({ children }) {
 
   // Logout
   const logout = async () => {
-    if (auth && isConfigured) {
-      try {
-        await signOut(auth);
-      } catch (e) {
-        console.error('Signout error:', e);
-      }
-    }
     setCurrentUser(null);
     localStorage.removeItem('zaro_portal_user');
+    localStorage.removeItem('zaro_portal_role');
   };
 
   // Data helpers

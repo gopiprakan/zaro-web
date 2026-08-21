@@ -164,7 +164,7 @@ export default function AdminDashboard() {
                 <div className="progress-bar-track"><div className="progress-bar-fill success" style={{ width: '99%' }}></div></div>
               </div>
               <div className="health-item">
-                <div className="health-label"><span>Firebase Auth State</span><strong className="text-success">Connected</strong></div>
+                <div className="health-label"><span>Authentication Gateway</span><strong className="text-success">Connected</strong></div>
                 <div className="progress-bar-track"><div className="progress-bar-fill success" style={{ width: '100%' }}></div></div>
               </div>
               <div className="health-item">

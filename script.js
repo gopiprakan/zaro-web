@@ -6,18 +6,6 @@
 ================================================================
 */
 
-import { auth } from './firebase-config.js';
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  updateProfile,
-  GoogleAuthProvider,
-  signInWithPopup,
-  sendPasswordResetEmail
-} from 'firebase/auth';
-
 document.addEventListener('DOMContentLoaded', () => {
 
   /* --- 1. DARK & LIGHT THEME ENGINE --- */
@@ -651,13 +639,11 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   
   const ordersListContainer = document.getElementById('orders-list-container');
 
-  /* --- 11. FIREBASE INITIALIZATION & SESSION MANAGEMENT --- */
+  /* --- 11. USER AUTHENTICATION & SESSION MANAGEMENT --- */
   
-  const firebaseConfigured = auth && auth.app && auth.app.options && auth.app.options.apiKey && !auth.app.options.apiKey.includes('your_');
-
   let activeUser = null;
 
-  // Retrieve databases from localStorage (for mock fallback)
+  // Retrieve databases from localStorage
   const getUsers = () => JSON.parse(localStorage.getItem('zaro-users')) || {};
   const saveUsers = (users) => localStorage.setItem('zaro-users', JSON.stringify(users));
   
@@ -670,12 +656,12 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
     }
   };
 
-  // Get active user data object (compatible with original code)
+  // Get active user data object
   const getActiveUser = () => {
     return activeUser;
   };
 
-  // Update specific active user properties (for mock fallback)
+  // Update specific active user properties
   const updateActiveUserData = (updatedFields) => {
     const email = getActiveUserEmail();
     if (!email) return;
@@ -694,67 +680,12 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
 
   // Update all header & drawer profile displays based on active session
   const checkActiveSession = async () => {
-    if (!firebaseConfigured || !auth) {
-      // Fallback: Local Storage Mock Auth
-      const email = getActiveUserEmail();
-      if (email) {
-        const users = getUsers();
-        activeUser = users[email] || null;
-      } else {
-        activeUser = null;
-      }
+    const email = getActiveUserEmail();
+    if (email) {
+      const users = getUsers();
+      activeUser = users[email] || null;
     } else {
-      // Live Firebase Auth
-      try {
-        const user = auth.currentUser;
-
-        if (user) {
-          const email = user.email;
-          
-          let username = user.displayName || email.split('@')[0];
-          let shopName = "My Zaro Storefront";
-          
-          // Firestore profile lookup skipped (not enabled at this stage)
-          // username and shopName fall back to Auth displayName and localStorage
-          const storedName = localStorage.getItem(`zaro-name-${user.uid}`);
-          const storedShop = localStorage.getItem(`zaro-shop-${user.uid}`);
-          if (storedName) username = storedName;
-          if (storedShop) shopName = storedShop;
-          
-          // Retrieve local-only properties (avatar and orders list)
-          const storedAvatar = localStorage.getItem(`zaro-avatar-${email}`) || "";
-          const storedOrders = JSON.parse(localStorage.getItem(`zaro-orders-${email}`)) || [
-            {
-              id: `ZARO-${Math.floor(10000 + Math.random() * 90000)}`,
-              projectName: `${shopName} Launch Concept`,
-              category: 'Consultation & Schema Mapping',
-              price: 3500,
-              date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
-              estDelivery: 'Immediate Delivery',
-              status: 'launched'
-            }
-          ];
-          
-          // Save back default order list to localStorage if first time loading
-          if (!localStorage.getItem(`zaro-orders-${email}`)) {
-            localStorage.setItem(`zaro-orders-${email}`, JSON.stringify(storedOrders));
-          }
-
-          activeUser = {
-            id: user.uid,
-            name: username,
-            shop: shopName,
-            email: email,
-            avatar: storedAvatar,
-            orders: storedOrders
-          };
-        } else {
-          activeUser = null;
-        }
-      } catch (err) {
-        console.error("Firebase Auth session load failure:", err);
-        activeUser = null;
-      }
+      activeUser = null;
     }
     
     // Update DOM elements
@@ -895,10 +826,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
     // Update db / localStorage
     activeUser.orders = currentOrders;
     localStorage.setItem(`zaro-orders-${activeUser.email}`, JSON.stringify(currentOrders));
-    
-    if (!firebaseConfigured || !auth) {
-      updateActiveUserData({ orders: currentOrders });
-    }
+    updateActiveUserData({ orders: currentOrders });
     
     await checkActiveSession();
     
@@ -1070,93 +998,42 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       return;
     }
     
-    if (!firebaseConfigured || !auth) {
-      // Mock signup flow
-      const users = getUsers();
-      if (users[email]) {
-        showToast('Registration Error', 'An account with this email already exists!', 'danger');
-        return;
-      }
-      
-      const initialOrders = [
-        {
-          id: `ZARO-${Math.floor(10000 + Math.random() * 90000)}`,
-          projectName: `${shop} Launch Concept`,
-          category: 'Consultation & Schema Mapping',
-          price: 3500,
-          date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
-          estDelivery: 'Immediate Delivery',
-          status: 'launched'
-        }
-      ];
-
-      users[email] = {
-        name,
-        shop,
-        email,
-        password,
-        avatar: '',
-        orders: initialOrders
-      };
-      
-      saveUsers(users);
-      setActiveUserEmail(email);
-      
-      showToast('Success!', `Welcome to ZARO Agency, ${name}! Your account is now active.`, 'success');
-      
-      signupForm.reset();
-      closeAuthModal();
-      await checkActiveSession();
-    } else {
-      // Firebase signup flow
-      const submitBtn = signupForm.querySelector('button[type="submit"]');
-      const originalText = submitBtn.innerHTML;
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Registering...';
-      
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        
-        await updateProfile(user, {
-          displayName: name
-        });
-        
-        // Save name & shop to localStorage (Firestore not enabled at this stage)
-        localStorage.setItem(`zaro-name-${user.uid}`, name);
-        localStorage.setItem(`zaro-shop-${user.uid}`, shop);
-        
-        // Initialize default orders list for tracking
-        const initialOrders = [
-          {
-            id: `ZARO-${Math.floor(10000 + Math.random() * 90000)}`,
-            projectName: `${shop} Launch Concept`,
-            category: 'Consultation & Schema Mapping',
-            price: 3500,
-            date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
-            estDelivery: 'Immediate Delivery',
-            status: 'launched'
-          }
-        ];
-        localStorage.setItem(`zaro-orders-${email}`, JSON.stringify(initialOrders));
-        
-        showToast('Success!', `Welcome to ZARO, ${name}! Your account has been registered.`, 'success');
-        
-        signupForm.reset();
-        closeAuthModal();
-        await checkActiveSession();
-      } catch (err) {
-        const code = err.code || '';
-        let errMsg = 'Registration failed. Please try again.';
-        if (code === 'auth/email-already-in-use') errMsg = 'User already exists. Please sign in.';
-        else if (code === 'auth/invalid-email') errMsg = 'Please enter a valid email address.';
-        else if (code === 'auth/weak-password') errMsg = 'Password must be at least 6 characters.';
-        showToast('Registration Error', errMsg, 'danger');
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalText;
-      }
+    // Registration flow
+    const users = getUsers();
+    if (users[email]) {
+      showToast('Registration Error', 'An account with this email already exists!', 'danger');
+      return;
     }
+    
+    const initialOrders = [
+      {
+        id: `ZARO-${Math.floor(10000 + Math.random() * 90000)}`,
+        projectName: `${shop} Launch Concept`,
+        category: 'Consultation & Schema Mapping',
+        price: 3500,
+        date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+        estDelivery: 'Immediate Delivery',
+        status: 'launched'
+      }
+    ];
+
+    users[email] = {
+      name,
+      shop,
+      email,
+      password,
+      avatar: '',
+      orders: initialOrders
+    };
+    
+    saveUsers(users);
+    setActiveUserEmail(email);
+    
+    showToast('Success!', `Welcome to ZARO Agency, ${name}! Your account is now active.`, 'success');
+    
+    signupForm.reset();
+    closeAuthModal();
+    await checkActiveSession();
   });
 
   // Login Submit Handlers
@@ -1166,87 +1043,53 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
     const email = document.getElementById('login-email').value.toLowerCase().trim();
     const password = document.getElementById('login-password').value;
     
-    if (!firebaseConfigured || !auth) {
-      // Mock login flow
-      const users = getUsers();
-      const user = users[email];
-      
-      if (!user || user.password !== password) {
-        showToast('Auth Failure', 'Incorrect email address or password. Try again.', 'danger');
-        return;
-      }
-      
-      setActiveUserEmail(email);
-      showToast('Signed In Successfully!', `Welcome back, ${user.name}!`, 'success');
-      
-      loginForm.reset();
-      closeAuthModal();
-      await checkActiveSession();
-    } else {
-      // Firebase login flow
-      const submitBtn = loginForm.querySelector('button[type="submit"]');
-      const originalText = submitBtn.innerHTML;
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Signing In...';
-      
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        
-        showToast('Signed In Successfully!', 'Welcome back to ZARO Client Workspace!', 'success');
-        
-        loginForm.reset();
-        closeAuthModal();
-        await checkActiveSession();
-      } catch (err) {
-        const code = err.code || '';
-        let errMsg = 'Login failed. Please try again.';
-        if (
-          code === 'auth/wrong-password' ||
-          code === 'auth/user-not-found' ||
-          code === 'auth/invalid-credential' ||
-          code === 'auth/invalid-email'
-        ) { errMsg = 'Email or password is incorrect.'; }
-        showToast('Auth Failure', errMsg, 'danger');
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalText;
-      }
+    const users = getUsers();
+    const user = users[email];
+    
+    if (!user || user.password !== password) {
+      showToast('Auth Failure', 'Incorrect email address or password. Try again.', 'danger');
+      return;
     }
+    
+    setActiveUserEmail(email);
+    showToast('Signed In Successfully!', `Welcome back, ${user.name}!`, 'success');
+    
+    loginForm.reset();
+    closeAuthModal();
+    await checkActiveSession();
   });
 
   // Google Sign-In Handler
   const googleSignInBtn = document.getElementById('google-signin-btn');
   if (googleSignInBtn) {
     googleSignInBtn.addEventListener('click', async () => {
-      if (!firebaseConfigured || !auth) {
-        showToast('Auth Error', 'Firebase is not configured for Google Sign-In.', 'danger');
-        return;
+      const demoEmail = 'google.user@zaro.dev';
+      const users = getUsers();
+      if (!users[demoEmail]) {
+        users[demoEmail] = {
+          name: 'Alex Rivera',
+          shop: 'Rivera Studio',
+          email: demoEmail,
+          password: 'google-oauth-demo',
+          avatar: '',
+          orders: [
+            {
+              id: `ZARO-${Math.floor(10000 + Math.random() * 90000)}`,
+              projectName: 'Rivera Studio Launch Concept',
+              category: 'Full-Stack E-Commerce',
+              price: 4500,
+              date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+              estDelivery: 'Immediate Delivery',
+              status: 'launched'
+            }
+          ]
+        };
+        saveUsers(users);
       }
-      
-      const provider = new GoogleAuthProvider();
-      const originalText = googleSignInBtn.innerHTML;
-      googleSignInBtn.disabled = true;
-      googleSignInBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Loading...';
-      
-      try {
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-        
-        if (user.displayName) {
-          localStorage.setItem(`zaro-name-${user.uid}`, user.displayName);
-        }
-        
-        showToast('Signed In Successfully!', `Welcome to ZARO, ${user.displayName || 'User'}!`, 'success');
-        
-        closeAuthModal();
-        await checkActiveSession();
-      } catch (err) {
-        console.error(err);
-        showToast('Auth Failure', 'Google Sign-In failed or was cancelled.', 'danger');
-      } finally {
-        googleSignInBtn.disabled = false;
-        googleSignInBtn.innerHTML = originalText;
-      }
+      setActiveUserEmail(demoEmail);
+      showToast('Signed In Successfully!', 'Welcome to ZARO, Alex Rivera!', 'success');
+      closeAuthModal();
+      await checkActiveSession();
     });
   }
 
@@ -1260,35 +1103,9 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       return;
     }
     
-    if (!firebaseConfigured || !auth) {
-      // Mock save
-      updateActiveUserData({ name: newName });
-      await checkActiveSession();
-      showToast('Profile Updated', 'Your Display Name has been saved successfully!', 'success');
-    } else {
-      // Firebase save
-      saveProfileBtn.disabled = true;
-      saveProfileBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Saving...';
-      try {
-        const user = auth.currentUser;
-        if (!user) throw new Error("No active user found!");
-
-        await updateProfile(user, {
-          displayName: newName
-        });
-        
-        // Save name to localStorage (Firestore not enabled at this stage)
-        localStorage.setItem(`zaro-name-${user.uid}`, newName);
-        
-        showToast('Profile Updated', 'Your Display Name has been saved successfully!', 'success');
-        await checkActiveSession();
-      } catch (err) {
-        showToast('Update Failed', err.message, 'danger');
-      } finally {
-        saveProfileBtn.disabled = false;
-        saveProfileBtn.innerHTML = '<i class="ri-save-line"></i> Save Profile Details';
-      }
-    }
+    updateActiveUserData({ name: newName });
+    await checkActiveSession();
+    showToast('Profile Updated', 'Your Display Name has been saved successfully!', 'success');
   });
 
   // Avatar file input listener
@@ -1313,11 +1130,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
       if (activeUser) {
         activeUser.avatar = base64String;
         localStorage.setItem(`zaro-avatar-${activeUser.email}`, base64String);
-        
-        if (!firebaseConfigured || !auth) {
-          updateActiveUserData({ avatar: base64String });
-        }
-        
+        updateActiveUserData({ avatar: base64String });
         await checkActiveSession();
         showToast('Avatar Updated', 'Your profile picture has been customized successfully!', 'success');
       }
@@ -1328,27 +1141,10 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   // Sign out Handler
   logoutBtn.addEventListener('click', async () => {
     const userName = activeUser ? activeUser.name : 'Client';
-    
-    if (!firebaseConfigured || !auth) {
-      setActiveUserEmail(null);
-      await checkActiveSession();
-      closeProfileDrawer();
-      showToast('Logged Out', `Goodbye, ${userName}! Have a wonderful day!`, 'warning');
-    } else {
-      logoutBtn.disabled = true;
-      logoutBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Signing Out...';
-      try {
-        await signOut(auth);
-        await checkActiveSession();
-        closeProfileDrawer();
-        showToast('Logged Out', `Goodbye, ${userName}! Have a wonderful day!`, 'warning');
-      } catch (err) {
-        showToast('Logout Error', err.message, 'danger');
-      } finally {
-        logoutBtn.disabled = false;
-        logoutBtn.innerHTML = '<i class="ri-logout-box-r-line"></i> Sign Out';
-      }
-    }
+    setActiveUserEmail(null);
+    await checkActiveSession();
+    closeProfileDrawer();
+    showToast('Logged Out', `Goodbye, ${userName}! Have a wonderful day!`, 'warning');
   });
 
   /* --- 9. HIGH-PERFORMANCE SCROLL REVEAL ENGINE --- */
@@ -1373,14 +1169,6 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   } else {
     // Fallback if browser does not support IntersectionObserver
     revealElements.forEach(el => el.classList.add('active'));
-  }
-
-  // Bind session updates
-  if (firebaseConfigured && auth) {
-    onAuthStateChanged(auth, async (user) => {
-      console.log("Firebase Auth state changed:", user);
-      await checkActiveSession();
-    });
   }
 
   // Active check on load
@@ -1483,24 +1271,7 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
         return;
       }
       
-      if (!firebaseConfigured || !auth) {
-        // Mock fallback — can't send real emails
-        showToast('Reset Sent!', `If an account exists for ${email}, a password reset link has been sent.`, 'success');
-        return;
-      }
-      
-      try {
-        await sendPasswordResetEmail(auth, email);
-        showToast('Reset Email Sent!', `A password reset link has been sent to ${email}. Check your inbox.`, 'success');
-      } catch (err) {
-        const code = err.code || '';
-        if (code === 'auth/user-not-found' || code === 'auth/invalid-email') {
-          // For security, show the same success message
-          showToast('Reset Sent!', `If an account exists for ${email}, a password reset link has been sent.`, 'success');
-        } else {
-          showToast('Error', 'Failed to send reset email. Please try again later.', 'danger');
-        }
-      }
+      showToast('Reset Email Sent!', `If an account exists for ${email}, a password reset link has been dispatched.`, 'success');
     });
   }
 
