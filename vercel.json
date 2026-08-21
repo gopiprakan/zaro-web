@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm --prefix portal install && npm --prefix portal run build",
+  "buildCommand": "npm run build",
   "rewrites": [
     {
       "source": "/api/(.*)",

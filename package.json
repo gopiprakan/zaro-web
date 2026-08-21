@@ -1,22 +1,31 @@
 {
-  "name": "sample-zaro",
+  "name": "zaro-web",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "npm --prefix portal install && npm --prefix portal run build",
     "dev": "npx --yes serve . -l 3000",
     "start": "npx --yes serve . -l 3000",
-    "dev:portal": "npm --prefix portal run dev",
-    "dev:backend": "npm --prefix backend run dev",
-    "start:backend": "npm --prefix backend start",
-    "build:portal": "npm --prefix portal run build"
+    "dev:portal": "vite -c portal/vite.config.js",
+    "dev:backend": "node backend/server.js",
+    "start:backend": "node backend/server.js",
+    "build:portal": "vite build -c portal/vite.config.js",
+    "build": "vite build -c portal/vite.config.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-router-dom": "^7.18.2"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "vite": "^8.0.12"
   },
   "keywords": [],
   "author": "",
