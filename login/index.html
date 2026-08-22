@@ -1,131 +1,282 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ZARO - Login & Access Your Account</title>
+  <title>ZARO - Login & Access Your Account | Digital Agency Portal</title>
   <meta name="description"
-    content="Login to ZARO to explore curated creative showcases, connect with top designers, and manage your account.">
+    content="Login to ZARO to manage your web development projects, explore client showcases, and grow your local business online.">
+  <meta name="keywords" content="ZARO login, web agency portal, digital marketing, client dashboard">
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+
+  <!-- Remix Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+
+  <!-- Link Custom CSS -->
+  <link rel="stylesheet" href="style.css?v=2.1">
 </head>
 
 <body>
-  <!-- Ambient Backdrop with deep cosmic canvas effect -->
+  <!-- Ambient Backdrop with Mesh Glows & Particle Canvas -->
   <div class="ambient-backdrop">
-    <div class="glow-orb glow-1"></div>
-    <div class="glow-orb glow-2"></div>
-    <div class="star-field" id="starField"></div>
+    <div class="mesh-glow glow-top-left"></div>
+    <div class="mesh-glow glow-bottom-right"></div>
+    <div class="mesh-glow glow-center"></div>
+    <canvas id="login-particle-canvas" class="particle-canvas"></canvas>
   </div>
 
   <main class="page-container">
     <!-- Master Showcase & Auth Card -->
     <div class="auth-card" id="authCard">
 
-      <!-- LEFT PANEL: Artwork Showcase (Inspired by reference UI) -->
-      <section class="showcase-panel" id="showcasePanel" aria-label="Featured Works Showcase">
-        <!-- Background Slider Images -->
-        <div class="showcase-slides" id="showcaseSlides">
-          <div class="slide active" style="background-image: url('assets/artwork-1.jpg');">
-            <div class="slide-overlay"></div>
+      <!-- LEFT PANEL: 4:5 Vertical Social-Media Advertising Poster Showcase -->
+      <section class="showcase-panel" id="showcasePanel" aria-label="Digital Marketing Showcase">
+        
+        <!-- Showcase Header / Quick Badge -->
+        <div class="showcase-top-bar">
+          <div class="showcase-tag">
+            <span class="pulse-dot"></span>
+            <span class="tag-text">Featured Campaign</span>
           </div>
-          <div class="slide" style="background-image: url('assets/artwork-2.jpg');">
-            <div class="slide-overlay"></div>
+          <button type="button" class="expand-poster-btn" id="expandPosterBtn" title="Inspect Full 4:5 Poster" aria-label="Expand poster preview">
+            <i class="ri-fullscreen-line"></i> <span>View 4:5 Poster</span>
+          </button>
+        </div>
+
+        <!-- 4:5 Advertising Poster Container -->
+        <div class="poster-viewport">
+          <div class="poster-4-5" id="mainPoster">
+            
+            <!-- Background Image & Gradient Mesh Layer -->
+            <div class="poster-bg-layer">
+              <img src="assets/vertex_poster_bg.jpg" alt="Dignified Indian Business Statesman" class="poster-portrait-img">
+              <div class="poster-gradient-overlay"></div>
+            </div>
+
+            <!-- Poster Top Row: Logo & Social Icons -->
+            <div class="poster-header-row">
+              <!-- TOP LEFT: Vertex Logo -->
+              <div class="vertex-logo-group">
+                <div class="vertex-symbol">
+                  <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+                    <polygon points="16,2 30,28 2,28" fill="url(#vertexGrad)" />
+                    <polygon points="16,10 24,25 8,25" fill="#ffffff" />
+                    <defs>
+                      <linearGradient id="vertexGrad" x1="2" y1="2" x2="30" y2="28" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#0066FF"/>
+                        <stop offset="1" stop-color="#00D2FF"/>
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+                <div class="vertex-text-wrap">
+                  <span class="vertex-brand-title">VERTEX</span>
+                  <span class="vertex-brand-sub">DIGITAL MEDIA</span>
+                </div>
+              </div>
+
+              <!-- TOP RIGHT: Social Media Icons -->
+              <div class="poster-social-row" aria-label="Social Media">
+                <span class="poster-social-icon" title="Instagram"><i class="ri-instagram-line"></i></span>
+                <span class="poster-social-icon" title="Facebook"><i class="ri-facebook-fill"></i></span>
+                <span class="poster-social-icon" title="X"><i class="ri-twitter-x-line"></i></span>
+                <span class="poster-social-icon" title="YouTube"><i class="ri-youtube-fill"></i></span>
+                <span class="poster-social-icon" title="LinkedIn"><i class="ri-linkedin-fill"></i></span>
+              </div>
+            </div>
+
+            <!-- Poster Content Body (Left-aligned typography) -->
+            <div class="poster-body">
+              
+              <!-- MAIN SPEECH BUBBLE -->
+              <div class="speech-bubble-wrapper">
+                <div class="speech-bubble">
+                  <div class="bubble-sparkle sparkle-top">✦</div>
+                  <div class="bubble-text">
+                    <span>HELLO</span>
+                    <strong>FRIENDS</strong>
+                  </div>
+                  <!-- Bubble Pointer Tail -->
+                  <div class="bubble-tail"></div>
+                </div>
+                <!-- Playful accent curved lines -->
+                <svg class="bubble-accent-lines" width="48" height="34" viewBox="0 0 48 34" fill="none">
+                  <path d="M2 18 C14 8, 28 8, 44 2" stroke="#111827" stroke-width="2.5" stroke-linecap="round"/>
+                  <path d="M8 28 C20 20, 32 20, 46 14" stroke="#0066FF" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 3"/>
+                </svg>
+              </div>
+
+              <!-- MAIN HEADLINE -->
+              <div class="poster-headline-group">
+                <h2 class="poster-headline">
+                  <span class="line-1">GROW YOUR</span>
+                  <span class="line-2 highlight-blue">BUSINESS</span>
+                  <span class="line-3 highlight-blue">DIGITALLY</span>
+                </h2>
+
+                <!-- Dotted Curved Arrow Pointing toward Subject/Headline -->
+                <svg class="dotted-curved-arrow" width="70" height="50" viewBox="0 0 70 50" fill="none">
+                  <path d="M5 45 C 25 45, 55 35, 60 10" stroke="#0066FF" stroke-width="2.2" stroke-dasharray="4 4" stroke-linecap="round"/>
+                  <polygon points="60,5 65,15 54,12" fill="#0066FF"/>
+                </svg>
+              </div>
+
+              <!-- SUPPORTING COPY -->
+              <div class="poster-supporting-copy">
+                <p>
+                  <strong>Vertex Digital Media</strong><br>
+                  helps brands grow,<br>
+                  engage and succeed<br>
+                  in the digital world.
+                </p>
+              </div>
+
+              <!-- CALL TO ACTION -->
+              <div class="poster-cta-box">
+                <div class="cta-inner">
+                  <span class="cta-chevron">&gt;&gt;</span>
+                  <span class="cta-text">LET'S BUILD YOUR BRAND TOGETHER</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- BOTTOM CONTACT BAR (Spanning full width) -->
+            <div class="poster-bottom-contact-bar">
+              <div class="contact-section phone-sec">
+                <div class="contact-icon-circle">
+                  <i class="ri-phone-fill"></i>
+                </div>
+                <div class="contact-details">
+                  <span>9540452604</span>
+                  <span>8587020217</span>
+                </div>
+              </div>
+
+              <div class="contact-divider"></div>
+
+              <div class="contact-section email-sec">
+                <div class="contact-icon-circle">
+                  <i class="ri-mail-send-fill"></i>
+                </div>
+                <div class="contact-details">
+                  <a href="mailto:info@vertexdigitalmedia.com">info@vertexdigitalmedia.com</a>
+                </div>
+              </div>
+
+              <div class="contact-divider"></div>
+
+              <div class="contact-section web-sec">
+                <div class="contact-icon-circle">
+                  <i class="ri-global-line"></i>
+                </div>
+                <div class="contact-details">
+                  <a href="http://www.vertexdigitalmedia.in" target="_blank" rel="noopener">www.vertexdigitalmedia.in</a>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 
-        <!-- Top Navigation in Showcase -->
-        <header class="showcase-header">
-          <div class="showcase-tag">
-            <span class="pulse-dot"></span>
-            <span class="tag-text">Selected Works</span>
-          </div>
-          <nav class="showcase-nav">
-            <button type="button" class="nav-text-btn" id="showcaseSignUpBtn">Sign Up</button>
-            <button type="button" class="btn-pill-outline" id="showcaseJoinBtn">Join Us</button>
-          </nav>
-        </header>
-
-        <!-- Bottom Showcase Author Details & Slider Controls -->
-        <footer class="showcase-footer">
-          <div class="author-badge" id="authorBadge">
-            <div class="avatar-ring">
-              <img src="assets/avatar.jpg" alt="Featured Creator Avatar" class="author-avatar" id="authorAvatar">
+        <!-- Showcase Footer Quick Quote / Controls -->
+        <div class="showcase-bottom-badge">
+          <div class="badge-creator-info">
+            <div class="creator-avatar-wrap">
+              <img src="assets/vertex_poster_bg.jpg" alt="Vertex Media Campaign" class="creator-mini-avatar">
             </div>
-            <div class="author-info">
-              <h4 class="author-name" id="authorName">Andrew.ui</h4>
-              <p class="author-role" id="authorRole">UI & Illustration</p>
+            <div class="creator-text">
+              <span class="creator-name">Vertex Digital Media</span>
+              <span class="creator-sub">Growth & Transformation Campaign</span>
             </div>
           </div>
-
-          <!-- Carousel Controls (Prev / Next) -->
-          <div class="slider-controls">
-            <button type="button" class="slider-btn" id="prevSlideBtn" aria-label="Previous artwork">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-              </svg>
-            </button>
-            <button type="button" class="slider-btn" id="nextSlideBtn" aria-label="Next artwork">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
-              </svg>
+          <div class="badge-actions">
+            <button type="button" class="poster-action-pill" id="demoAccountFillBtn" title="Auto-fill Demo Credentials">
+              <i class="ri-flashlight-line"></i> Demo Auto-Fill
             </button>
           </div>
-        </footer>
+        </div>
+
       </section>
 
-      <!-- RIGHT PANEL: Login Form Area -->
+      <!-- RIGHT PANEL: Login Form Area (Matching Website Design System) -->
       <section class="form-panel" aria-label="Login Form">
-        <!-- Top bar: Logo & Language Selector -->
+        
+        <!-- Top bar: Logo, Back to Home, Theme Toggle & Language Selector -->
         <header class="form-header">
-          <div class="brand-logo" id="brandLogo" style="cursor: pointer;" onclick="window.location.href='../index.html'">
-            <div class="brand-symbol">
+          <a href="../index.html" class="brand-logo-link" title="Return to ZARO Home">
+            <img src="../ZARO_logo.png" alt="ZARO Logo" class="brand-logo-img" onerror="this.style.display='none'; document.getElementById('brandFallbackSymbol').style.display='flex';">
+            <div class="brand-fallback-symbol" id="brandFallbackSymbol" style="display: none;">
               <span>Z</span>
             </div>
-            <span class="brand-text">ZARO</span>
-          </div>
+            <div class="brand-name-group">
+              <span class="brand-title">ZARO</span>
+              <span class="brand-subtitle">Digital Agency</span>
+            </div>
+          </a>
 
-          <!-- Language Selector -->
-          <div class="lang-selector-wrapper">
-            <button type="button" class="lang-btn" id="langDropdownBtn" aria-expanded="false" aria-haspopup="listbox">
-              <span class="lang-flag" id="currentFlag">🇬🇧</span>
-              <span class="lang-code" id="currentLangCode">EN</span>
-              <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
+          <!-- Controls: Back Button, Theme Switcher & Language -->
+          <div class="header-controls-group">
+            
+            <!-- Home Link Icon -->
+            <a href="../index.html" class="icon-nav-btn" title="Back to Homepage" aria-label="Back to Homepage">
+              <i class="ri-home-5-line"></i>
+            </a>
+
+            <!-- Theme Toggle Button (Synchronized with root site) -->
+            <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Dark / Light Theme" title="Toggle Theme">
+              <i class="ri-sun-line" id="themeIcon"></i>
             </button>
-            <div class="lang-menu" id="langMenu" role="listbox">
-              <div class="lang-item active" data-lang="EN" data-flag="🇬🇧" role="option">
-                <span>🇬🇧 English (EN)</span>
-              </div>
-              <div class="lang-item" data-lang="ES" data-flag="🇪🇸" role="option">
-                <span>🇪🇸 Español (ES)</span>
-              </div>
-              <div class="lang-item" data-lang="FR" data-flag="🇫🇷" role="option">
-                <span>🇫🇷 Français (FR)</span>
-              </div>
-              <div class="lang-item" data-lang="DE" data-flag="🇩🇪" role="option">
-                <span>🇩🇪 Deutsch (DE)</span>
+
+            <!-- Language Selector -->
+            <div class="lang-selector-wrapper">
+              <button type="button" class="lang-btn" id="langDropdownBtn" aria-expanded="false" aria-haspopup="listbox">
+                <span class="lang-flag" id="currentFlag">🇮🇳</span>
+                <span class="lang-code" id="currentLangCode">EN</span>
+                <i class="ri-arrow-down-s-line chevron-icon"></i>
+              </button>
+              <div class="lang-menu" id="langMenu" role="listbox">
+                <div class="lang-item active" data-lang="EN" data-flag="🇮🇳" role="option">
+                  <span>🇮🇳 English (India)</span>
+                </div>
+                <div class="lang-item" data-lang="UK" data-flag="🇬🇧" role="option">
+                  <span>🇬🇧 English (Global)</span>
+                </div>
+                <div class="lang-item" data-lang="HI" data-flag="🇮🇳" role="option">
+                  <span>🇮🇳 हिन्दी (Hindi)</span>
+                </div>
+                <div class="lang-item" data-lang="ES" data-flag="🇪🇸" role="option">
+                  <span>🇪🇸 Español (ES)</span>
+                </div>
               </div>
             </div>
+
           </div>
         </header>
 
         <!-- Main Form Content -->
         <div class="form-body">
+          
+          <!-- Mode Switcher Tabs -->
+          <div class="auth-tabs" role="tablist">
+            <button type="button" class="auth-tab active" id="tabLogin" role="tab" aria-selected="true">
+              <i class="ri-login-box-line"></i> Sign In
+            </button>
+            <button type="button" class="auth-tab" id="tabRegister" role="tab" aria-selected="false">
+              <i class="ri-user-add-line"></i> Create Account
+            </button>
+          </div>
+
           <div class="heading-group">
             <h1 class="main-title" id="welcomeTitle">Welcome Back</h1>
-            <p class="sub-title" id="welcomeSubtitle">Login to access your account</p>
+            <p class="sub-title" id="welcomeSubtitle">Access your digital dashboard and web growth tools</p>
           </div>
 
           <!-- Auth Form -->
@@ -136,11 +287,7 @@
               <label for="emailInput" class="input-label">Email or Username</label>
               <div class="input-wrapper">
                 <span class="field-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L1 7"></path>
-                  </svg>
+                  <i class="ri-mail-line"></i>
                 </span>
                 <input type="text" id="emailInput" name="email" class="text-input"
                   placeholder="name@company.com or username" autocomplete="username" required>
@@ -150,126 +297,102 @@
 
             <!-- Password Input Group -->
             <div class="input-group" id="passwordGroup">
-              <label for="passwordInput" class="input-label">Password</label>
+              <div class="label-row">
+                <label for="passwordInput" class="input-label">Password</label>
+                <button type="button" class="forgot-password-link" id="forgotPasswordBtn">
+                  Forgot password?
+                </button>
+              </div>
               <div class="input-wrapper">
                 <span class="field-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                  </svg>
+                  <i class="ri-lock-2-line"></i>
                 </span>
                 <input type="password" id="passwordInput" name="password" class="text-input"
-                  placeholder="Enter your password" autocomplete="current-password" required>
+                  placeholder="Enter your secure password" autocomplete="current-password" required>
                 <!-- Show / Hide Password Button -->
                 <button type="button" class="toggle-password-btn" id="togglePasswordBtn"
                   aria-label="Toggle password visibility" title="Show/Hide password">
-                  <!-- Eye Icon (hidden by default) -->
-                  <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                  </svg>
-                  <!-- Eye Off Icon -->
-                  <svg class="eye-closed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-                    <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
-                    <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
-                    <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
-                    <line x1="2" y1="2" x2="22" y2="22"></line>
-                  </svg>
+                  <i class="ri-eye-line eye-open"></i>
+                  <i class="ri-eye-off-line eye-closed" style="display: none;"></i>
                 </button>
               </div>
               <div class="field-error-msg" id="passwordError">Password must be at least 6 characters</div>
             </div>
 
-            <!-- Options Row: Remember Me & Forgot Password -->
+            <!-- Options Row: Remember Me -->
             <div class="form-options-row">
               <label class="custom-checkbox" for="rememberMeCheckbox">
                 <input type="checkbox" id="rememberMeCheckbox" name="rememberMe" checked>
                 <span class="checkmark">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
+                  <i class="ri-check-line"></i>
                 </span>
-                <span class="checkbox-label">Remember me</span>
+                <span class="checkbox-label">Keep me signed in for 30 days</span>
               </label>
-
-              <button type="button" class="forgot-password-link" id="forgotPasswordBtn">
-                Forgot password ?
-              </button>
             </div>
-
-            <!-- Divider with OR -->
-            <div class="or-divider">
-              <span class="line"></span>
-              <span class="or-text">or</span>
-              <span class="line"></span>
-            </div>
-
-            <!-- Social Login: Google -->
-            <button type="button" class="social-login-btn google-btn" id="googleLoginBtn">
-              <svg class="social-icon" width="18" height="18" viewBox="0 0 24 24">
-                <path fill="#4285F4"
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                <path fill="#34A853"
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                <path fill="#FBBC05"
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-                <path fill="#EA4335"
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
-              </svg>
-              <span>Login with Google</span>
-            </button>
 
             <!-- Primary Login Submit Button -->
             <button type="submit" class="submit-login-btn" id="submitLoginBtn">
-              <span class="btn-text">Login</span>
+              <span class="btn-text">Sign In to ZARO</span>
+              <i class="ri-arrow-right-line btn-arrow"></i>
               <div class="btn-loader" id="btnLoader">
                 <span class="spinner"></span>
               </div>
             </button>
 
-            <!-- Form Error Message Display -->
+            <!-- Form Alert Display -->
             <div class="form-error-alert" id="formErrorAlert" role="alert" style="display: none;"></div>
 
-            <!-- Create Account / Sign Up Link -->
+            <!-- Divider with OR -->
+            <div class="or-divider">
+              <span class="line"></span>
+              <span class="or-text">or continue with</span>
+              <span class="line"></span>
+            </div>
+
+            <!-- Social Login: Google -->
+            <div class="social-login-grid">
+              <button type="button" class="social-login-btn google-btn" id="googleLoginBtn">
+                <svg class="social-icon" width="18" height="18" viewBox="0 0 24 24">
+                  <path fill="#4285F4"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                  <path fill="#34A853"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                  <path fill="#FBBC05"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                  <path fill="#EA4335"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                </svg>
+                <span>Google Account</span>
+              </button>
+
+              <button type="button" class="social-login-btn quick-demo-btn" id="guestLoginBtn" title="Quick Explorer Mode">
+                <i class="ri-shield-user-line"></i>
+                <span>Guest Preview</span>
+              </button>
+            </div>
+
+            <!-- Create Account / Sign Up Toggle Link -->
             <div class="signup-prompt">
-              <span>Don't have an account?</span>
-              <button type="button" class="signup-link" id="signUpToggleBtn">Sign up</button>
+              <span id="switchPromptText">Don't have an account?</span>
+              <button type="button" class="signup-link" id="signUpToggleBtn">Create Account</button>
             </div>
           </form>
         </div>
 
-        <!-- Form Footer: Social Icons & Terms/Privacy -->
+        <!-- Form Footer: Social Icons & Legal Links -->
         <footer class="form-footer">
-          <div class="social-links" aria-label="Social media channels">
-            <a href="#facebook" class="social-icon-link" aria-label="Facebook" title="Facebook">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-              </svg>
+          <div class="social-links" aria-label="ZARO Social Channels">
+            <a href="https://instagram.com" target="_blank" rel="noopener" class="social-icon-link" aria-label="Instagram" title="Instagram">
+              <i class="ri-instagram-line"></i>
             </a>
-            <a href="#twitter" class="social-icon-link" aria-label="Twitter / X" title="Twitter / X">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-              </svg>
+            <a href="https://facebook.com" target="_blank" rel="noopener" class="social-icon-link" aria-label="Facebook" title="Facebook">
+              <i class="ri-facebook-circle-fill"></i>
             </a>
-            <a href="#linkedin" class="social-icon-link" aria-label="LinkedIn" title="LinkedIn">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-              </svg>
+            <a href="https://twitter.com" target="_blank" rel="noopener" class="social-icon-link" aria-label="Twitter / X" title="Twitter / X">
+              <i class="ri-twitter-x-line"></i>
             </a>
-            <a href="#instagram" class="social-icon-link" aria-label="Instagram" title="Instagram">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-              </svg>
+            <a href="https://linkedin.com" target="_blank" rel="noopener" class="social-icon-link" aria-label="LinkedIn" title="LinkedIn">
+              <i class="ri-linkedin-box-fill"></i>
             </a>
           </div>
 
@@ -279,10 +402,33 @@
             <button type="button" class="legal-link-btn" id="privacyLink">Privacy Policy</button>
           </div>
         </footer>
+
       </section>
 
     </div>
   </main>
+
+  <!-- Full-Screen 4:5 Poster Modal Viewer -->
+  <div class="modal-backdrop" id="posterModalBackdrop">
+    <div class="modal-card poster-modal-card">
+      <button type="button" class="modal-close-btn" id="closePosterModal" aria-label="Close poster view">&times;</button>
+      <div class="poster-modal-header">
+        <div class="poster-modal-badge">
+          <i class="ri-sparkling-fill"></i> Vertex Digital Media • 4:5 Advertising Campaign
+        </div>
+        <div class="poster-modal-controls">
+          <a href="assets/vertex_poster_bg.jpg" download="vertex-digital-media-poster.jpg" class="btn-pill-outline btn-download" title="Download Poster Asset">
+            <i class="ri-download-2-line"></i> Download Asset
+          </a>
+        </div>
+      </div>
+      <div class="poster-modal-content">
+        <div class="modal-poster-clone" id="modalPosterContainer">
+          <!-- Dynamically cloned high-res poster view will be injected here -->
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Interactive Modal: Forgot Password -->
   <div class="modal-backdrop" id="forgotModalBackdrop">
@@ -290,28 +436,25 @@
       <button type="button" class="modal-close-btn" id="closeForgotModal" aria-label="Close modal">&times;</button>
       <div class="modal-header">
         <div class="modal-icon-badge">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-          </svg>
+          <i class="ri-key-2-line"></i>
         </div>
-        <h3>Reset Password</h3>
-        <p>Enter your registered email address to receive password recovery instructions.</p>
+        <h3>Reset Your Password</h3>
+        <p>Enter your registered email address and we'll send you an instant reset link.</p>
       </div>
       <form id="forgotPasswordForm">
         <div class="input-group">
-          <label for="resetEmailInput" class="input-label">Email Address</label>
+          <label for="resetEmailInput" class="input-label">Registered Email</label>
           <div class="input-wrapper">
             <span class="field-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L1 7"></path>
-              </svg>
+              <i class="ri-mail-line"></i>
             </span>
-            <input type="email" id="resetEmailInput" class="text-input" placeholder="you@example.com" required>
+            <input type="email" id="resetEmailInput" class="text-input" placeholder="you@company.com" required>
           </div>
         </div>
-        <button type="submit" class="submit-login-btn modal-submit">Send Reset Link</button>
+        <button type="submit" class="submit-login-btn modal-submit">
+          <span>Send Recovery Email</span>
+          <i class="ri-send-plane-fill"></i>
+        </button>
       </form>
     </div>
   </div>
@@ -322,27 +465,25 @@
       <button type="button" class="modal-close-btn" id="closeLegalModal" aria-label="Close modal">&times;</button>
       <div class="modal-header">
         <h3 id="legalModalTitle">Terms of Service</h3>
-        <p id="legalModalDate">Last updated: August 2026</p>
+        <p id="legalModalDate">Updated: August 2026</p>
       </div>
       <div class="legal-body" id="legalModalContent">
-        <p>Welcome to <strong>ZARO</strong>. By accessing or using our platform, you agree to comply with our community
-          guidelines, secure access policies, and terms of creative content distribution.</p>
-        <h4>1. Account Security</h4>
-        <p>Users are responsible for maintaining the confidentiality of their login credentials and account actions.</p>
-        <h4>2. Showcase & Intellectual Property</h4>
-        <p>All featured design artworks showcased on ZARO belong to their respective creators and verified contributors.
-        </p>
-        <h4>3. Privacy & Cookies</h4>
-        <p>We respect your privacy. Preferences saved locally (such as Remember Me and Language) are kept strictly on
-          your client device.</p>
+        <p>Welcome to <strong>ZARO & Vertex Digital Ecosystem</strong>. By accessing our platform and services, you agree to comply with our client security policies, digital workspace ethics, and content privacy standards.</p>
+        <h4>1. Account Security & Verification</h4>
+        <p>Users are responsible for maintaining the confidentiality of their login credentials and managing store authentication tokens safely.</p>
+        <h4>2. Client Showcases & Marketing Assets</h4>
+        <p>All featured marketing campaigns (such as Vertex Digital Media advertisements) are curated creative works designed to empower Indian local businesses, boutiques, and enterprises.</p>
+        <h4>3. Theme & Device Preferences</h4>
+        <p>Preferences (such as Dark/Light Theme mode and Remember Me sessions) are preserved locally on your client device for optimal performance.</p>
       </div>
-      <button type="button" class="btn-pill-outline modal-confirm-btn" id="legalAcknowledgeBtn">Understood</button>
+      <button type="button" class="btn-pill-outline modal-confirm-btn" id="legalAcknowledgeBtn">Understood & Accept</button>
     </div>
   </div>
 
-  <!-- Toast Notification System -->
+  <!-- Toast Notification Container -->
   <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
+  <!-- Script Modules -->
   <script type="module" src="script.js"></script>
 </body>
 
