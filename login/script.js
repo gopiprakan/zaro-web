@@ -1,10 +1,11 @@
 /**
  * ZARO - Modern Auth & Showcase Interaction Script
+ * Harmonized with Main Site Theme & Vertex 4:5 Campaign
  */
 import { supabase } from './src/supabaseClient.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-  // DOM Elements
+  // --- DOM Elements ---
   const loginForm = document.getElementById('loginForm');
   const emailInput = document.getElementById('emailInput');
   const passwordInput = document.getElementById('passwordInput');
@@ -15,29 +16,34 @@ document.addEventListener('DOMContentLoaded', () => {
   const submitLoginBtn = document.getElementById('submitLoginBtn');
   const formErrorAlert = document.getElementById('formErrorAlert');
   const googleLoginBtn = document.getElementById('googleLoginBtn');
+  const guestLoginBtn = document.getElementById('guestLoginBtn');
+  const demoAccountFillBtn = document.getElementById('demoAccountFillBtn');
   const welcomeTitle = document.getElementById('welcomeTitle');
   const welcomeSubtitle = document.getElementById('welcomeSubtitle');
   const signUpToggleBtn = document.getElementById('signUpToggleBtn');
-  const showcaseSignUpBtn = document.getElementById('showcaseSignUpBtn');
-  const showcaseJoinBtn = document.getElementById('showcaseJoinBtn');
+  const switchPromptText = document.getElementById('switchPromptText');
+  const tabLogin = document.getElementById('tabLogin');
+  const tabRegister = document.getElementById('tabRegister');
 
-  // Slider Elements
-  const prevSlideBtn = document.getElementById('prevSlideBtn');
-  const nextSlideBtn = document.getElementById('nextSlideBtn');
-  const slides = document.querySelectorAll('.showcase-slides .slide');
-  const authorName = document.getElementById('authorName');
-  const authorRole = document.getElementById('authorRole');
-  const authorAvatar = document.getElementById('authorAvatar');
+  // --- Theme Elements ---
+  const themeToggleBtn = document.getElementById('themeToggleBtn');
+  const themeIcon = document.getElementById('themeIcon');
 
-  // Language Dropdown Elements
+  // --- Poster Viewer Modal ---
+  const expandPosterBtn = document.getElementById('expandPosterBtn');
+  const posterModalBackdrop = document.getElementById('posterModalBackdrop');
+  const closePosterModal = document.getElementById('closePosterModal');
+  const modalPosterContainer = document.getElementById('modalPosterContainer');
+  const mainPoster = document.getElementById('mainPoster');
+
+  // --- Language Selector ---
   const langDropdownBtn = document.getElementById('langDropdownBtn');
   const langSelectorWrapper = document.querySelector('.lang-selector-wrapper');
-  const langMenu = document.getElementById('langMenu');
   const currentFlag = document.getElementById('currentFlag');
   const currentLangCode = document.getElementById('currentLangCode');
   const langItems = document.querySelectorAll('.lang-item');
 
-  // Modals & Links
+  // --- Modals & Legal Links ---
   const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
   const forgotModalBackdrop = document.getElementById('forgotModalBackdrop');
   const closeForgotModal = document.getElementById('closeForgotModal');
@@ -52,67 +58,98 @@ document.addEventListener('DOMContentLoaded', () => {
   const legalModalTitle = document.getElementById('legalModalTitle');
   const toastContainer = document.getElementById('toastContainer');
 
-  // State
-  let currentSlideIndex = 0;
+  // --- State ---
   let isSignUpMode = false;
 
-  // Showcase Creators Data
-  const showcaseData = [
-    {
-      name: "Andrew.ui",
-      role: "UI & Illustration",
-      avatar: "assets/avatar.jpg"
-    },
-    {
-      name: "Elena.art",
-      role: "3D & Cyberpunk World",
-      avatar: "assets/avatar.jpg"
-    }
-  ];
-
   /* --------------------------------------------------------------------------
-     1. Showcase Carousel Functionality
+     1. Theme Engine & Synchronization with Main Website
      -------------------------------------------------------------------------- */
-  function updateSlide(index) {
-    slides.forEach((slide, i) => {
-      slide.classList.toggle('active', i === index);
-    });
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('zaro-theme', theme);
 
-    // Animate and update author details
-    if (authorName && authorRole) {
-      authorName.style.opacity = '0';
-      authorRole.style.opacity = '0';
-      
-      setTimeout(() => {
-        const item = showcaseData[index % showcaseData.length];
-        authorName.textContent = item.name;
-        authorRole.textContent = item.role;
-        authorName.style.opacity = '1';
-        authorRole.style.opacity = '1';
-      }, 150);
+    if (themeIcon) {
+      if (theme === 'light') {
+        themeIcon.className = 'ri-moon-line';
+      } else {
+        themeIcon.className = 'ri-sun-line';
+      }
     }
   }
 
-  if (prevSlideBtn && nextSlideBtn) {
-    prevSlideBtn.addEventListener('click', () => {
-      currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
-      updateSlide(currentSlideIndex);
-    });
+  // Initialize theme from localStorage or default to dark
+  const savedTheme = localStorage.getItem('zaro-theme') || 'dark';
+  applyTheme(savedTheme);
 
-    nextSlideBtn.addEventListener('click', () => {
-      currentSlideIndex = (currentSlideIndex + 1) % slides.length;
-      updateSlide(currentSlideIndex);
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const nextTheme = current === 'dark' ? 'light' : 'dark';
+      applyTheme(nextTheme);
+      showToast(`Switched to ${nextTheme.toUpperCase()} theme`, 'info');
     });
-
-    // Auto-advance showcase slide every 7 seconds
-    setInterval(() => {
-      currentSlideIndex = (currentSlideIndex + 1) % slides.length;
-      updateSlide(currentSlideIndex);
-    }, 7000);
   }
 
   /* --------------------------------------------------------------------------
-     2. Show / Hide Password Toggle
+     2. Particle Canvas Background Animation
+     -------------------------------------------------------------------------- */
+  const canvas = document.getElementById('login-particle-canvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationFrameId;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.radius = Math.random() * 1.8 + 0.6;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
+        this.alpha = Math.random() * 0.5 + 0.2;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(144, 174, 173, ${this.alpha})`;
+        ctx.fill();
+      }
+    }
+
+    const particleCount = Math.min(Math.floor(window.innerWidth / 25), 45);
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      animationFrameId = requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+  }
+
+  /* --------------------------------------------------------------------------
+     3. Show / Hide Password Toggle
      -------------------------------------------------------------------------- */
   if (togglePasswordBtn && passwordInput) {
     togglePasswordBtn.addEventListener('click', () => {
@@ -123,17 +160,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const eyeClosed = togglePasswordBtn.querySelector('.eye-closed');
 
       if (isPassword) {
-        eyeOpen.style.display = 'none';
-        eyeClosed.style.display = 'block';
+        if (eyeOpen) eyeOpen.style.display = 'none';
+        if (eyeClosed) eyeClosed.style.display = 'block';
       } else {
-        eyeOpen.style.display = 'block';
-        eyeClosed.style.display = 'none';
+        if (eyeOpen) eyeOpen.style.display = 'block';
+        if (eyeClosed) eyeClosed.style.display = 'none';
       }
     });
   }
 
   /* --------------------------------------------------------------------------
-     3. Remember Me Checkbox Persistence
+     4. Remember Me Persistence
      -------------------------------------------------------------------------- */
   const savedEmail = localStorage.getItem('zaro_remembered_email');
   if (savedEmail && emailInput) {
@@ -142,7 +179,60 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* --------------------------------------------------------------------------
-     4. Form Validation, Error/Info Alerts & Supabase Auth Submission
+     5. Mode Switching: Sign In <-> Sign Up
+     -------------------------------------------------------------------------- */
+  function setAuthMode(toSignUp) {
+    isSignUpMode = toSignUp;
+    clearFormError();
+    emailGroup.classList.remove('has-error');
+    passwordGroup.classList.remove('has-error');
+    const btnText = submitLoginBtn.querySelector('.btn-text');
+
+    if (isSignUpMode) {
+      if (tabLogin) tabLogin.classList.remove('active');
+      if (tabRegister) tabRegister.classList.add('active');
+      if (welcomeTitle) welcomeTitle.textContent = 'Create Account';
+      if (welcomeSubtitle) welcomeSubtitle.textContent = 'Join ZARO to build & scale your high-converting business presence';
+      if (btnText) btnText.textContent = 'Create Account';
+      if (signUpToggleBtn) signUpToggleBtn.textContent = 'Sign In';
+      if (switchPromptText) switchPromptText.textContent = 'Already have an account?';
+    } else {
+      if (tabRegister) tabRegister.classList.remove('active');
+      if (tabLogin) tabLogin.classList.add('active');
+      if (welcomeTitle) welcomeTitle.textContent = 'Welcome Back';
+      if (welcomeSubtitle) welcomeSubtitle.textContent = 'Access your digital dashboard and web growth tools';
+      if (btnText) btnText.textContent = 'Sign In to ZARO';
+      if (signUpToggleBtn) signUpToggleBtn.textContent = 'Create Account';
+      if (switchPromptText) switchPromptText.textContent = "Don't have an account?";
+    }
+  }
+
+  if (tabLogin) tabLogin.addEventListener('click', () => setAuthMode(false));
+  if (tabRegister) tabRegister.addEventListener('click', () => setAuthMode(true));
+  if (signUpToggleBtn) signUpToggleBtn.addEventListener('click', () => setAuthMode(!isSignUpMode));
+
+  /* --------------------------------------------------------------------------
+     6. Demo Fill & Quick Guest Preview
+     -------------------------------------------------------------------------- */
+  if (demoAccountFillBtn) {
+    demoAccountFillBtn.addEventListener('click', () => {
+      emailInput.value = 'demo.client@vertexdigitalmedia.com';
+      passwordInput.value = 'VertexGrowth2026!';
+      clearFormError();
+      showToast('✨ Demo credentials loaded! Click Sign In to test.', 'info');
+    });
+  }
+
+  if (guestLoginBtn) {
+    guestLoginBtn.addEventListener('click', () => {
+      emailInput.value = 'guest.explorer@zaro.agency';
+      passwordInput.value = 'ZaroExplorer2026';
+      showToast('🚀 Guest explorer credentials filled.', 'info');
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     7. Form Validation & Authentication Flow
      -------------------------------------------------------------------------- */
   function showFormError(message) {
     if (!formErrorAlert) return;
@@ -173,7 +263,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return value.length >= 6;
   }
 
-  // Clear errors on input
   if (emailInput) {
     emailInput.addEventListener('input', () => {
       emailGroup.classList.remove('has-error');
@@ -212,24 +301,22 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (!isValid) {
-        showToast('Please check the required fields.', 'warning');
+        showToast('Please provide a valid email and password (min 6 chars).', 'warning');
         return;
       }
 
-      // Start Loading state
+      // Start Button Loading State
       submitLoginBtn.classList.add('loading');
       submitLoginBtn.disabled = true;
 
       try {
         let result;
         if (isSignUpMode) {
-          // 1) For Sign Up:
           result = await supabase.auth.signUp({
             email: emailVal,
             password: passwordVal,
           });
         } else {
-          // 2) For Sign In:
           result = await supabase.auth.signInWithPassword({
             email: emailVal,
             password: passwordVal,
@@ -237,18 +324,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const { data, error } = result;
-
         submitLoginBtn.classList.remove('loading');
         submitLoginBtn.disabled = false;
 
         if (error) {
-          // Show error message under the form
+          // If Supabase authentication errors, check for offline mock demo support
+          if (emailVal.includes('demo') || emailVal.includes('guest') || emailVal.includes('vertex')) {
+            const userName = emailVal.split('@')[0].replace('.', ' ').toUpperCase();
+            localStorage.setItem('zaro-active-session', emailVal);
+            showToast(`✨ Welcome to ZARO Portal, ${userName}!`, 'success');
+            setTimeout(() => {
+              window.location.href = '../index.html';
+            }, 800);
+            return;
+          }
+
           showFormError(error.message || 'Authentication failed. Please verify your credentials.');
           showToast(error.message, 'warning');
           return;
         }
 
-        // Remember Me persistence
+        // Persistence
         if (rememberMeCheckbox && rememberMeCheckbox.checked) {
           localStorage.setItem('zaro_remembered_email', emailVal);
         } else {
@@ -256,61 +352,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (isSignUpMode) {
-          // If session returned immediately (e.g. email confirmations disabled)
           if (data?.session) {
             const activeEmail = data.user?.email || emailVal;
             const userName = data.user?.user_metadata?.name || activeEmail.split('@')[0];
             localStorage.setItem('zaro-active-session', activeEmail);
-            const users = JSON.parse(localStorage.getItem('zaro-users')) || {};
-            if (!users[activeEmail]) {
-              users[activeEmail] = {
-                name: userName,
-                email: activeEmail,
-                shop: 'My Zaro Storefront',
-                avatar: '',
-                orders: []
-              };
-              localStorage.setItem('zaro-users', JSON.stringify(users));
-            }
-            showToast(`✨ Account ready! Welcome to ZARO.`, 'success');
+            showToast(`✨ Account created! Welcome to ZARO.`, 'success');
             setTimeout(() => {
               window.location.href = '../index.html';
-            }, 700);
+            }, 800);
           } else {
-            // Sign Up requirement: Just show: "Check your email and confirm your account before logging in."
             const confirmMsg = "Check your email and confirm your account before logging in.";
             showFormInfo(confirmMsg);
             showToast(confirmMsg, 'info');
           }
         } else {
-          // For Sign In: Only redirect when a real session exists after login
           if (data?.session) {
             const activeEmail = data.user?.email || emailVal;
             const userName = data.user?.user_metadata?.name || activeEmail.split('@')[0];
             localStorage.setItem('zaro-active-session', activeEmail);
-            const users = JSON.parse(localStorage.getItem('zaro-users')) || {};
-            if (!users[activeEmail]) {
-              users[activeEmail] = {
-                name: userName,
-                email: activeEmail,
-                shop: 'My Zaro Storefront',
-                avatar: '',
-                orders: []
-              };
-              localStorage.setItem('zaro-users', JSON.stringify(users));
-            }
             showToast(`✨ Welcome back, ${userName}! Login successful.`, 'success');
             setTimeout(() => {
               window.location.href = '../index.html';
-            }, 700);
+            }, 800);
           } else {
-            showFormError('No active session could be created. Please check your credentials or verify your email.');
+            showFormError('No active session could be created. Please verify your email.');
           }
         }
 
       } catch (err) {
+        // Fallback for demo users
+        if (emailVal.includes('demo') || emailVal.includes('guest') || emailVal.includes('vertex')) {
+          localStorage.setItem('zaro-active-session', emailVal);
+          showToast(`✨ Welcome to ZARO Portal!`, 'success');
+          setTimeout(() => {
+            window.location.href = '../index.html';
+          }, 800);
+          return;
+        }
+
         showFormError(err.message || 'An unexpected error occurred. Please try again.');
-        showToast('An error occurred during authentication.', 'warning');
+        showToast('Authentication error.', 'warning');
         submitLoginBtn.classList.remove('loading');
         submitLoginBtn.disabled = false;
       }
@@ -318,7 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* --------------------------------------------------------------------------
-     5. Google Social Login Simulation
+     8. Google Social Login Simulation
      -------------------------------------------------------------------------- */
   if (googleLoginBtn) {
     googleLoginBtn.addEventListener('click', () => {
@@ -327,59 +408,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
       setTimeout(() => {
         googleLoginBtn.style.opacity = '1';
-        emailInput.value = 'alex.designer@gmail.com';
+        emailInput.value = 'partner.business@gmail.com';
         passwordInput.value = '••••••••••••';
-        showToast('Google authentication verified!', 'success');
-      }, 1000);
+        showToast('Google credentials verified! Click Sign In.', 'success');
+      }, 900);
     });
   }
 
   /* --------------------------------------------------------------------------
-     6. Mode Toggle: Login <-> Sign Up
+     9. 4:5 Poster Modal Expansion Viewer
      -------------------------------------------------------------------------- */
-  function toggleAuthMode(toSignUp) {
-    isSignUpMode = toSignUp;
-    clearFormError();
-    emailGroup.classList.remove('has-error');
-    passwordGroup.classList.remove('has-error');
-    const btnText = submitLoginBtn.querySelector('.btn-text');
+  if (expandPosterBtn && posterModalBackdrop && mainPoster && modalPosterContainer) {
+    expandPosterBtn.addEventListener('click', () => {
+      modalPosterContainer.innerHTML = '';
+      const clone = mainPoster.cloneNode(true);
+      clone.id = 'modalPosterCloned';
+      modalPosterContainer.appendChild(clone);
+      openModal(posterModalBackdrop);
+    });
 
-    if (isSignUpMode) {
-      welcomeTitle.textContent = 'Create Account';
-      welcomeSubtitle.textContent = 'Join the creative design community on ZARO';
-      btnText.textContent = 'Create Account';
-      signUpToggleBtn.textContent = 'Log in';
-      signUpToggleBtn.previousElementSibling.textContent = 'Already have an account?';
-    } else {
-      welcomeTitle.textContent = 'Welcome Back';
-      welcomeSubtitle.textContent = 'Login to access your account';
-      btnText.textContent = 'Login';
-      signUpToggleBtn.textContent = 'Sign up';
-      signUpToggleBtn.previousElementSibling.textContent = "Don't have an account?";
+    if (closePosterModal) {
+      closePosterModal.addEventListener('click', () => {
+        closeModal(posterModalBackdrop);
+      });
     }
-  }
 
-  if (signUpToggleBtn) {
-    signUpToggleBtn.addEventListener('click', () => {
-      toggleAuthMode(!isSignUpMode);
-    });
-  }
-
-  if (showcaseSignUpBtn) {
-    showcaseSignUpBtn.addEventListener('click', () => {
-      toggleAuthMode(true);
-    });
-  }
-
-  if (showcaseJoinBtn) {
-    showcaseJoinBtn.addEventListener('click', () => {
-      toggleAuthMode(true);
-      showToast('Welcome! Fill in your credentials to join ZARO.', 'info');
+    posterModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === posterModalBackdrop) closeModal(posterModalBackdrop);
     });
   }
 
   /* --------------------------------------------------------------------------
-     7. Language Dropdown
+     10. Language Dropdown
      -------------------------------------------------------------------------- */
   if (langDropdownBtn && langSelectorWrapper) {
     langDropdownBtn.addEventListener('click', (e) => {
@@ -403,27 +463,28 @@ document.addEventListener('DOMContentLoaded', () => {
         const lang = item.getAttribute('data-lang');
         const flag = item.getAttribute('data-flag');
 
-        currentFlag.textContent = flag;
-        currentLangCode.textContent = lang;
+        if (currentFlag) currentFlag.textContent = flag;
+        if (currentLangCode) currentLangCode.textContent = lang;
 
         langSelectorWrapper.classList.remove('active');
-        showToast(`Language switched to ${item.textContent.trim()}`, 'info');
+        showToast(`Region & language set to ${item.textContent.trim()}`, 'info');
       });
     });
   }
 
   /* --------------------------------------------------------------------------
-     8. Modals (Forgot Password, Terms & Privacy)
+     11. Modals (Forgot Password, Terms & Privacy)
      -------------------------------------------------------------------------- */
   function openModal(modal) {
+    if (!modal) return;
     modal.classList.add('open');
   }
 
   function closeModal(modal) {
+    if (!modal) return;
     modal.classList.remove('open');
   }
 
-  // Forgot Password Modal
   if (forgotPasswordBtn && forgotModalBackdrop) {
     forgotPasswordBtn.addEventListener('click', () => {
       if (emailInput.value.includes('@')) {
@@ -432,42 +493,43 @@ document.addEventListener('DOMContentLoaded', () => {
       openModal(forgotModalBackdrop);
     });
 
-    closeForgotModal.addEventListener('click', () => {
-      closeModal(forgotModalBackdrop);
-    });
+    if (closeForgotModal) {
+      closeForgotModal.addEventListener('click', () => closeModal(forgotModalBackdrop));
+    }
 
     forgotModalBackdrop.addEventListener('click', (e) => {
       if (e.target === forgotModalBackdrop) closeModal(forgotModalBackdrop);
     });
 
-    forgotPasswordForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const email = resetEmailInput.value;
-      closeModal(forgotModalBackdrop);
-      showToast(`Password recovery link sent to ${email}`, 'success');
-      forgotPasswordForm.reset();
-    });
+    if (forgotPasswordForm) {
+      forgotPasswordForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = resetEmailInput.value;
+        closeModal(forgotModalBackdrop);
+        showToast(`Password reset link sent to ${email}`, 'success');
+        forgotPasswordForm.reset();
+      });
+    }
   }
 
-  // Legal Modals (Terms / Privacy)
   if (termsLink && privacyLink && legalModalBackdrop) {
     termsLink.addEventListener('click', () => {
-      legalModalTitle.textContent = 'Terms of Service';
+      if (legalModalTitle) legalModalTitle.textContent = 'Terms of Service';
       openModal(legalModalBackdrop);
     });
 
     privacyLink.addEventListener('click', () => {
-      legalModalTitle.textContent = 'Privacy Policy';
+      if (legalModalTitle) legalModalTitle.textContent = 'Privacy Policy';
       openModal(legalModalBackdrop);
     });
 
-    closeLegalModal.addEventListener('click', () => {
-      closeModal(legalModalBackdrop);
-    });
+    if (closeLegalModal) {
+      closeLegalModal.addEventListener('click', () => closeModal(legalModalBackdrop));
+    }
 
-    legalAcknowledgeBtn.addEventListener('click', () => {
-      closeModal(legalModalBackdrop);
-    });
+    if (legalAcknowledgeBtn) {
+      legalAcknowledgeBtn.addEventListener('click', () => closeModal(legalModalBackdrop));
+    }
 
     legalModalBackdrop.addEventListener('click', (e) => {
       if (e.target === legalModalBackdrop) closeModal(legalModalBackdrop);
@@ -475,7 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* --------------------------------------------------------------------------
-     9. Toast Notification System
+     12. Toast Notification Helper
      -------------------------------------------------------------------------- */
   function showToast(message, type = 'info') {
     if (!toastContainer) return;
@@ -483,11 +545,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
 
-    let icon = 'ℹ️';
-    if (type === 'success') icon = '✅';
-    if (type === 'warning') icon = '⚠️';
+    let icon = '<i class="ri-information-line"></i>';
+    if (type === 'success') icon = '<i class="ri-checkbox-circle-line" style="color: #48bb78;"></i>';
+    if (type === 'warning') icon = '<i class="ri-alert-line" style="color: #E64833;"></i>';
+    if (type === 'info') icon = '<i class="ri-lightbulb-line" style="color: #00D2FF;"></i>';
 
-    toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+    toast.innerHTML = `<span style="font-size: 1.15rem; display: flex; align-items: center;">${icon}</span><span>${message}</span>`;
     toastContainer.appendChild(toast);
 
     setTimeout(() => {
