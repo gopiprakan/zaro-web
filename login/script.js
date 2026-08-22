@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const posterModalBackdrop = document.getElementById('posterModalBackdrop');
   const closePosterModal = document.getElementById('closePosterModal');
   const modalPosterContainer = document.getElementById('modalPosterContainer');
-  const mainPoster = document.getElementById('mainPoster');
+  const mainPoster = document.getElementById('mainBanner') || document.getElementById('mainPoster');
 
   // --- Language Selector ---
   const langDropdownBtn = document.getElementById('langDropdownBtn');
@@ -216,8 +216,8 @@ document.addEventListener('DOMContentLoaded', () => {
      -------------------------------------------------------------------------- */
   if (demoAccountFillBtn) {
     demoAccountFillBtn.addEventListener('click', () => {
-      emailInput.value = 'demo.client@vertexdigitalmedia.com';
-      passwordInput.value = 'VertexGrowth2026!';
+      emailInput.value = 'client@zaro.agency';
+      passwordInput.value = 'ZaroStore2026!';
       clearFormError();
       showToast('✨ Demo credentials loaded! Click Sign In to test.', 'info');
     });
