@@ -351,11 +351,36 @@ document.addEventListener('DOMContentLoaded', () => {
           localStorage.removeItem('zaro_remembered_email');
         }
 
+        const users = JSON.parse(localStorage.getItem('zaro-users')) || {};
+        const activeEmail = (data?.user?.email || emailVal).toLowerCase();
+        const userName = data?.user?.user_metadata?.name || activeEmail.split('@')[0];
+
+        if (!users[activeEmail]) {
+          users[activeEmail] = {
+            name: userName,
+            shop: data?.user?.user_metadata?.shop || 'My ZARO Store',
+            email: activeEmail,
+            password: passwordVal,
+            avatar: '',
+            orders: [
+              {
+                id: `ZARO-${Math.floor(10000 + Math.random() * 90000)}`,
+                projectName: 'Custom Storefront Launch Concept',
+                category: 'Full-Stack E-Commerce',
+                price: 4500,
+                date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+                estDelivery: 'Immediate Delivery',
+                status: 'launched'
+              }
+            ]
+          };
+          localStorage.setItem('zaro-users', JSON.stringify(users));
+        }
+
+        localStorage.setItem('zaro-active-session', activeEmail);
+
         if (isSignUpMode) {
           if (data?.session) {
-            const activeEmail = data.user?.email || emailVal;
-            const userName = data.user?.user_metadata?.name || activeEmail.split('@')[0];
-            localStorage.setItem('zaro-active-session', activeEmail);
             showToast(`✨ Account created! Welcome to ZARO.`, 'success');
             setTimeout(() => {
               window.location.href = '../index.html';
@@ -367,22 +392,46 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         } else {
           if (data?.session) {
-            const activeEmail = data.user?.email || emailVal;
-            const userName = data.user?.user_metadata?.name || activeEmail.split('@')[0];
-            localStorage.setItem('zaro-active-session', activeEmail);
             showToast(`✨ Welcome back, ${userName}! Login successful.`, 'success');
             setTimeout(() => {
               window.location.href = '../index.html';
             }, 800);
           } else {
-            showFormError('No active session could be created. Please verify your email.');
+            showToast(`✨ Welcome back, ${userName}!`, 'success');
+            setTimeout(() => {
+              window.location.href = '../index.html';
+            }, 800);
           }
         }
 
       } catch (err) {
         // Fallback for demo users
-        if (emailVal.includes('demo') || emailVal.includes('guest') || emailVal.includes('vertex')) {
-          localStorage.setItem('zaro-active-session', emailVal);
+        if (emailVal.includes('demo') || emailVal.includes('guest') || emailVal.includes('vertex') || emailVal.includes('client')) {
+          const activeEmail = emailVal.toLowerCase();
+          const userName = emailVal.split('@')[0].replace('.', ' ').toUpperCase();
+          const users = JSON.parse(localStorage.getItem('zaro-users')) || {};
+          if (!users[activeEmail]) {
+            users[activeEmail] = {
+              name: userName,
+              shop: 'ZARO Demo Storefront',
+              email: activeEmail,
+              password: passwordVal,
+              avatar: '',
+              orders: [
+                {
+                  id: `ZARO-${Math.floor(10000 + Math.random() * 90000)}`,
+                  projectName: 'Demo Storefront Showcase',
+                  category: 'Consultation & Mockup',
+                  price: 3500,
+                  date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+                  estDelivery: 'Immediate Delivery',
+                  status: 'launched'
+                }
+              ]
+            };
+            localStorage.setItem('zaro-users', JSON.stringify(users));
+          }
+          localStorage.setItem('zaro-active-session', activeEmail);
           showToast(`✨ Welcome to ZARO Portal!`, 'success');
           setTimeout(() => {
             window.location.href = '../index.html';

@@ -617,14 +617,53 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   const profileDrawer = document.getElementById('profile-drawer');
   const profileDrawerClose = document.getElementById('profile-drawer-close');
   
-  const authLoginView = document.getElementById('auth-login-view');
-  const authSignupView = document.getElementById('auth-signup-view');
-  const goToSignupLink = document.getElementById('go-to-signup');
-  const goToLoginLink = document.getElementById('go-to-login');
+  // Auth Form Elements
+  const loginForm = document.getElementById('loginForm');
+  const emailInput = document.getElementById('emailInput');
+  const passwordInput = document.getElementById('passwordInput');
+  const emailGroup = document.getElementById('emailGroup');
+  const passwordGroup = document.getElementById('passwordGroup');
+  const nameGroup = document.getElementById('nameGroup');
+  const shopGroup = document.getElementById('shopGroup');
+  const signupNameInput = document.getElementById('signupNameInput');
+  const signupShopInput = document.getElementById('signupShopInput');
+  const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+  const rememberMeCheckbox = document.getElementById('rememberMeCheckbox');
+  const submitLoginBtn = document.getElementById('submitLoginBtn');
+  const formErrorAlert = document.getElementById('formErrorAlert');
+  const googleLoginBtn = document.getElementById('googleLoginBtn');
+  const guestLoginBtn = document.getElementById('guestLoginBtn');
+  const demoAccountFillBtn = document.getElementById('demoAccountFillBtn');
+  const welcomeTitle = document.getElementById('welcomeTitle');
+  const welcomeSubtitle = document.getElementById('welcomeSubtitle');
+  const signUpToggleBtn = document.getElementById('signUpToggleBtn');
+  const switchPromptText = document.getElementById('switchPromptText');
+  const tabLogin = document.getElementById('tabLogin');
+  const tabRegister = document.getElementById('tabRegister');
   
-  const loginForm = document.getElementById('login-form');
-  const signupForm = document.getElementById('signup-form');
-  
+  // Poster Viewer Modal
+  const expandPosterBtn = document.getElementById('expandPosterBtn');
+  const posterModalBackdrop = document.getElementById('posterModalBackdrop');
+  const closePosterModal = document.getElementById('closePosterModal');
+  const modalPosterContainer = document.getElementById('modalPosterContainer');
+  const mainBanner = document.getElementById('mainBanner');
+
+  // Forgot Password Modal
+  const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+  const forgotModalBackdrop = document.getElementById('forgotModalBackdrop');
+  const closeForgotModal = document.getElementById('closeForgotModal');
+  const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+  const resetEmailInput = document.getElementById('resetEmailInput');
+
+  // Legal Modal
+  const termsLink = document.getElementById('termsLink');
+  const privacyLink = document.getElementById('privacyLink');
+  const legalModalBackdrop = document.getElementById('legalModalBackdrop');
+  const closeLegalModal = document.getElementById('closeLegalModal');
+  const legalAcknowledgeBtn = document.getElementById('legalAcknowledgeBtn');
+  const legalModalTitle = document.getElementById('legalModalTitle');
+
+  // Profile Drawer Elements
   const profileNameInput = document.getElementById('profile-name-input');
   const profileShopDisplay = document.getElementById('profile-shop-display');
   const profileEmailDisplay = document.getElementById('profile-email-display');
@@ -984,11 +1023,52 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
 
   /* --- 14. AUTHENTICATION CONTROLLER FLOWS --- */
 
-  const openAuthModal = () => {
+  let isSignUpMode = false;
+
+  const setAuthMode = (toSignUp) => {
+    isSignUpMode = toSignUp;
+    clearFormError();
+    if (emailGroup) emailGroup.classList.remove('has-error');
+    if (passwordGroup) passwordGroup.classList.remove('has-error');
+    if (nameGroup) nameGroup.classList.remove('has-error');
+    if (shopGroup) shopGroup.classList.remove('has-error');
+
+    const btnText = submitLoginBtn ? submitLoginBtn.querySelector('.btn-text') : null;
+
+    if (isSignUpMode) {
+      if (tabLogin) tabLogin.classList.remove('active');
+      if (tabRegister) tabRegister.classList.add('active');
+      if (nameGroup) nameGroup.style.display = 'flex';
+      if (shopGroup) shopGroup.style.display = 'flex';
+      if (welcomeTitle) welcomeTitle.textContent = 'Create Account';
+      if (welcomeSubtitle) welcomeSubtitle.textContent = 'Join ZARO to build & scale your high-converting business presence';
+      if (btnText) btnText.textContent = 'Create Account';
+      if (signUpToggleBtn) signUpToggleBtn.textContent = 'Sign In';
+      if (switchPromptText) switchPromptText.textContent = 'Already have an account?';
+    } else {
+      if (tabRegister) tabRegister.classList.remove('active');
+      if (tabLogin) tabLogin.classList.add('active');
+      if (nameGroup) nameGroup.style.display = 'none';
+      if (shopGroup) shopGroup.style.display = 'none';
+      if (welcomeTitle) welcomeTitle.textContent = 'Welcome Back';
+      if (welcomeSubtitle) welcomeSubtitle.textContent = 'Access your digital dashboard and web growth tools';
+      if (btnText) btnText.textContent = 'Sign In to ZARO';
+      if (signUpToggleBtn) signUpToggleBtn.textContent = 'Create Account';
+      if (switchPromptText) switchPromptText.textContent = "Don't have an account?";
+    }
+  };
+
+  const openAuthModal = (mode = 'login') => {
+    setAuthMode(mode === 'register');
     authModal.style.display = 'flex';
     authModal.style.opacity = '1';
-    authLoginView.style.display = 'block';
-    authSignupView.style.display = 'none';
+    
+    // Remembered email fill
+    const savedEmail = localStorage.getItem('zaro_remembered_email');
+    if (savedEmail && emailInput && !emailInput.value) {
+      emailInput.value = savedEmail;
+      if (rememberMeCheckbox) rememberMeCheckbox.checked = true;
+    }
   };
 
   const closeAuthModal = () => {
@@ -1009,116 +1089,315 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   // Event Listeners for openers
   if (headerLoginBtn) {
     headerLoginBtn.addEventListener('click', (e) => {
-      // Navigate to standalone login page
-      window.location.href = 'login/index.html';
+      e.preventDefault();
+      openAuthModal('login');
     });
   }
-  headerProfileBtn.addEventListener('click', openProfileDrawer);
+
+  if (headerProfileBtn) {
+    headerProfileBtn.addEventListener('click', openProfileDrawer);
+  }
   
-  authModalClose.addEventListener('click', closeAuthModal);
-  profileDrawerClose.addEventListener('click', closeProfileDrawer);
+  if (authModalClose) {
+    authModalClose.addEventListener('click', closeAuthModal);
+  }
+  
+  if (profileDrawerClose) {
+    profileDrawerClose.addEventListener('click', closeProfileDrawer);
+  }
   
   // Close modals when clicking outside
-  authModal.addEventListener('click', (e) => {
-    if (e.target === authModal) closeAuthModal();
-  });
-  profileDrawer.addEventListener('click', (e) => {
-    if (e.target === profileDrawer) closeProfileDrawer();
-  });
+  if (authModal) {
+    authModal.addEventListener('click', (e) => {
+      if (e.target === authModal) closeAuthModal();
+    });
+  }
 
-  // Switch links
-  goToSignupLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    authLoginView.style.display = 'none';
-    authSignupView.style.display = 'block';
-  });
+  if (profileDrawer) {
+    profileDrawer.addEventListener('click', (e) => {
+      if (e.target === profileDrawer) closeProfileDrawer();
+    });
+  }
 
-  goToLoginLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    authSignupView.style.display = 'none';
-    authLoginView.style.display = 'block';
-  });
+  // Tab & Toggle Switchers
+  if (tabLogin) tabLogin.addEventListener('click', () => setAuthMode(false));
+  if (tabRegister) tabRegister.addEventListener('click', () => setAuthMode(true));
+  if (signUpToggleBtn) signUpToggleBtn.addEventListener('click', () => setAuthMode(!isSignUpMode));
 
-  // Register Submit Handlers
-  signupForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const name = document.getElementById('signup-name').value;
-    const shop = document.getElementById('signup-shop').value;
-    const email = document.getElementById('signup-email').value.toLowerCase().trim();
-    const password = document.getElementById('signup-password').value;
-    
-    if (password.length < 6) {
-      showToast('Validation Error', 'Password must be at least 6 characters long!', 'danger');
-      return;
-    }
-    
-    // Registration flow
-    const users = getUsers();
-    if (users[email]) {
-      showToast('Registration Error', 'An account with this email already exists!', 'danger');
-      return;
-    }
-    
-    const initialOrders = [
-      {
-        id: `ZARO-${Math.floor(10000 + Math.random() * 90000)}`,
-        projectName: `${shop} Launch Concept`,
-        category: 'Consultation & Schema Mapping',
-        price: 3500,
-        date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
-        estDelivery: 'Immediate Delivery',
-        status: 'launched'
+  // Password Visibility Toggle
+  if (togglePasswordBtn && passwordInput) {
+    togglePasswordBtn.addEventListener('click', () => {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+
+      const eyeOpen = togglePasswordBtn.querySelector('.eye-open');
+      const eyeClosed = togglePasswordBtn.querySelector('.eye-closed');
+
+      if (isPassword) {
+        if (eyeOpen) eyeOpen.style.display = 'none';
+        if (eyeClosed) eyeClosed.style.display = 'block';
+      } else {
+        if (eyeOpen) eyeOpen.style.display = 'block';
+        if (eyeClosed) eyeClosed.style.display = 'none';
       }
-    ];
+    });
+  }
 
-    users[email] = {
-      name,
-      shop,
-      email,
-      password,
-      avatar: '',
-      orders: initialOrders
-    };
-    
-    saveUsers(users);
-    setActiveUserEmail(email);
-    
-    showToast('Success!', `Welcome to ZARO Agency, ${name}! Your account is now active.`, 'success');
-    
-    signupForm.reset();
-    closeAuthModal();
-    await checkActiveSession();
-  });
+  // Demo Credentials Auto-Fill
+  if (demoAccountFillBtn) {
+    demoAccountFillBtn.addEventListener('click', () => {
+      if (emailInput) emailInput.value = 'client@zaro.agency';
+      if (passwordInput) passwordInput.value = 'ZaroStore2026!';
+      clearFormError();
+      showToast('Quick Demo Loaded', '✨ Demo credentials filled! Click Sign In to test.', 'info');
+    });
+  }
 
-  // Login Submit Handlers
-  loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const email = document.getElementById('login-email').value.toLowerCase().trim();
-    const password = document.getElementById('login-password').value;
-    
-    const users = getUsers();
-    const user = users[email];
-    
-    if (!user || user.password !== password) {
-      showToast('Auth Failure', 'Incorrect email address or password. Try again.', 'danger');
-      return;
-    }
-    
-    setActiveUserEmail(email);
-    showToast('Signed In Successfully!', `Welcome back, ${user.name}!`, 'success');
-    
-    loginForm.reset();
-    closeAuthModal();
-    await checkActiveSession();
-  });
+  // Guest Explorer Auto-Fill
+  if (guestLoginBtn) {
+    guestLoginBtn.addEventListener('click', () => {
+      if (emailInput) emailInput.value = 'guest.explorer@zaro.agency';
+      if (passwordInput) passwordInput.value = 'ZaroExplorer2026';
+      clearFormError();
+      showToast('Guest Preview', '🚀 Guest credentials loaded. Click Sign In to test.', 'info');
+    });
+  }
 
-  // Google Sign-In Handler
-  const googleSignInBtn = document.getElementById('google-signin-btn');
-  if (googleSignInBtn) {
-    googleSignInBtn.addEventListener('click', async () => {
-      const demoEmail = 'google.user@zaro.dev';
+  // Form Error Display Helpers
+  function showFormError(message) {
+    if (!formErrorAlert) return;
+    formErrorAlert.classList.remove('info');
+    formErrorAlert.textContent = message;
+    formErrorAlert.style.display = 'flex';
+  }
+
+  function clearFormError() {
+    if (!formErrorAlert) return;
+    formErrorAlert.classList.remove('info');
+    formErrorAlert.textContent = '';
+    formErrorAlert.style.display = 'none';
+  }
+
+  if (emailInput) {
+    emailInput.addEventListener('input', () => {
+      if (emailGroup) emailGroup.classList.remove('has-error');
+      clearFormError();
+    });
+  }
+
+  if (passwordInput) {
+    passwordInput.addEventListener('input', () => {
+      if (passwordGroup) passwordGroup.classList.remove('has-error');
+      clearFormError();
+    });
+  }
+
+  // Main Auth Form Submission
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearFormError();
+
+      let isValid = true;
+      const emailVal = emailInput ? emailInput.value.trim() : '';
+      const passwordVal = passwordInput ? passwordInput.value : '';
+      const nameVal = signupNameInput ? signupNameInput.value.trim() : '';
+      const shopVal = signupShopInput ? signupShopInput.value.trim() : '';
+
+      if (isSignUpMode) {
+        if (!nameVal) {
+          if (nameGroup) nameGroup.classList.add('has-error');
+          isValid = false;
+        } else {
+          if (nameGroup) nameGroup.classList.remove('has-error');
+        }
+
+        if (!shopVal) {
+          if (shopGroup) shopGroup.classList.add('has-error');
+          isValid = false;
+        } else {
+          if (shopGroup) shopGroup.classList.remove('has-error');
+        }
+      }
+
+      if (!emailVal || emailVal.length < 3) {
+        if (emailGroup) emailGroup.classList.add('has-error');
+        isValid = false;
+      } else {
+        if (emailGroup) emailGroup.classList.remove('has-error');
+      }
+
+      if (!passwordVal || passwordVal.length < 6) {
+        if (passwordGroup) passwordGroup.classList.add('has-error');
+        isValid = false;
+      } else {
+        if (passwordGroup) passwordGroup.classList.remove('has-error');
+      }
+
+      if (!isValid) {
+        showToast('Validation Error', 'Please complete all required fields (password min 6 chars).', 'warning');
+        return;
+      }
+
+      // Loading state
+      if (submitLoginBtn) {
+        submitLoginBtn.classList.add('loading');
+        submitLoginBtn.disabled = true;
+      }
+
+      try {
+        if (isSignUpMode) {
+          // Registration Logic
+          let registeredViaSupabase = false;
+          if (supabase && supabase.auth) {
+            try {
+              const { data, error } = await supabase.auth.signUp({
+                email: emailVal,
+                password: passwordVal,
+                options: {
+                  data: {
+                    name: nameVal,
+                    shop: shopVal
+                  }
+                }
+              });
+              if (!error && data?.user) {
+                registeredViaSupabase = true;
+              }
+            } catch (err) {
+              console.warn('Supabase sign up warning, saving local session:', err);
+            }
+          }
+
+          // Save into local users database
+          const users = getUsers();
+          const initialOrders = [
+            {
+              id: `ZARO-${Math.floor(10000 + Math.random() * 90000)}`,
+              projectName: `${shopVal} Digital Launch Concept`,
+              category: 'Website Design & Schema Mapping',
+              price: 3500,
+              date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+              estDelivery: 'Immediate Delivery',
+              status: 'launched'
+            }
+          ];
+
+          users[emailVal.toLowerCase()] = {
+            name: nameVal,
+            shop: shopVal,
+            email: emailVal.toLowerCase(),
+            password: passwordVal,
+            avatar: '',
+            orders: initialOrders
+          };
+          saveUsers(users);
+
+          // Remember Me
+          if (rememberMeCheckbox && rememberMeCheckbox.checked) {
+            localStorage.setItem('zaro_remembered_email', emailVal);
+          } else {
+            localStorage.removeItem('zaro_remembered_email');
+          }
+
+          setActiveUserEmail(emailVal.toLowerCase());
+          if (submitLoginBtn) {
+            submitLoginBtn.classList.remove('loading');
+            submitLoginBtn.disabled = false;
+          }
+
+          showToast('Account Created!', `Welcome to ZARO Agency, ${nameVal}!`, 'success');
+          closeAuthModal();
+          await checkActiveSession();
+
+        } else {
+          // Login Logic
+          let loggedInViaSupabase = false;
+          if (supabase && supabase.auth) {
+            try {
+              const { data, error } = await supabase.auth.signInWithPassword({
+                email: emailVal,
+                password: passwordVal
+              });
+              if (!error && data?.session) {
+                loggedInViaSupabase = true;
+              }
+            } catch (err) {
+              console.warn('Supabase sign in warning, checking local storage:', err);
+            }
+          }
+
+          const users = getUsers();
+          const user = users[emailVal.toLowerCase()];
+
+          // Handle Demo & Mock Users fallback
+          if (!loggedInViaSupabase && !user) {
+            if (emailVal.includes('demo') || emailVal.includes('guest') || emailVal.includes('client')) {
+              const displayName = emailVal.split('@')[0].replace('.', ' ').toUpperCase();
+              users[emailVal.toLowerCase()] = {
+                name: displayName,
+                shop: 'ZARO Demo Storefront',
+                email: emailVal.toLowerCase(),
+                password: passwordVal,
+                avatar: '',
+                orders: [
+                  {
+                    id: `ZARO-${Math.floor(10000 + Math.random() * 90000)}`,
+                    projectName: 'Full-Stack E-Commerce & WhatsApp Hub',
+                    category: 'E-Commerce Storefront',
+                    price: 15000,
+                    date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+                    estDelivery: '14 Business Days',
+                    status: 'development'
+                  }
+                ]
+              };
+              saveUsers(users);
+            } else {
+              if (submitLoginBtn) {
+                submitLoginBtn.classList.remove('loading');
+                submitLoginBtn.disabled = false;
+              }
+              showFormError('Incorrect email or password. Please verify your credentials.');
+              showToast('Authentication Error', 'Invalid login credentials.', 'warning');
+              return;
+            }
+          }
+
+          // Remember Me
+          if (rememberMeCheckbox && rememberMeCheckbox.checked) {
+            localStorage.setItem('zaro_remembered_email', emailVal);
+          } else {
+            localStorage.removeItem('zaro_remembered_email');
+          }
+
+          setActiveUserEmail(emailVal.toLowerCase());
+          if (submitLoginBtn) {
+            submitLoginBtn.classList.remove('loading');
+            submitLoginBtn.disabled = false;
+          }
+
+          const activeName = (users[emailVal.toLowerCase()]?.name) || emailVal.split('@')[0];
+          showToast('Signed In Successfully!', `Welcome back, ${activeName}!`, 'success');
+          closeAuthModal();
+          await checkActiveSession();
+        }
+
+      } catch (err) {
+        if (submitLoginBtn) {
+          submitLoginBtn.classList.remove('loading');
+          submitLoginBtn.disabled = false;
+        }
+        showFormError(err.message || 'An unexpected error occurred. Please try again.');
+        showToast('Error', 'Authentication could not complete.', 'danger');
+      }
+    });
+  }
+
+  // Google Social Sign-In Simulation
+  if (googleLoginBtn) {
+    googleLoginBtn.addEventListener('click', async () => {
+      const demoEmail = 'partner.business@gmail.com';
       const users = getUsers();
       if (!users[demoEmail]) {
         users[demoEmail] = {
@@ -1142,9 +1421,84 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
         saveUsers(users);
       }
       setActiveUserEmail(demoEmail);
-      showToast('Signed In Successfully!', 'Welcome to ZARO, Alex Rivera!', 'success');
+      showToast('Signed In with Google', '✨ Welcome to ZARO Agency, Alex Rivera!', 'success');
       closeAuthModal();
       await checkActiveSession();
+    });
+  }
+
+  // Auxiliary Modal Handlers
+  // 1. Poster Viewer Modal
+  if (expandPosterBtn && posterModalBackdrop && mainBanner && modalPosterContainer) {
+    expandPosterBtn.addEventListener('click', () => {
+      modalPosterContainer.innerHTML = '';
+      const clone = mainBanner.cloneNode(true);
+      clone.id = 'modalPosterCloned';
+      modalPosterContainer.appendChild(clone);
+      posterModalBackdrop.classList.add('open');
+    });
+
+    if (closePosterModal) {
+      closePosterModal.addEventListener('click', () => {
+        posterModalBackdrop.classList.remove('open');
+      });
+    }
+
+    posterModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === posterModalBackdrop) posterModalBackdrop.classList.remove('open');
+    });
+  }
+
+  // 2. Forgot Password Modal
+  if (forgotPasswordBtn && forgotModalBackdrop) {
+    forgotPasswordBtn.addEventListener('click', () => {
+      if (emailInput && emailInput.value.includes('@') && resetEmailInput) {
+        resetEmailInput.value = emailInput.value;
+      }
+      forgotModalBackdrop.classList.add('open');
+    });
+
+    if (closeForgotModal) {
+      closeForgotModal.addEventListener('click', () => forgotModalBackdrop.classList.remove('open'));
+    }
+
+    forgotModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === forgotModalBackdrop) forgotModalBackdrop.classList.remove('open');
+    });
+
+    if (forgotPasswordForm) {
+      forgotPasswordForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = resetEmailInput ? resetEmailInput.value : '';
+        forgotModalBackdrop.classList.remove('open');
+        showToast('Recovery Link Sent', `Password reset link sent to ${email}`, 'success');
+        forgotPasswordForm.reset();
+      });
+    }
+  }
+
+  // 3. Terms & Privacy Modal
+  if (termsLink && privacyLink && legalModalBackdrop) {
+    termsLink.addEventListener('click', () => {
+      if (legalModalTitle) legalModalTitle.textContent = 'Terms of Service';
+      legalModalBackdrop.classList.add('open');
+    });
+
+    privacyLink.addEventListener('click', () => {
+      if (legalModalTitle) legalModalTitle.textContent = 'Privacy Policy';
+      legalModalBackdrop.classList.add('open');
+    });
+
+    if (closeLegalModal) {
+      closeLegalModal.addEventListener('click', () => legalModalBackdrop.classList.remove('open'));
+    }
+
+    if (legalAcknowledgeBtn) {
+      legalAcknowledgeBtn.addEventListener('click', () => legalModalBackdrop.classList.remove('open'));
+    }
+
+    legalModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === legalModalBackdrop) legalModalBackdrop.classList.remove('open');
     });
   }
 
