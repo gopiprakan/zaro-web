@@ -999,89 +999,397 @@
     </a>
   </div>
 
-  <!-- --- AUTHENTICATION MODAL --- -->
+  <!-- --- INTEGRATED COLLABORATIVE AUTHENTICATION MODAL & SHOWCASE --- -->
   <div id="auth-modal" class="modal-overlay" style="display: none;">
-    <div class="modal-card">
+    <div class="auth-modal-wrapper">
       <button class="modal-close-btn" id="auth-modal-close" aria-label="Close modal">
         <i class="ri-close-line"></i>
       </button>
 
-      <!-- Login Form View -->
-      <div id="auth-login-view">
-        <h3 class="modal-title">Welcome Back</h3>
-        <p class="modal-subtitle">Log in to track your web designs and order status.</p>
-        <form id="login-form" class="modal-form">
-          <div class="form-group">
-            <label for="login-email">Email Address</label>
-            <input type="email" id="login-email" class="form-input" placeholder="e.g. name@shop.com" required
-              autocomplete="username">
-          </div>
-          <div class="form-group">
-            <label for="login-password">Password</label>
-            <div class="password-field-wrapper">
-              <input type="password" id="login-password" class="form-input" placeholder="••••••••" required
-                autocomplete="current-password">
-              <button type="button" class="password-toggle-btn" data-target="login-password" aria-label="Toggle password visibility">
-                <i class="ri-eye-off-line"></i>
-              </button>
-            </div>
-            <a href="#" id="forgot-password-link" class="forgot-password-link">Forgot Password?</a>
-          </div>
-          <button type="submit" class="btn btn-primary w-full" style="margin-top: 10px; width: 100%;">
-            Sign In <i class="ri-arrow-right-line"></i>
-          </button>
-        </form>
-        <div style="display: flex; align-items: center; margin: 15px 0;">
-          <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.1);"></div>
-          <span style="padding: 0 10px; font-size: 0.85rem; color: var(--text-muted);">or</span>
-          <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.1);"></div>
-        </div>
-        <button id="google-signin-btn" class="btn w-full" style="width: 100%; background: #ffffff; color: #1f2937; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 15px;">
-          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
-          Sign in with Google
-        </button>
-        <p class="auth-toggle-text">
-          Don't have an account? <a href="#" id="go-to-signup" class="gradient-text">Create Account</a>
-        </p>
-      </div>
+      <!-- Master Showcase & Auth Card -->
+      <div class="auth-card" id="authCard">
 
-      <!-- Signup Form View -->
-      <div id="auth-signup-view" style="display: none;">
-        <h3 class="modal-title">Launch Your Shop</h3>
-        <p class="modal-subtitle">Create an account to manage your ZARO storefront design.</p>
-        <form id="signup-form" class="modal-form">
-          <div class="form-group">
-            <label for="signup-name">Full Name</label>
-            <input type="text" id="signup-name" class="form-input" placeholder="e.g. Rajesh Kumar" required
-              autocomplete="name">
+        <!-- LEFT PANEL: ZARO Agency Services Ad Banner (Pure Digital / Vector Mockup) -->
+        <section class="showcase-panel" id="showcasePanel" aria-label="ZARO Services Showcase">
+          <!-- Showcase Header / Quick Badge -->
+          <div class="showcase-top-bar">
+            <div class="showcase-tag">
+              <span class="pulse-dot"></span>
+              <span class="tag-text">ZARO Digital Solutions</span>
+            </div>
+            <button type="button" class="expand-poster-btn" id="expandPosterBtn" title="Inspect Full Screen Banner" aria-label="Expand banner view">
+              <i class="ri-fullscreen-line"></i> <span>View Banner</span>
+            </button>
           </div>
-          <div class="form-group">
-            <label for="signup-shop">Shop / Business Name</label>
-            <input type="text" id="signup-shop" class="form-input" placeholder="e.g. Bella Boutique" required>
-          </div>
-          <div class="form-group">
-            <label for="signup-email">Email Address</label>
-            <input type="email" id="signup-email" class="form-input" placeholder="e.g. name@shop.com" required
-              autocomplete="username">
-          </div>
-          <div class="form-group">
-            <label for="signup-password">Choose Password</label>
-            <div class="password-field-wrapper">
-              <input type="password" id="signup-password" class="form-input" placeholder="Min. 6 characters" required
-                autocomplete="new-password">
-              <button type="button" class="password-toggle-btn" data-target="signup-password" aria-label="Toggle password visibility">
-                <i class="ri-eye-off-line"></i>
-              </button>
+
+          <!-- ZARO Services Ad Banner Viewport -->
+          <div class="banner-viewport">
+            <div class="zaro-ad-banner" id="mainBanner">
+              <!-- Diagonal Geometric Background Shapes -->
+              <div class="banner-bg-geometry">
+                <div class="diagonal-orange-slash"></div>
+                <div class="diagonal-accent-line"></div>
+                
+                <!-- Right Side Digital UI & Glass Mockup Architecture -->
+                <div class="banner-digital-showcase">
+                  <!-- Main Floating Glass Storefront Card -->
+                  <div class="mockup-glass-card">
+                    <div class="mockup-header-dots">
+                      <span class="dot-item dot-red"></span>
+                      <span class="dot-item dot-yellow"></span>
+                      <span class="dot-item dot-green"></span>
+                    </div>
+                    
+                    <div class="mockup-store-preview">
+                      <div class="mockup-brand-bar">
+                        <i class="ri-store-2-fill brand-icon"></i>
+                        <span>Bella Storefront</span>
+                        <span class="live-pill">LIVE</span>
+                      </div>
+                      
+                      <div class="mockup-card-title">Turn Footfall Into Sales</div>
+                      <div class="mockup-card-desc">Modern e-commerce &amp; WhatsApp ordering setup.</div>
+                      
+                      <div class="mockup-action-row">
+                        <span class="mock-btn-chip"><i class="ri-shopping-cart-line"></i> Order Online</span>
+                        <span class="mock-btn-chip alt"><i class="ri-whatsapp-line"></i> WhatsApp</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Floating Metric Card 1: Revenue Boost -->
+                  <div class="floating-metric-badge badge-top">
+                    <div class="metric-icon-wrap icon-green">
+                      <i class="ri-line-chart-line"></i>
+                    </div>
+                    <div class="metric-info">
+                      <span class="metric-title">Sales Multiplier</span>
+                      <strong class="metric-value">+142% Growth</strong>
+                    </div>
+                  </div>
+
+                  <!-- Floating Metric Card 2: Google Maps #1 Rank -->
+                  <div class="floating-metric-badge badge-bottom">
+                    <div class="metric-icon-wrap icon-orange">
+                      <i class="ri-map-pin-2-fill"></i>
+                    </div>
+                    <div class="metric-info">
+                      <span class="metric-title">Local SEO Ranking</span>
+                      <strong class="metric-value">#1 Top on Google</strong>
+                    </div>
+                  </div>
+
+                  <!-- Floating Decorative Glow Rings -->
+                  <div class="deco-orbit-ring ring-1"></div>
+                </div>
+              </div>
+
+              <!-- Left Content: Brand Logo, Headlines, Services List, CTA & Contact -->
+              <div class="banner-content-left">
+                <!-- TOP LEFT: ZARO Logo Badge -->
+                <div class="banner-brand-badge">
+                  <div class="badge-logo-wrap">
+                    <img src="ZARO_logo.png" alt="ZARO Logo" class="badge-logo-img">
+                  </div>
+                  <div class="badge-text-wrap">
+                    <span class="badge-title">ZARO AGENCY</span>
+                    <span class="badge-subtitle"><i class="ri-rocket-2-fill"></i> Taking Local Businesses Online</span>
+                  </div>
+                </div>
+
+                <!-- MAIN HEADLINE GROUP -->
+                <div class="banner-headline-group">
+                  <p class="headline-sub">WE ARE PROVIDING</p>
+                  <h2 class="headline-main">
+                    THE BEST SERVICE IN<br>
+                    <span class="headline-highlight">WEBSITE DESIGN</span>
+                  </h2>
+                </div>
+
+                <!-- BULLETED SERVICES LIST -->
+                <ul class="banner-services-list">
+                  <li>
+                    <span class="bullet-arrow"><i class="ri-play-fill"></i></span>
+                    <span class="service-name">WEBSITE DEVELOPMENT</span>
+                  </li>
+                  <li>
+                    <span class="bullet-arrow"><i class="ri-play-fill"></i></span>
+                    <span class="service-name">MOBILE APP &amp; UI</span>
+                  </li>
+                  <li>
+                    <span class="bullet-arrow"><i class="ri-play-fill"></i></span>
+                    <span class="service-name">E-COMMERCE STOREFRONTS</span>
+                  </li>
+                  <li>
+                    <span class="bullet-arrow"><i class="ri-play-fill"></i></span>
+                    <span class="service-name">WHATSAPP ORDER INTEGRATION</span>
+                  </li>
+                  <li>
+                    <span class="bullet-arrow"><i class="ri-play-fill"></i></span>
+                    <span class="service-name">LOCAL SEO &amp; GOOGLE MAPS</span>
+                  </li>
+                  <li>
+                    <span class="bullet-arrow"><i class="ri-play-fill"></i></span>
+                    <span class="service-name">APPOINTMENTS &amp; BOOKINGS</span>
+                  </li>
+                </ul>
+
+                <!-- CONTACT & CTA FOOTER AREA -->
+                <div class="banner-contact-cta-wrap">
+                  <div class="banner-contact-details">
+                    <div class="contact-phone-row">
+                      <i class="ri-phone-fill"></i>
+                      <span>+91 9043379569</span>
+                    </div>
+                    <div class="contact-web-row">
+                      <i class="ri-global-line"></i>
+                      <span>www.zaroagency.in</span>
+                    </div>
+                  </div>
+
+                  <a href="#contact" class="banner-cta-btn" onclick="document.getElementById('auth-modal').style.display='none';">
+                    <span>CONTACT US</span>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary w-full" style="margin-top: 10px; width: 100%;">
-            Register Account <i class="ri-arrow-right-line"></i>
-          </button>
-        </form>
-        <p class="auth-toggle-text">
-          Already registered? <a href="#" id="go-to-login" class="gradient-text">Log In</a>
-        </p>
+
+          <!-- Showcase Footer Quick Actions -->
+          <div class="showcase-bottom-badge">
+            <div class="badge-creator-info">
+              <div class="creator-avatar-wrap">
+                <i class="ri-rocket-2-fill brand-badge-icon"></i>
+              </div>
+              <div class="creator-text">
+                <span class="creator-name">ZARO Agency Ecosystem</span>
+                <span class="creator-sub">Empowering Retailers, Boutiques &amp; Cafes</span>
+              </div>
+            </div>
+            <button type="button" class="poster-action-pill" id="demoAccountFillBtn" title="Auto-fill Demo Credentials">
+              <i class="ri-flashlight-line"></i> Quick Demo
+            </button>
+          </div>
+        </section>
+
+        <!-- RIGHT PANEL: Login Form Area (Matching Website Design System) -->
+        <section class="form-panel" aria-label="Login Form">
+          <!-- Top bar: Logo & Title -->
+          <div class="form-header">
+            <div class="brand-logo-link">
+              <img src="ZARO_logo.png" alt="ZARO Logo" class="brand-logo-img">
+              <div class="brand-name-group">
+                <span class="brand-title">ZARO</span>
+                <span class="brand-subtitle">Digital Agency</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Form Content -->
+          <div class="form-body">
+            <!-- Mode Switcher Tabs -->
+            <div class="auth-tabs" role="tablist">
+              <button type="button" class="auth-tab active" id="tabLogin" role="tab" aria-selected="true">
+                <i class="ri-login-box-line"></i> Sign In
+              </button>
+              <button type="button" class="auth-tab" id="tabRegister" role="tab" aria-selected="false">
+                <i class="ri-user-add-line"></i> Create Account
+              </button>
+            </div>
+
+            <div class="heading-group">
+              <h2 class="main-title" id="welcomeTitle">Welcome Back</h2>
+              <p class="sub-title" id="welcomeSubtitle">Access your digital dashboard and web growth tools</p>
+            </div>
+
+            <!-- Auth Form -->
+            <form class="auth-form" id="loginForm" novalidate>
+              <!-- Name Input Group (Shown in Register Mode) -->
+              <div class="input-group" id="nameGroup" style="display: none;">
+                <label for="signupNameInput" class="input-label">Full Name</label>
+                <div class="input-wrapper">
+                  <span class="field-icon"><i class="ri-user-line"></i></span>
+                  <input type="text" id="signupNameInput" name="name" class="text-input" placeholder="e.g. Rajesh Kumar" autocomplete="name">
+                </div>
+                <div class="field-error-msg" id="nameError">Please enter your full name</div>
+              </div>
+
+              <!-- Business / Shop Name Input Group (Shown in Register Mode) -->
+              <div class="input-group" id="shopGroup" style="display: none;">
+                <label for="signupShopInput" class="input-label">Shop / Business Name</label>
+                <div class="input-wrapper">
+                  <span class="field-icon"><i class="ri-store-2-line"></i></span>
+                  <input type="text" id="signupShopInput" name="shop" class="text-input" placeholder="e.g. Bella Boutique" autocomplete="organization">
+                </div>
+                <div class="field-error-msg" id="shopError">Please enter your business or shop name</div>
+              </div>
+
+              <!-- Email / Username Input Group -->
+              <div class="input-group" id="emailGroup">
+                <label for="emailInput" class="input-label">Email Address</label>
+                <div class="input-wrapper">
+                  <span class="field-icon"><i class="ri-mail-line"></i></span>
+                  <input type="text" id="emailInput" name="email" class="text-input" placeholder="name@company.com or username" autocomplete="username" required>
+                </div>
+                <div class="field-error-msg" id="emailError">Please enter a valid email address</div>
+              </div>
+
+              <!-- Password Input Group -->
+              <div class="input-group" id="passwordGroup">
+                <div class="label-row">
+                  <label for="passwordInput" class="input-label">Password</label>
+                  <button type="button" class="forgot-password-link" id="forgotPasswordBtn">Forgot password?</button>
+                </div>
+                <div class="input-wrapper">
+                  <span class="field-icon"><i class="ri-lock-2-line"></i></span>
+                  <input type="password" id="passwordInput" name="password" class="text-input" placeholder="Enter your secure password" autocomplete="current-password" required>
+                  <button type="button" class="toggle-password-btn" id="togglePasswordBtn" aria-label="Toggle password visibility" title="Show/Hide password">
+                    <i class="ri-eye-line eye-open"></i>
+                    <i class="ri-eye-off-line eye-closed" style="display: none;"></i>
+                  </button>
+                </div>
+                <div class="field-error-msg" id="passwordError">Password must be at least 6 characters</div>
+              </div>
+
+              <!-- Options Row: Remember Me -->
+              <div class="form-options-row">
+                <label class="custom-checkbox" for="rememberMeCheckbox">
+                  <input type="checkbox" id="rememberMeCheckbox" name="rememberMe" checked>
+                  <span class="checkmark"><i class="ri-check-line"></i></span>
+                  <span class="checkbox-label">Keep me signed in for 30 days</span>
+                </label>
+              </div>
+
+              <!-- Primary Login Submit Button -->
+              <button type="submit" class="submit-login-btn" id="submitLoginBtn">
+                <span class="btn-text">Sign In to ZARO</span>
+                <i class="ri-arrow-right-line btn-arrow"></i>
+                <div class="btn-loader" id="btnLoader"><span class="spinner"></span></div>
+              </button>
+
+              <!-- Form Alert Display -->
+              <div class="form-error-alert" id="formErrorAlert" role="alert" style="display: none;"></div>
+
+              <!-- Divider with OR -->
+              <div class="or-divider">
+                <span class="line"></span>
+                <span class="or-text">or continue with</span>
+                <span class="line"></span>
+              </div>
+
+              <!-- Social Login Grid -->
+              <div class="social-login-grid">
+                <button type="button" class="social-login-btn google-btn" id="googleLoginBtn">
+                  <svg class="social-icon" width="18" height="18" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                  </svg>
+                  <span>Google Account</span>
+                </button>
+
+                <button type="button" class="social-login-btn quick-demo-btn" id="guestLoginBtn" title="Quick Explorer Mode">
+                  <i class="ri-shield-user-line"></i>
+                  <span>Guest Preview</span>
+                </button>
+              </div>
+
+              <!-- Create Account / Sign Up Toggle Link -->
+              <div class="signup-prompt">
+                <span id="switchPromptText">Don't have an account?</span>
+                <button type="button" class="signup-link" id="signUpToggleBtn">Create Account</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Form Footer: Social Icons & Legal Links -->
+          <div class="form-footer">
+            <div class="social-links" aria-label="ZARO Social Channels">
+              <a href="https://instagram.com" target="_blank" rel="noopener" class="social-icon-link" aria-label="Instagram" title="Instagram">
+                <i class="ri-instagram-line"></i>
+              </a>
+              <a href="https://facebook.com" target="_blank" rel="noopener" class="social-icon-link" aria-label="Facebook" title="Facebook">
+                <i class="ri-facebook-circle-fill"></i>
+              </a>
+              <a href="https://twitter.com" target="_blank" rel="noopener" class="social-icon-link" aria-label="Twitter / X" title="Twitter / X">
+                <i class="ri-twitter-x-line"></i>
+              </a>
+            </div>
+
+            <div class="legal-links">
+              <button type="button" class="legal-link-btn" id="termsLink">Terms</button>
+              <span class="dot-separator">•</span>
+              <button type="button" class="legal-link-btn" id="privacyLink">Privacy</button>
+            </div>
+          </div>
+        </section>
+
       </div>
+    </div>
+  </div>
+
+  <!-- Full-Screen Banner Modal Viewer -->
+  <div class="modal-backdrop" id="posterModalBackdrop">
+    <div class="modal-card poster-modal-card">
+      <button type="button" class="modal-close-btn" id="closePosterModal" aria-label="Close banner view">&times;</button>
+      <div class="poster-modal-header">
+        <div class="poster-modal-badge">
+          <i class="ri-sparkling-fill"></i> ZARO Agency • Official Campaign
+        </div>
+        <a href="#services" class="btn-pill-outline" onclick="document.getElementById('posterModalBackdrop').classList.remove('open');">
+          <i class="ri-external-link-line"></i> All Services
+        </a>
+      </div>
+      <div class="poster-modal-content">
+        <div class="modal-poster-clone" id="modalPosterContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Modal: Forgot Password -->
+  <div class="modal-backdrop" id="forgotModalBackdrop">
+    <div class="modal-card">
+      <button type="button" class="modal-close-btn" id="closeForgotModal" aria-label="Close modal">&times;</button>
+      <div class="modal-header">
+        <div class="modal-icon-badge"><i class="ri-key-2-line"></i></div>
+        <h3>Reset Your Password</h3>
+        <p>Enter your registered email address and we'll send you an instant reset link.</p>
+      </div>
+      <form id="forgotPasswordForm">
+        <div class="input-group">
+          <label for="resetEmailInput" class="input-label">Registered Email</label>
+          <div class="input-wrapper">
+            <span class="field-icon"><i class="ri-mail-line"></i></span>
+            <input type="email" id="resetEmailInput" class="text-input" placeholder="you@company.com" required>
+          </div>
+        </div>
+        <button type="submit" class="submit-login-btn modal-submit" style="margin-top: 14px;">
+          <span>Send Recovery Email</span>
+          <i class="ri-send-plane-fill"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Interactive Modal: Terms / Privacy -->
+  <div class="modal-backdrop" id="legalModalBackdrop">
+    <div class="modal-card legal-modal">
+      <button type="button" class="modal-close-btn" id="closeLegalModal" aria-label="Close modal">&times;</button>
+      <div class="modal-header">
+        <h3 id="legalModalTitle">Terms of Service</h3>
+        <p id="legalModalDate">Updated: August 2026</p>
+      </div>
+      <div class="legal-body" id="legalModalContent">
+        <p>Welcome to <strong>ZARO Digital Web Agency</strong>. By accessing our platform and services, you agree to comply with our client security policies, digital storefront guidelines, and privacy standards.</p>
+        <h4>1. Account Security &amp; Store Access</h4>
+        <p>Clients are responsible for maintaining the security of their login credentials and managing store authentication tokens safely.</p>
+        <h4>2. Web Design &amp; Digital Solutions</h4>
+        <p>All featured services (including E-commerce, WhatsApp Catalogs, Local Maps Boosters, and Custom UI) are crafted to elevate local business growth.</p>
+        <h4>3. Theme &amp; Preferences</h4>
+        <p>Preferences (such as Dark/Light Theme mode and Remember Me sessions) are preserved locally on your client device for optimal performance.</p>
+      </div>
+      <button type="button" class="btn-pill-outline modal-confirm-btn" id="legalAcknowledgeBtn">Understood &amp; Accept</button>
     </div>
   </div>
 
