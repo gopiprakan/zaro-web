@@ -1,6 +1,13 @@
 {
   "version": 2,
+  "framework": null,
   "buildCommand": "npm run build",
+  "outputDirectory": ".",
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "backend/data/**"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -28,3 +35,4 @@
     }
   ]
 }
+
