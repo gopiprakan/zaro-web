@@ -1,14 +1,14 @@
 /* 
 ================================================================
-   ZARO LOGIN & AUTHENTICATION SYSTEM + VERTEX 4:5 SHOWCASE
-   Harmonized with ZARO Next-Gen Digital Interface Theme
-   Futuristic Glassmorphism, Floating UI & Precision Typography
+   ZARO LOGIN & AUTHENTICATION SYSTEM + SERVICES AD SHOWCASE
+   Harmonized with ZARO Next-Gen Digital Agency Theme System
+   Inspired by High-Converting Agency Ad Reference Composition
 ================================================================
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap');
 
-/* --- DESIGN TOKENS & DUAL-THEME SYSTEM --- */
+/* --- DESIGN TOKENS & SYSTEM THEMES --- */
 :root {
   /* Typography */
   --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -23,7 +23,7 @@
   --radius-xl: 36px;
   --radius-full: 9999px;
 
-  /* Transitions & Animation Curves */
+  /* Transitions & Curves */
   --transition-fast: 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -57,12 +57,7 @@
   --secondary-gradient: linear-gradient(135deg, #90AEAD 0%, #244855 100%);
   --accent-color: #874F41;
   --warm-accent: #E64833;
-  --warm-gradient: linear-gradient(135deg, #E64833 0%, #874F41 100%);
-
-  /* Poster Specific Electric Blue Tokens */
-  --poster-blue: #0066FF;
-  --poster-blue-dark: #004ecc;
-  --poster-blue-gradient: linear-gradient(135deg, #0066FF 0%, #00C6FF 100%);
+  --warm-gradient: linear-gradient(135deg, #E64833 0%, #ff6b4a 100%);
 
   --card-shadow: 0 25px 60px -15px rgba(5, 12, 16, 0.85), inset 0 1px 1px 0 rgba(251, 233, 208, 0.2), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.3);
   --card-shadow-hover: 0 32px 75px -12px rgba(230, 72, 51, 0.35), inset 0 1px 2px 0 rgba(251, 233, 208, 0.35);
@@ -206,8 +201,8 @@ a {
 
 .auth-card {
   width: 100%;
-  max-width: 1200px;
-  min-height: 720px;
+  max-width: 1240px;
+  min-height: 740px;
   background: var(--bg-glass-heavy);
   backdrop-filter: blur(28px) saturate(190%);
   -webkit-backdrop-filter: blur(28px) saturate(190%);
@@ -215,7 +210,7 @@ a {
   border-radius: var(--radius-xl);
   box-shadow: var(--card-shadow);
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
+  grid-template-columns: 1.12fr 0.88fr;
   overflow: hidden;
   position: relative;
   transition: transform var(--transition-smooth), box-shadow var(--transition-smooth), border-color var(--transition-smooth);
@@ -226,12 +221,12 @@ a {
 }
 
 /* ==========================================================================
-   LEFT PANEL: 4:5 VERTICAL ADVERTISING POSTER SHOWCASE
+   LEFT PANEL: ZARO ADVERTISING SERVICES BANNER (Reference Inspired)
    ========================================================================== */
 .showcase-panel {
-  background: linear-gradient(145deg, rgba(22, 42, 51, 0.8) 0%, rgba(17, 31, 38, 0.95) 100%);
+  background: linear-gradient(145deg, rgba(22, 42, 51, 0.85) 0%, rgba(17, 31, 38, 0.98) 100%);
   border-right: 1px solid var(--border-color);
-  padding: 28px;
+  padding: 24px 28px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -240,15 +235,15 @@ a {
 }
 
 [data-theme="light"] .showcase-panel {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.7) 0%, rgba(242, 222, 195, 0.5) 100%);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.75) 0%, rgba(242, 222, 195, 0.5) 100%);
 }
 
 .showcase-top-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
-  z-index: 2;
+  margin-bottom: 16px;
+  z-index: 5;
 }
 
 .showcase-tag {
@@ -271,8 +266,8 @@ a {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #00D2FF;
-  box-shadow: 0 0 10px #00D2FF;
+  background: var(--primary-color);
+  box-shadow: 0 0 10px var(--primary-color);
   animation: pulseBeacon 2s infinite ease-in-out;
 }
 
@@ -303,376 +298,303 @@ a {
   transform: translateY(-1px);
 }
 
-/* --- THE 4:5 POSTER CANVAS / CONTAINER --- */
-.poster-viewport {
+/* --- THE ADVERTISING BANNER LAYOUT --- */
+.banner-viewport {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px 0 16px;
+  padding: 4px 0 12px;
 }
 
-.poster-4-5 {
+.zaro-ad-banner {
   width: 100%;
-  max-width: 480px;
-  aspect-ratio: 4 / 5;
-  background: #ffffff;
+  min-height: 520px;
+  background: #111f26;
   border-radius: var(--radius-md);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(251, 233, 208, 0.15);
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 22px 20px 16px;
-  color: #111827;
+  padding: 24px 22px;
+  color: #ffffff;
 }
 
-/* Background Image Layer: Clean Light Blue Gradient + Statesman Portrait on Right */
-.poster-bg-layer {
+/* Background Diagonal Geometry & Character */
+.banner-bg-geometry {
   position: absolute;
   inset: 0;
   z-index: 1;
-  pointer-events: none;
+  overflow: hidden;
 }
 
-.poster-portrait-img {
+/* Bold diagonal warm coral/orange shape on the right */
+.diagonal-orange-slash {
   position: absolute;
-  right: -5%;
+  top: -10%;
+  right: -22%;
+  width: 75%;
+  height: 120%;
+  background: linear-gradient(135deg, #ff5722 0%, #E64833 60%, #874F41 100%);
+  transform: rotate(-18deg);
+  border-radius: 40px;
+  box-shadow: -15px 0 35px rgba(230, 72, 51, 0.35);
+}
+
+.diagonal-accent-line {
+  position: absolute;
+  top: -5%;
+  right: 48%;
+  width: 4px;
+  height: 120%;
+  background: rgba(251, 233, 208, 0.25);
+  transform: rotate(-18deg);
+}
+
+/* Subject Placement (Right Side, pointing to the Left) */
+.banner-subject-container {
+  position: absolute;
+  right: -2%;
   bottom: 0;
-  width: 72%;
+  width: 58%;
+  height: 98%;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.banner-subject-img {
+  width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: right bottom;
-  filter: contrast(102%) brightness(101%);
+  object-position: bottom center;
+  filter: contrast(105%) brightness(102%) drop-shadow(0 15px 25px rgba(0,0,0,0.6));
+  mix-blend-mode: normal;
 }
 
-.poster-gradient-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg, 
-    #edf6ff 0%, 
-    #edf6ff 42%, 
-    rgba(237, 246, 255, 0.75) 55%, 
-    transparent 80%
-  );
-  pointer-events: none;
-}
-
-/* Poster Header: Logo (Left) + Social Icons (Right) */
-.poster-header-row {
+/* Left Content Area */
+.banner-content-left {
   position: relative;
   z-index: 3;
+  width: 60%;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: space-between;
   gap: 12px;
 }
 
-.vertex-logo-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.vertex-symbol {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.vertex-text-wrap {
-  display: flex;
-  flex-direction: column;
-}
-
-.vertex-brand-title {
-  font-family: var(--font-heading);
-  font-size: 1.15rem;
-  font-weight: 900;
-  letter-spacing: 1.5px;
-  color: #0b1f3a;
-  line-height: 1;
-}
-
-.vertex-brand-sub {
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
-  font-weight: 700;
-  letter-spacing: 1.8px;
-  color: #0066FF;
-  margin-top: 2px;
-}
-
-.poster-social-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
-  box-shadow: 0 2px 8px rgba(0, 50, 120, 0.08);
-}
-
-.poster-social-icon {
+/* Top Left: ZARO Brand Badge */
+.banner-brand-badge {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: #f0f6ff;
-  color: #0066FF;
-  font-size: 0.75rem;
-  transition: transform 0.2s ease;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 6px 14px 6px 8px;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  width: fit-content;
 }
 
-.poster-social-icon:hover {
-  transform: scale(1.15);
-  background: #0066FF;
+.badge-logo-wrap {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-logo-img {
+  height: 26px;
+  width: auto;
+  object-fit: contain;
+}
+
+.ad-fallback-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--primary-color);
   color: #ffffff;
-}
-
-/* Poster Body: Speech bubble, headline, supporting copy, CTA */
-.poster-body {
-  position: relative;
-  z-index: 3;
-  width: 58%;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: -8px;
-}
-
-/* Speech Bubble */
-.speech-bubble-wrapper {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-}
-
-.speech-bubble {
-  position: relative;
-  background: #ffffff;
-  border: 2.5px solid #111827;
-  border-radius: 20px;
-  padding: 6px 14px 7px;
-  box-shadow: 3px 4px 0px #111827;
-  display: inline-flex;
-  align-items: center;
-}
-
-.bubble-sparkle {
-  position: absolute;
-  top: -9px;
-  right: -6px;
-  font-size: 0.85rem;
-  color: #0066FF;
-  animation: pulseSparkle 2.5s infinite;
-}
-
-@keyframes pulseSparkle {
-  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
-  50% { transform: scale(1.25) rotate(15deg); opacity: 0.7; }
-}
-
-.bubble-text {
   font-family: var(--font-heading);
-  line-height: 1.05;
+  font-weight: 800;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-text-wrap {
   display: flex;
   flex-direction: column;
 }
 
-.bubble-text span {
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.8px;
-  color: #111827;
-}
-
-.bubble-text strong {
-  font-size: 1.05rem;
+.badge-title {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
   font-weight: 900;
-  letter-spacing: 1px;
-  color: #0066FF;
+  letter-spacing: 0.5px;
+  color: #111f26;
+  line-height: 1.1;
 }
 
-.bubble-tail {
-  position: absolute;
-  bottom: -11px;
-  left: 24px;
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 10px solid #111827;
+.badge-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: #E64833;
+  display: flex;
+  align-items: center;
+  gap: 3px;
 }
 
-.bubble-tail::after {
-  content: '';
-  position: absolute;
-  bottom: 3px;
-  left: -6px;
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 8px solid #ffffff;
-}
-
-.bubble-accent-lines {
-  position: absolute;
-  right: -38px;
-  top: -4px;
-  pointer-events: none;
-}
-
-/* Headline */
-.poster-headline-group {
-  position: relative;
+/* Headline Group */
+.banner-headline-group {
   margin-top: 4px;
 }
 
-.poster-headline {
+.headline-sub {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #90AEAD;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.headline-main {
   font-family: var(--font-heading);
-  font-size: 1.65rem;
+  font-size: 1.55rem;
   font-weight: 900;
-  line-height: 1.05;
+  line-height: 1.12;
   letter-spacing: -0.5px;
+  color: #FBE9D0;
+  text-transform: uppercase;
+}
+
+.headline-highlight {
+  color: #ff6b4a;
+  text-shadow: 0 0 20px rgba(255, 107, 74, 0.4);
+  font-weight: 900;
+}
+
+/* Services List */
+.banner-services-list {
+  list-style: none;
   display: flex;
   flex-direction: column;
-}
-
-.poster-headline .line-1 {
-  color: #111827;
-}
-
-.poster-headline .highlight-blue {
-  background: linear-gradient(135deg, #0052cc 0%, #0088ff 60%, #00c6ff 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  display: inline-block;
-  font-weight: 900;
-}
-
-.dotted-curved-arrow {
-  position: absolute;
-  right: -45px;
-  bottom: -12px;
-  pointer-events: none;
-}
-
-/* Supporting Copy */
-.poster-supporting-copy p {
-  font-family: var(--font-body);
-  font-size: 0.78rem;
-  font-weight: 500;
-  line-height: 1.35;
-  color: #374151;
-}
-
-.poster-supporting-copy strong {
-  color: #0b1f3a;
-  font-weight: 700;
-}
-
-/* Call to Action */
-.poster-cta-box {
+  gap: 5px;
   margin-top: 2px;
 }
 
-.cta-inner {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: linear-gradient(135deg, #0052cc 0%, #0066FF 100%);
-  color: #ffffff;
-  padding: 8px 14px;
-  border-radius: var(--radius-sm);
-  box-shadow: 0 8px 18px -4px rgba(0, 102, 255, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.cta-inner:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 24px -4px rgba(0, 102, 255, 0.55);
-}
-
-.cta-chevron {
-  font-family: var(--font-mono);
-  font-weight: 800;
-  font-size: 1.05rem;
-  letter-spacing: -2px;
-  color: #ffde59;
-}
-
-.cta-text {
-  font-family: var(--font-heading);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  line-height: 1.15;
-}
-
-/* BOTTOM CONTACT BAR */
-.poster-bottom-contact-bar {
-  position: relative;
-  z-index: 3;
-  width: 100%;
-  background: linear-gradient(135deg, #004ecc 0%, #0066FF 50%, #0080ff 100%);
-  border-radius: var(--radius-sm);
-  padding: 9px 12px;
-  display: grid;
-  grid-template-columns: 1fr auto 1.3fr auto 1.3fr;
-  align-items: center;
-  box-shadow: 0 8px 20px -5px rgba(0, 78, 204, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.3);
-  color: #ffffff;
-  margin-top: 8px;
-}
-
-.contact-section {
+.banner-services-list li {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
 }
 
-.contact-icon-circle {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.22);
+.bullet-arrow {
+  color: #ff6b4a;
+  font-size: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
-  color: #ffffff;
-  flex-shrink: 0;
+  filter: drop-shadow(0 0 4px rgba(255, 107, 74, 0.6));
 }
 
-.contact-details {
+.service-name {
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+/* Contact & CTA Footer Area */
+.banner-contact-cta-wrap {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  margin-top: 6px;
+  position: relative;
+}
+
+.drawn-down-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: bounceArrow 2s infinite ease-in-out;
+  padding-bottom: 4px;
+}
+
+@keyframes bounceArrow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+
+.banner-contact-details {
   display: flex;
   flex-direction: column;
-  font-size: 0.64rem;
-  font-weight: 600;
-  line-height: 1.2;
+  gap: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #FBE9D0;
 }
 
-.contact-details a {
+.contact-phone-row,
+.contact-web-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.contact-phone-row i,
+.contact-web-row i {
+  color: #ff6b4a;
+  font-size: 0.85rem;
+}
+
+.banner-cta-button-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  margin-left: auto;
+}
+
+.banner-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ff5722;
   color: #ffffff;
-  word-break: break-all;
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  padding: 8px 16px;
+  border-radius: var(--radius-xs);
+  box-shadow: 0 6px 16px rgba(255, 87, 34, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.contact-divider {
-  width: 1px;
-  height: 20px;
-  background: rgba(255, 255, 255, 0.25);
-  margin: 0 4px;
+.banner-cta-btn:hover {
+  background: #ff6b4a;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(255, 87, 34, 0.6);
+}
+
+.cta-sub-label {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: #90AEAD;
+  letter-spacing: 0.5px;
 }
 
 /* Showcase Footer Badge */
@@ -682,7 +604,7 @@ a {
   justify-content: space-between;
   padding-top: 14px;
   border-top: 1px solid var(--border-color);
-  z-index: 2;
+  z-index: 5;
 }
 
 .badge-creator-info {
@@ -1096,7 +1018,7 @@ a {
   display: block;
 }
 
-/* Remember Me & Forgot Password */
+/* Remember Me */
 .form-options-row {
   display: flex;
   align-items: center;
@@ -1386,7 +1308,7 @@ a {
 }
 
 /* ==========================================================================
-   MODAL WINDOWS (Poster Viewer, Forgot Password, Legal Terms)
+   MODAL WINDOWS
    ========================================================================== */
 .modal-backdrop {
   position: fixed;
@@ -1529,7 +1451,7 @@ a {
 
 /* Poster Viewer Modal */
 .poster-modal-card {
-  max-width: 580px;
+  max-width: 640px;
   padding: 24px;
 }
 
@@ -1548,19 +1470,11 @@ a {
   font-family: var(--font-mono);
   font-size: 0.8rem;
   font-weight: 600;
-  color: #00D2FF;
+  color: var(--primary-color);
 }
 
-.btn-download {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.8rem;
-  padding: 6px 14px;
-}
-
-.modal-poster-clone .poster-4-5 {
-  max-width: 100%;
+.modal-poster-clone .zaro-ad-banner {
+  min-height: 480px;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
 }
 
@@ -1657,26 +1571,29 @@ a {
     padding: 18px 14px;
   }
 
-  .poster-4-5 {
-    padding: 16px 14px 12px;
+  .zaro-ad-banner {
+    padding: 18px 14px 14px;
   }
 
-  .poster-body {
-    width: 65%;
+  .banner-content-left {
+    width: 68%;
   }
 
-  .poster-headline {
-    font-size: 1.35rem;
+  .headline-main {
+    font-size: 1.25rem;
   }
 
-  .poster-bottom-contact-bar {
-    grid-template-columns: 1fr;
-    gap: 6px;
-    padding: 8px 10px;
+  .banner-services-list {
+    gap: 4px;
   }
 
-  .contact-divider {
-    display: none;
+  .service-name {
+    font-size: 0.72rem;
+  }
+
+  .banner-contact-cta-wrap {
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
   .form-panel {

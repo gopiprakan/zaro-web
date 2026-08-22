@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ZARO - Login & Access Your Account | Digital Agency Portal</title>
+  <title>ZARO - Login & Web Agency Portal</title>
   <meta name="description"
     content="Login to ZARO to manage your web development projects, explore client showcases, and grow your local business online.">
   <meta name="keywords" content="ZARO login, web agency portal, digital marketing, client dashboard">
@@ -13,14 +13,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"
     rel="stylesheet">
 
   <!-- Remix Icons CDN -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
 
   <!-- Link Custom CSS -->
-  <link rel="stylesheet" href="style.css?v=2.1">
+  <link rel="stylesheet" href="style.css?v=3.0">
 </head>
 
 <body>
@@ -36,170 +36,145 @@
     <!-- Master Showcase & Auth Card -->
     <div class="auth-card" id="authCard">
 
-      <!-- LEFT PANEL: 4:5 Vertical Social-Media Advertising Poster Showcase -->
-      <section class="showcase-panel" id="showcasePanel" aria-label="Digital Marketing Showcase">
+      <!-- LEFT PANEL: ZARO Agency Services Ad Banner (Inspired by Reference Composition) -->
+      <section class="showcase-panel" id="showcasePanel" aria-label="ZARO Services Showcase">
         
         <!-- Showcase Header / Quick Badge -->
         <div class="showcase-top-bar">
           <div class="showcase-tag">
             <span class="pulse-dot"></span>
-            <span class="tag-text">Featured Campaign</span>
+            <span class="tag-text">ZARO Digital Solutions</span>
           </div>
-          <button type="button" class="expand-poster-btn" id="expandPosterBtn" title="Inspect Full 4:5 Poster" aria-label="Expand poster preview">
-            <i class="ri-fullscreen-line"></i> <span>View 4:5 Poster</span>
+          <button type="button" class="expand-poster-btn" id="expandPosterBtn" title="Inspect Full Screen Banner" aria-label="Expand banner view">
+            <i class="ri-fullscreen-line"></i> <span>View Banner</span>
           </button>
         </div>
 
-        <!-- 4:5 Advertising Poster Container -->
-        <div class="poster-viewport">
-          <div class="poster-4-5" id="mainPoster">
+        <!-- ZARO Services Ad Banner Viewport -->
+        <div class="banner-viewport">
+          <div class="zaro-ad-banner" id="mainBanner">
             
-            <!-- Background Image & Gradient Mesh Layer -->
-            <div class="poster-bg-layer">
-              <img src="assets/vertex_poster_bg.jpg" alt="Dignified Indian Business Statesman" class="poster-portrait-img">
-              <div class="poster-gradient-overlay"></div>
+            <!-- Diagonal Geometric Background Shapes -->
+            <div class="banner-bg-geometry">
+              <div class="diagonal-orange-slash"></div>
+              <div class="diagonal-accent-line"></div>
+              
+              <!-- Right Side Subject: Professional Sitting on Stool Pointing Left -->
+              <div class="banner-subject-container">
+                <img src="assets/zaro_ad_man.jpg" alt="ZARO Digital Agency Consultant" class="banner-subject-img">
+              </div>
             </div>
 
-            <!-- Poster Top Row: Logo & Social Icons -->
-            <div class="poster-header-row">
-              <!-- TOP LEFT: Vertex Logo -->
-              <div class="vertex-logo-group">
-                <div class="vertex-symbol">
-                  <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
-                    <polygon points="16,2 30,28 2,28" fill="url(#vertexGrad)" />
-                    <polygon points="16,10 24,25 8,25" fill="#ffffff" />
-                    <defs>
-                      <linearGradient id="vertexGrad" x1="2" y1="2" x2="30" y2="28" gradientUnits="userSpaceOnUse">
-                        <stop stop-color="#0066FF"/>
-                        <stop offset="1" stop-color="#00D2FF"/>
-                      </linearGradient>
-                    </defs>
+            <!-- Left Content: Brand Logo, Headlines, Services List, CTA & Contact -->
+            <div class="banner-content-left">
+              
+              <!-- TOP LEFT: ZARO Logo Badge -->
+              <div class="banner-brand-badge">
+                <div class="badge-logo-wrap">
+                  <img src="../ZARO_logo.png" alt="ZARO Logo" class="badge-logo-img" onerror="this.style.display='none'; document.getElementById('adFallbackLogo').style.display='flex';">
+                  <div class="ad-fallback-logo" id="adFallbackLogo" style="display: none;">
+                    <span>Z</span>
+                  </div>
+                </div>
+                <div class="badge-text-wrap">
+                  <span class="badge-title">ZARO AGENCY</span>
+                  <span class="badge-subtitle"><i class="ri-rocket-2-fill"></i> Taking Local Businesses Online</span>
+                </div>
+              </div>
+
+              <!-- MAIN HEADLINE GROUP -->
+              <div class="banner-headline-group">
+                <p class="headline-sub">WE ARE PROVIDING</p>
+                <h2 class="headline-main">
+                  THE BEST SERVICE IN<br>
+                  <span class="headline-highlight">WEBSITE DESIGN</span>
+                </h2>
+              </div>
+
+              <!-- BULLETED SERVICES LIST -->
+              <ul class="banner-services-list">
+                <li>
+                  <span class="bullet-arrow"><i class="ri-play-fill"></i></span>
+                  <span class="service-name">WEBSITE DEVELOPMENT</span>
+                </li>
+                <li>
+                  <span class="bullet-arrow"><i class="ri-play-fill"></i></span>
+                  <span class="service-name">MOBILE APP &amp; UI</span>
+                </li>
+                <li>
+                  <span class="bullet-arrow"><i class="ri-play-fill"></i></span>
+                  <span class="service-name">E-COMMERCE STOREFRONTS</span>
+                </li>
+                <li>
+                  <span class="bullet-arrow"><i class="ri-play-fill"></i></span>
+                  <span class="service-name">WHATSAPP ORDER INTEGRATION</span>
+                </li>
+                <li>
+                  <span class="bullet-arrow"><i class="ri-play-fill"></i></span>
+                  <span class="service-name">DIGITAL CATALOGS &amp; QR MENUS</span>
+                </li>
+                <li>
+                  <span class="bullet-arrow"><i class="ri-play-fill"></i></span>
+                  <span class="service-name">LOCAL SEO &amp; GOOGLE MAPS</span>
+                </li>
+                <li>
+                  <span class="bullet-arrow"><i class="ri-play-fill"></i></span>
+                  <span class="service-name">APPOINTMENTS &amp; BOOKINGS</span>
+                </li>
+                <li>
+                  <span class="bullet-arrow"><i class="ri-play-fill"></i></span>
+                  <span class="service-name">GRAPHIC DESIGN &amp; BRANDING</span>
+                </li>
+              </ul>
+
+              <!-- CONTACT & CTA FOOTER AREA -->
+              <div class="banner-contact-cta-wrap">
+                <!-- Hand-drawn Style Downward Arrow -->
+                <div class="drawn-down-arrow">
+                  <svg width="28" height="34" viewBox="0 0 32 40" fill="none">
+                    <path d="M16 2 Q14 18 16 30" stroke="#E64833" stroke-width="3" stroke-linecap="round" fill="none" />
+                    <path d="M7 22 L16 32 L25 22" stroke="#E64833" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
                   </svg>
                 </div>
-                <div class="vertex-text-wrap">
-                  <span class="vertex-brand-title">VERTEX</span>
-                  <span class="vertex-brand-sub">DIGITAL MEDIA</span>
-                </div>
-              </div>
 
-              <!-- TOP RIGHT: Social Media Icons -->
-              <div class="poster-social-row" aria-label="Social Media">
-                <span class="poster-social-icon" title="Instagram"><i class="ri-instagram-line"></i></span>
-                <span class="poster-social-icon" title="Facebook"><i class="ri-facebook-fill"></i></span>
-                <span class="poster-social-icon" title="X"><i class="ri-twitter-x-line"></i></span>
-                <span class="poster-social-icon" title="YouTube"><i class="ri-youtube-fill"></i></span>
-                <span class="poster-social-icon" title="LinkedIn"><i class="ri-linkedin-fill"></i></span>
-              </div>
-            </div>
-
-            <!-- Poster Content Body (Left-aligned typography) -->
-            <div class="poster-body">
-              
-              <!-- MAIN SPEECH BUBBLE -->
-              <div class="speech-bubble-wrapper">
-                <div class="speech-bubble">
-                  <div class="bubble-sparkle sparkle-top">✦</div>
-                  <div class="bubble-text">
-                    <span>HELLO</span>
-                    <strong>FRIENDS</strong>
+                <div class="banner-contact-details">
+                  <div class="contact-phone-row">
+                    <i class="ri-phone-fill"></i>
+                    <span>+91 9043379569</span>
                   </div>
-                  <!-- Bubble Pointer Tail -->
-                  <div class="bubble-tail"></div>
+                  <div class="contact-web-row">
+                    <i class="ri-global-line"></i>
+                    <span>www.zaroagency.in</span>
+                  </div>
                 </div>
-                <!-- Playful accent curved lines -->
-                <svg class="bubble-accent-lines" width="48" height="34" viewBox="0 0 48 34" fill="none">
-                  <path d="M2 18 C14 8, 28 8, 44 2" stroke="#111827" stroke-width="2.5" stroke-linecap="round"/>
-                  <path d="M8 28 C20 20, 32 20, 46 14" stroke="#0066FF" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 3"/>
-                </svg>
-              </div>
 
-              <!-- MAIN HEADLINE -->
-              <div class="poster-headline-group">
-                <h2 class="poster-headline">
-                  <span class="line-1">GROW YOUR</span>
-                  <span class="line-2 highlight-blue">BUSINESS</span>
-                  <span class="line-3 highlight-blue">DIGITALLY</span>
-                </h2>
-
-                <!-- Dotted Curved Arrow Pointing toward Subject/Headline -->
-                <svg class="dotted-curved-arrow" width="70" height="50" viewBox="0 0 70 50" fill="none">
-                  <path d="M5 45 C 25 45, 55 35, 60 10" stroke="#0066FF" stroke-width="2.2" stroke-dasharray="4 4" stroke-linecap="round"/>
-                  <polygon points="60,5 65,15 54,12" fill="#0066FF"/>
-                </svg>
-              </div>
-
-              <!-- SUPPORTING COPY -->
-              <div class="poster-supporting-copy">
-                <p>
-                  <strong>Vertex Digital Media</strong><br>
-                  helps brands grow,<br>
-                  engage and succeed<br>
-                  in the digital world.
-                </p>
-              </div>
-
-              <!-- CALL TO ACTION -->
-              <div class="poster-cta-box">
-                <div class="cta-inner">
-                  <span class="cta-chevron">&gt;&gt;</span>
-                  <span class="cta-text">LET'S BUILD YOUR BRAND TOGETHER</span>
+                <div class="banner-cta-button-group">
+                  <a href="../index.html#contact" class="banner-cta-btn">
+                    <span>CONTACT US</span>
+                  </a>
+                  <span class="cta-sub-label">FOR MORE DETAILS</span>
                 </div>
               </div>
 
-            </div>
-
-            <!-- BOTTOM CONTACT BAR (Spanning full width) -->
-            <div class="poster-bottom-contact-bar">
-              <div class="contact-section phone-sec">
-                <div class="contact-icon-circle">
-                  <i class="ri-phone-fill"></i>
-                </div>
-                <div class="contact-details">
-                  <span>9540452604</span>
-                  <span>8587020217</span>
-                </div>
-              </div>
-
-              <div class="contact-divider"></div>
-
-              <div class="contact-section email-sec">
-                <div class="contact-icon-circle">
-                  <i class="ri-mail-send-fill"></i>
-                </div>
-                <div class="contact-details">
-                  <a href="mailto:info@vertexdigitalmedia.com">info@vertexdigitalmedia.com</a>
-                </div>
-              </div>
-
-              <div class="contact-divider"></div>
-
-              <div class="contact-section web-sec">
-                <div class="contact-icon-circle">
-                  <i class="ri-global-line"></i>
-                </div>
-                <div class="contact-details">
-                  <a href="http://www.vertexdigitalmedia.in" target="_blank" rel="noopener">www.vertexdigitalmedia.in</a>
-                </div>
-              </div>
             </div>
 
           </div>
         </div>
 
-        <!-- Showcase Footer Quick Quote / Controls -->
+        <!-- Showcase Footer Quick Actions -->
         <div class="showcase-bottom-badge">
           <div class="badge-creator-info">
             <div class="creator-avatar-wrap">
-              <img src="assets/vertex_poster_bg.jpg" alt="Vertex Media Campaign" class="creator-mini-avatar">
+              <img src="assets/zaro_ad_man.jpg" alt="ZARO Agency" class="creator-mini-avatar">
             </div>
             <div class="creator-text">
-              <span class="creator-name">Vertex Digital Media</span>
-              <span class="creator-sub">Growth & Transformation Campaign</span>
+              <span class="creator-name">ZARO Agency Services</span>
+              <span class="creator-sub">Empowering Retailers, Boutiques &amp; Cafes</span>
             </div>
           </div>
           <div class="badge-actions">
             <button type="button" class="poster-action-pill" id="demoAccountFillBtn" title="Auto-fill Demo Credentials">
-              <i class="ri-flashlight-line"></i> Demo Auto-Fill
+              <i class="ri-flashlight-line"></i> Quick Demo
             </button>
           </div>
         </div>
@@ -349,7 +324,7 @@
               <span class="line"></span>
             </div>
 
-            <!-- Social Login: Google -->
+            <!-- Social Login Grid -->
             <div class="social-login-grid">
               <button type="button" class="social-login-btn google-btn" id="googleLoginBtn">
                 <svg class="social-icon" width="18" height="18" viewBox="0 0 24 24">
@@ -408,23 +383,23 @@
     </div>
   </main>
 
-  <!-- Full-Screen 4:5 Poster Modal Viewer -->
+  <!-- Full-Screen Banner Modal Viewer -->
   <div class="modal-backdrop" id="posterModalBackdrop">
     <div class="modal-card poster-modal-card">
-      <button type="button" class="modal-close-btn" id="closePosterModal" aria-label="Close poster view">&times;</button>
+      <button type="button" class="modal-close-btn" id="closePosterModal" aria-label="Close banner view">&times;</button>
       <div class="poster-modal-header">
         <div class="poster-modal-badge">
-          <i class="ri-sparkling-fill"></i> Vertex Digital Media • 4:5 Advertising Campaign
+          <i class="ri-sparkling-fill"></i> ZARO Agency • Official Campaign
         </div>
         <div class="poster-modal-controls">
-          <a href="assets/vertex_poster_bg.jpg" download="vertex-digital-media-poster.jpg" class="btn-pill-outline btn-download" title="Download Poster Asset">
-            <i class="ri-download-2-line"></i> Download Asset
+          <a href="../index.html#services" class="btn-pill-outline" title="View All Services">
+            <i class="ri-external-link-line"></i> All Services
           </a>
         </div>
       </div>
       <div class="poster-modal-content">
         <div class="modal-poster-clone" id="modalPosterContainer">
-          <!-- Dynamically cloned high-res poster view will be injected here -->
+          <!-- Dynamically cloned banner view injected here -->
         </div>
       </div>
     </div>
@@ -468,15 +443,15 @@
         <p id="legalModalDate">Updated: August 2026</p>
       </div>
       <div class="legal-body" id="legalModalContent">
-        <p>Welcome to <strong>ZARO & Vertex Digital Ecosystem</strong>. By accessing our platform and services, you agree to comply with our client security policies, digital workspace ethics, and content privacy standards.</p>
-        <h4>1. Account Security & Verification</h4>
-        <p>Users are responsible for maintaining the confidentiality of their login credentials and managing store authentication tokens safely.</p>
-        <h4>2. Client Showcases & Marketing Assets</h4>
-        <p>All featured marketing campaigns (such as Vertex Digital Media advertisements) are curated creative works designed to empower Indian local businesses, boutiques, and enterprises.</p>
-        <h4>3. Theme & Device Preferences</h4>
+        <p>Welcome to <strong>ZARO Digital Web Agency</strong>. By accessing our platform and services, you agree to comply with our client security policies, digital storefront guidelines, and privacy standards.</p>
+        <h4>1. Account Security & Store Access</h4>
+        <p>Clients are responsible for maintaining the security of their login credentials and managing store authentication tokens safely.</p>
+        <h4>2. Web Design & Digital Solutions</h4>
+        <p>All featured services (including E-commerce, WhatsApp Catalogs, Local Maps Boosters, and Custom UI) are crafted to elevate local business growth.</p>
+        <h4>3. Theme & Preferences</h4>
         <p>Preferences (such as Dark/Light Theme mode and Remember Me sessions) are preserved locally on your client device for optimal performance.</p>
       </div>
-      <button type="button" class="btn-pill-outline modal-confirm-btn" id="legalAcknowledgeBtn">Understood & Accept</button>
+      <button type="button" class="btn-pill-outline modal-confirm-btn" id="legalAcknowledgeBtn">Understood &amp; Accept</button>
     </div>
   </div>
 
