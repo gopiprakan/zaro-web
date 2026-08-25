@@ -8,7 +8,8 @@ export const login = (req, res) => {
     }
 
     const db = readDb();
-    const user = db.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    const users = db.users || [];
+    const user = users.find(u => u.email && u.email.toLowerCase() === email.toLowerCase());
 
     if (!user || user.password !== password) {
       return res.status(401).json({ success: false, message: 'Invalid email or password.' });
@@ -34,7 +35,8 @@ export const signup = (req, res) => {
     }
 
     const db = readDb();
-    const existing = db.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    db.users = db.users || [];
+    const existing = db.users.find(u => u.email && u.email.toLowerCase() === email.toLowerCase());
     if (existing) {
       return res.status(409).json({ success: false, message: 'User already exists with this email.' });
     }
@@ -75,7 +77,8 @@ export const demoLogin = (req, res) => {
   try {
     const { role = 'client' } = req.body;
     const db = readDb();
-    const user = db.users.find(u => u.role === role) || db.users[0];
+    const users = db.users || [];
+    const user = users.find(u => u.role === role) || users[0];
 
     if (!user) {
       return res.status(404).json({ success: false, message: 'Demo user not found.' });
@@ -101,7 +104,8 @@ export const getMe = (req, res) => {
     }
 
     const db = readDb();
-    const user = db.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    const users = db.users || [];
+    const user = users.find(u => u.email && u.email.toLowerCase() === email.toLowerCase());
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found.' });
     }
