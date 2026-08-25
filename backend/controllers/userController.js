@@ -3,7 +3,7 @@ import { readDb, writeDb } from '../data/dbHelper.js';
 export const getAllUsers = (req, res) => {
   try {
     const db = readDb();
-    const safeUsers = db.users.map(({ password, ...u }) => u);
+    const safeUsers = (db.users || []).map(({ password, ...u }) => u);
     return res.status(200).json({ success: true, count: safeUsers.length, data: safeUsers });
   } catch (error) {
     return res.status(500).json({ success: false, message: 'Internal server error', error: error.message });
@@ -14,7 +14,7 @@ export const getUserById = (req, res) => {
   try {
     const { id } = req.params;
     const db = readDb();
-    const user = db.users.find(u => u.id === id);
+    const user = (db.users || []).find(u => u.id === id);
 
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
@@ -33,6 +33,7 @@ export const updateUser = (req, res) => {
     const { name, company, title, avatar } = req.body;
 
     const db = readDb();
+    db.users = db.users || [];
     const index = db.users.findIndex(u => u.id === id);
 
     if (index === -1) {
