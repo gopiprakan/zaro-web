@@ -43,7 +43,7 @@ function HomeRedirect() {
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/portal">
         <Routes>
           {/* Home / Root Route */}
           <Route path="/" element={<HomeRedirect />} />
