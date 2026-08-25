@@ -49,6 +49,7 @@ export const createProject = (req, res) => {
     }
 
     const db = readDb();
+    db.projects = db.projects || [];
     const newProject = {
       id: `PRJ-${Math.floor(1000 + Math.random() * 9000)}`,
       title,
@@ -83,6 +84,7 @@ export const updateProjectStatus = (req, res) => {
     const { status, progress } = req.body;
 
     const db = readDb();
+    db.projects = db.projects || [];
     const index = db.projects.findIndex(p => p.id === id);
 
     if (index === -1) {
