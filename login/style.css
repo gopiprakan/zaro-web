@@ -502,8 +502,8 @@ a {
 }
 
 .badge-bottom {
-  bottom: -15px;
-  left: -15px;
+  bottom: 28px;
+  left: -12px;
   animation-delay: 2s;
 }
 
