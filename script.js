@@ -84,6 +84,60 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleMobileMenu(true);
   });
 
+  /* --- 2B. SMOOTH HEADER SCROLL & DYNAMIC SCROLLSPY --- */
+  const header = document.getElementById('main-header');
+  const sections = document.querySelectorAll('section[id]');
+  
+  const handleHeaderScroll = () => {
+    const scrollY = window.scrollY || window.pageYOffset;
+    if (header) {
+      if (scrollY > 40) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    }
+
+    // ScrollSpy: Update active nav link based on viewport position
+    const scrollPos = scrollY + 140;
+    sections.forEach((section) => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.offsetHeight;
+      const sectionId = section.getAttribute('id');
+      const navLink = document.querySelector(`.nav-link[href="#${sectionId}"]`);
+      if (navLink) {
+        if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+          document.querySelectorAll('.nav-link').forEach((link) => link.classList.remove('active'));
+          navLink.classList.add('active');
+        }
+      }
+    });
+  };
+
+  window.addEventListener('scroll', handleHeaderScroll, { passive: true });
+  handleHeaderScroll();
+
+  /* --- 2C. INTERSECTION OBSERVER FOR FLUID SCROLL REVEALS --- */
+  const revealElements = document.querySelectorAll('.reveal-element');
+  if ('IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      root: null,
+      threshold: 0.08,
+      rootMargin: '0px 0px -30px 0px'
+    });
+
+    revealElements.forEach((el) => revealObserver.observe(el));
+  } else {
+    revealElements.forEach((el) => el.classList.add('is-revealed'));
+  }
+
 
   /* --- 3. DYNAMIC ROI & GROWTH CALCULATOR --- */
   const selectBusinessType = document.getElementById('calc-business-type');
