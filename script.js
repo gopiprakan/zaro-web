@@ -673,13 +673,19 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
   const forgotPasswordForm = document.getElementById('forgotPasswordForm');
   const resetEmailInput = document.getElementById('resetEmailInput');
 
-  // Legal Modal
+  // Legal Modal & Footer Links
   const termsLink = document.getElementById('termsLink');
   const privacyLink = document.getElementById('privacyLink');
+  const licensesLink = document.getElementById('licensesLink');
+  const footerTermsLink = document.getElementById('footerTermsLink');
+  const footerPrivacyLink = document.getElementById('footerPrivacyLink');
+  const footerLicensesLink = document.getElementById('footerLicensesLink');
   const legalModalBackdrop = document.getElementById('legalModalBackdrop');
   const closeLegalModal = document.getElementById('closeLegalModal');
   const legalAcknowledgeBtn = document.getElementById('legalAcknowledgeBtn');
   const legalModalTitle = document.getElementById('legalModalTitle');
+  const legalTabBtns = document.querySelectorAll('.legal-tab-btn');
+  const legalTabPanes = document.querySelectorAll('.legal-tab-pane');
 
   // Profile Drawer Elements
   const profileNameInput = document.getElementById('profile-name-input');
@@ -1495,16 +1501,46 @@ Looking forward to discussing the design concept and pricing outline with ZARO!`
     }
   }
 
-  // 3. Terms & Privacy Modal
-  if (termsLink && privacyLink && legalModalBackdrop) {
-    termsLink.addEventListener('click', () => {
-      if (legalModalTitle) legalModalTitle.textContent = 'Terms of Service';
-      legalModalBackdrop.classList.add('open');
+  // 3. Interactive Legal, Security & Licensing Modal Tabs
+  function switchMainLegalTab(tabId) {
+    if (!legalTabBtns.length || !legalTabPanes.length) return;
+
+    legalTabBtns.forEach(btn => {
+      const isActive = btn.getAttribute('data-tab') === tabId;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
     });
 
-    privacyLink.addEventListener('click', () => {
-      if (legalModalTitle) legalModalTitle.textContent = 'Privacy Policy';
+    legalTabPanes.forEach(pane => {
+      pane.classList.toggle('active', pane.id === `pane-${tabId}`);
+    });
+
+    if (legalModalTitle) {
+      if (tabId === 'terms') legalModalTitle.textContent = 'Terms of Service';
+      else if (tabId === 'privacy') legalModalTitle.textContent = 'Security & Privacy Policy';
+      else if (tabId === 'licenses') legalModalTitle.textContent = 'Software Licenses & Compliance';
+    }
+  }
+
+  if (legalModalBackdrop) {
+    const openLegalWithTab = (tabId) => {
+      switchMainLegalTab(tabId);
       legalModalBackdrop.classList.add('open');
+    };
+
+    if (termsLink) termsLink.addEventListener('click', () => openLegalWithTab('terms'));
+    if (privacyLink) privacyLink.addEventListener('click', () => openLegalWithTab('privacy'));
+    if (licensesLink) licensesLink.addEventListener('click', () => openLegalWithTab('licenses'));
+
+    if (footerTermsLink) footerTermsLink.addEventListener('click', () => openLegalWithTab('terms'));
+    if (footerPrivacyLink) footerPrivacyLink.addEventListener('click', () => openLegalWithTab('privacy'));
+    if (footerLicensesLink) footerLicensesLink.addEventListener('click', () => openLegalWithTab('licenses'));
+
+    legalTabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetTab = btn.getAttribute('data-tab');
+        if (targetTab) switchMainLegalTab(targetTab);
+      });
     });
 
     if (closeLegalModal) {
