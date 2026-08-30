@@ -564,15 +564,54 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  if (termsLink && privacyLink && legalModalBackdrop) {
-    termsLink.addEventListener('click', () => {
-      if (legalModalTitle) legalModalTitle.textContent = 'Terms of Service';
-      openModal(legalModalBackdrop);
+  // 11. Interactive Legal, Security & Licensing Modal Tabs
+  function switchLegalTab(tabId) {
+    if (!legalTabBtns.length || !legalTabPanes.length) return;
+
+    legalTabBtns.forEach(btn => {
+      const isActive = btn.getAttribute('data-tab') === tabId;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
     });
 
-    privacyLink.addEventListener('click', () => {
-      if (legalModalTitle) legalModalTitle.textContent = 'Privacy Policy';
-      openModal(legalModalBackdrop);
+    legalTabPanes.forEach(pane => {
+      pane.classList.toggle('active', pane.id === `pane-${tabId}`);
+    });
+
+    if (legalModalTitle) {
+      if (tabId === 'terms') legalModalTitle.textContent = 'Terms of Service';
+      else if (tabId === 'privacy') legalModalTitle.textContent = 'Security & Privacy Policy';
+      else if (tabId === 'licenses') legalModalTitle.textContent = 'Software Licenses & Compliance';
+    }
+  }
+
+  if (legalModalBackdrop) {
+    if (termsLink) {
+      termsLink.addEventListener('click', () => {
+        switchLegalTab('terms');
+        openModal(legalModalBackdrop);
+      });
+    }
+
+    if (privacyLink) {
+      privacyLink.addEventListener('click', () => {
+        switchLegalTab('privacy');
+        openModal(legalModalBackdrop);
+      });
+    }
+
+    if (licensesLink) {
+      licensesLink.addEventListener('click', () => {
+        switchLegalTab('licenses');
+        openModal(legalModalBackdrop);
+      });
+    }
+
+    legalTabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetTab = btn.getAttribute('data-tab');
+        if (targetTab) switchLegalTab(targetTab);
+      });
     });
 
     if (closeLegalModal) {

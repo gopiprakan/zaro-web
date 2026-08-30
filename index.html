@@ -982,8 +982,11 @@
     <div class="container footer-bottom">
       <p>&copy; 2026 ZARO Web Agency. All Rights Reserved. Designed for small and medium shops.</p>
       <div class="footer-legal">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
+        <button type="button" class="footer-legal-btn" id="footerPrivacyLink">Privacy &amp; Security</button>
+        <span class="dot-separator">•</span>
+        <button type="button" class="footer-legal-btn" id="footerTermsLink">Terms of Service</button>
+        <span class="dot-separator">•</span>
+        <button type="button" class="footer-legal-btn" id="footerLicensesLink">Licenses</button>
       </div>
     </div>
   </footer>
@@ -1318,9 +1321,11 @@
             </div>
 
             <div class="legal-links">
-              <button type="button" class="legal-link-btn" id="termsLink">Terms</button>
+              <button type="button" class="legal-link-btn" id="termsLink">Terms of Service</button>
               <span class="dot-separator">•</span>
-              <button type="button" class="legal-link-btn" id="privacyLink">Privacy</button>
+              <button type="button" class="legal-link-btn" id="privacyLink">Privacy &amp; Security</button>
+              <span class="dot-separator">•</span>
+              <button type="button" class="legal-link-btn" id="licensesLink">Licenses</button>
             </div>
           </div>
         </section>
@@ -1372,24 +1377,145 @@
     </div>
   </div>
 
-  <!-- Interactive Modal: Terms / Privacy -->
+  <!-- Interactive Modal: Terms / Privacy / Security / Licenses -->
   <div class="modal-backdrop" id="legalModalBackdrop">
     <div class="modal-card legal-modal">
       <button type="button" class="modal-close-btn" id="closeLegalModal" aria-label="Close modal">&times;</button>
-      <div class="modal-header">
-        <h3 id="legalModalTitle">Terms of Service</h3>
-        <p id="legalModalDate">Updated: August 2026</p>
+      
+      <div class="modal-header legal-modal-header">
+        <div class="modal-icon-badge security-badge">
+          <i class="ri-shield-check-fill"></i>
+        </div>
+        <div class="legal-header-titles">
+          <h3 id="legalModalTitle">Terms of Service</h3>
+          <div class="security-meta-tags">
+            <span class="sec-tag"><i class="ri-lock-2-line"></i> 256-Bit SSL/TLS</span>
+            <span class="sec-tag"><i class="ri-shield-keyhole-line"></i> GDPR &amp; Privacy Shield</span>
+            <span class="sec-tag"><i class="ri-file-code-line"></i> MIT &amp; Proprietary</span>
+          </div>
+        </div>
       </div>
+
+      <!-- Legal Modal Navigation Tabs -->
+      <div class="legal-tab-nav" role="tablist">
+        <button type="button" class="legal-tab-btn active" data-tab="terms" id="modalTabTerms" role="tab" aria-selected="true">
+          <i class="ri-file-text-line"></i>
+          <span>Terms of Service</span>
+        </button>
+        <button type="button" class="legal-tab-btn" data-tab="privacy" id="modalTabPrivacy" role="tab" aria-selected="false">
+          <i class="ri-shield-check-line"></i>
+          <span>Security &amp; Privacy</span>
+        </button>
+        <button type="button" class="legal-tab-btn" data-tab="licenses" id="modalTabLicenses" role="tab" aria-selected="false">
+          <i class="ri-award-line"></i>
+          <span>Licenses &amp; Compliance</span>
+        </button>
+      </div>
+
       <div class="legal-body" id="legalModalContent">
-        <p>Welcome to <strong>ZARO Digital Web Agency</strong>. By accessing our platform and services, you agree to comply with our client security policies, digital storefront guidelines, and privacy standards.</p>
-        <h4>1. Account Security &amp; Store Access</h4>
-        <p>Clients are responsible for maintaining the security of their login credentials and managing store authentication tokens safely.</p>
-        <h4>2. Web Design &amp; Digital Solutions</h4>
-        <p>All featured services (including E-commerce, WhatsApp Catalogs, Local Maps Boosters, and Custom UI) are crafted to elevate local business growth.</p>
-        <h4>3. Theme &amp; Preferences</h4>
-        <p>Preferences (such as Dark/Light Theme mode and Remember Me sessions) are preserved locally on your client device for optimal performance.</p>
+        <!-- TAB 1: TERMS OF SERVICE -->
+        <div class="legal-tab-pane active" id="pane-terms" role="tabpanel">
+          <div class="legal-callout">
+            <i class="ri-information-line"></i>
+            <p>Welcome to <strong>ZARO Digital Web Agency</strong>. By accessing our platform and services, you agree to comply with our client engagement terms, digital storefront guidelines, and security policies.</p>
+          </div>
+
+          <div class="legal-section-block">
+            <h4><i class="ri-shield-user-line"></i> 1. Account Integrity &amp; Access Controls</h4>
+            <p>Clients are responsible for maintaining the confidentiality of their authentication credentials, portal keys, and administrative logins. Any activity conducted under your authorized session is your enterprise's responsibility.</p>
+          </div>
+
+          <div class="legal-section-block">
+            <h4><i class="ri-code-s-slash-line"></i> 2. Web Solutions &amp; Code Ownership</h4>
+            <p>All featured services (including E-commerce, WhatsApp Catalogs, Local Maps Boosters, and Custom UI) are crafted to elevate business growth. Upon completion of milestone settlements, clients obtain full proprietary ownership of customized frontend code and storefront media.</p>
+          </div>
+
+          <div class="legal-section-block">
+            <h4><i class="ri-pulse-line"></i> 3. Service Level Agreement (SLA) &amp; Uptime</h4>
+            <p>ZARO targets a <strong>99.9% uptime</strong> standard for hosted digital solutions. Scheduled maintenance windows are announced with advance notice, and critical security patches are deployed with zero service disruption.</p>
+          </div>
+
+          <div class="legal-section-block">
+            <h4><i class="ri-settings-4-line"></i> 4. Client Preferences &amp; Local Persistence</h4>
+            <p>User preferences (such as Dark/Light Theme mode, filter states, and Remember Me sessions) are preserved locally on your client device for lightning-fast performance.</p>
+          </div>
+        </div>
+
+        <!-- TAB 2: SECURITY & PRIVACY -->
+        <div class="legal-tab-pane" id="pane-privacy" role="tabpanel">
+          <div class="security-hero-card">
+            <div class="sec-hero-icon"><i class="ri-shield-star-line"></i></div>
+            <div class="sec-hero-text">
+              <h5>Enterprise-Grade Security Architecture</h5>
+              <p>ZARO is built with zero-trust principles, cryptographic data protection, and continuous threat mitigation.</p>
+            </div>
+          </div>
+
+          <div class="legal-section-block">
+            <h4><i class="ri-lock-password-line"></i> 1. 256-Bit SSL/TLS Cryptographic Transport</h4>
+            <p>All communications between your client browser, our load balancers, and backend microservices are protected using <strong>TLS 1.3 encryption with 256-Bit SHA AES ciphers</strong>. Any packet interception is cryptographically prevented.</p>
+          </div>
+
+          <div class="legal-section-block">
+            <h4><i class="ri-key-fill"></i> 2. Password Hashing &amp; JWT Security</h4>
+            <p>User credentials are encrypted using <strong>Bcrypt with 12+ salt rounds</strong> before hitting persistent storage. Session tokens are signed via tamper-proof <strong>JSON Web Tokens (JWT)</strong> delivered with strict HttpOnly and SameSite flags against CSRF/XSS.</p>
+          </div>
+
+          <div class="legal-section-block">
+            <h4><i class="ri-user-unfollow-line"></i> 3. Strict Zero-Data-Selling Policy (GDPR / ISO)</h4>
+            <p>We respect client sovereignty: ZARO <strong>never sells, monetizes, or shares</strong> client project data, leads, or contact submissions with third-party data brokers or advertisers.</p>
+          </div>
+
+          <div class="legal-section-block">
+            <h4><i class="ri-fire-line"></i> 4. Active DDoS Shield &amp; Web Application Firewall</h4>
+            <p>Our infrastructure features real-time IP rate limiting, input sanitization routines against SQL injection, and automated bot mitigation to protect your digital storefront around the clock.</p>
+          </div>
+        </div>
+
+        <!-- TAB 3: LICENSES & COMPLIANCE -->
+        <div class="legal-tab-pane" id="pane-licenses" role="tabpanel">
+          <div class="license-grid">
+            <div class="license-card">
+              <div class="license-card-header">
+                <span class="license-badge mit">MIT License</span>
+                <h6>Open Source Components</h6>
+              </div>
+              <p class="license-text">
+                Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files to deal in the Software without restriction.
+              </p>
+              <div class="license-meta">Copyright &copy; 2026 ZARO Core Open Modules</div>
+            </div>
+
+            <div class="license-card">
+              <div class="license-card-header">
+                <span class="license-badge commercial">Commercial License</span>
+                <h6>ZARO Proprietary Framework</h6>
+              </div>
+              <p class="license-text">
+                Custom agency UI designs, client dashboard templates, and brand assets are protected under ZARO Web Agency commercial copyright. All rights reserved.
+              </p>
+              <div class="license-meta">&copy; 2026 ZARO Digital Web Agency.</div>
+            </div>
+          </div>
+
+          <div class="legal-section-block" style="margin-top: 14px;">
+            <h4><i class="ri-font-size"></i> Typography &amp; Iconography Attributions</h4>
+            <p>• <strong>Remix Icon:</strong> Open-source icon set licensed under Apache License 2.0.<br>
+               • <strong>Google Fonts:</strong> Outfit, Inter, and Plus Jakarta Sans licensed under the SIL Open Font License 1.1.<br>
+               • <strong>WCAG 2.1 AA Compliant:</strong> Color contrasts and semantic tags designed for accessibility.</p>
+          </div>
+        </div>
       </div>
-      <button type="button" class="btn-pill-outline modal-confirm-btn" id="legalAcknowledgeBtn">Understood &amp; Accept</button>
+
+      <div class="legal-modal-footer">
+        <div class="legal-update-note">
+          <i class="ri-checkbox-circle-line"></i>
+          <span>Updated: August 2026 • Certified Secure</span>
+        </div>
+        <button type="button" class="btn-pill-outline modal-confirm-btn" id="legalAcknowledgeBtn">
+          <i class="ri-check-line"></i> Understood &amp; Accept
+        </button>
+      </div>
     </div>
   </div>
 
