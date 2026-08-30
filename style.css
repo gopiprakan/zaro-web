@@ -2476,11 +2476,23 @@ footer {
 
 .footer-legal {
   display: flex;
-  gap: 20px;
+  align-items: center;
+  gap: 12px;
 }
 
+.footer-legal-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  transition: color var(--transition-fast);
+}
+
+.footer-legal-btn:hover,
 .footer-legal a:hover {
-  color: var(--text-primary);
+  color: var(--primary-color);
 }
 
 /* --- FLOATING WIDGET BAR --- */
