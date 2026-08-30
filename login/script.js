@@ -52,10 +52,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const termsLink = document.getElementById('termsLink');
   const privacyLink = document.getElementById('privacyLink');
+  const licensesLink = document.getElementById('licensesLink');
   const legalModalBackdrop = document.getElementById('legalModalBackdrop');
   const closeLegalModal = document.getElementById('closeLegalModal');
   const legalAcknowledgeBtn = document.getElementById('legalAcknowledgeBtn');
   const legalModalTitle = document.getElementById('legalModalTitle');
+  const legalTabBtns = document.querySelectorAll('.legal-tab-btn');
+  const legalTabPanes = document.querySelectorAll('.legal-tab-pane');
   const toastContainer = document.getElementById('toastContainer');
 
   // --- State ---
