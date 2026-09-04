@@ -74,6 +74,257 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- State ---
   let isSignUpMode = false;
+  let currentLang = localStorage.getItem('zaro-lang') || 'EN';
+
+  // --- Translation Dictionary ---
+  const translations = {
+    EN: {
+      flag: '🇮🇳',
+      code: 'EN',
+      tabLogin: 'Sign In',
+      tabRegister: 'Create Account',
+      welcomeTitleLogin: 'Welcome Back',
+      welcomeSubtitleLogin: 'Access your digital dashboard and web growth tools',
+      welcomeTitleRegister: 'Create Account',
+      welcomeSubtitleRegister: 'Join ZARO to build & scale your high-converting business presence',
+      exampleHint: '<strong>Default Example:</strong> Username <code>user@zaro.agency</code> &bull; Password <code>min 6 chars</code> &mdash; please manually type your username &amp; password.',
+      emailLabel: 'Email or Username',
+      emailPlaceholder: 'e.g. user@zaro.agency or your_username',
+      emailError: 'Please enter a valid email or username (min 3 chars)',
+      passwordLabel: 'Password',
+      passwordPlaceholder: 'e.g. •••••••• (min 6 characters)',
+      passwordError: 'Password must be at least 6 characters',
+      forgotPassword: 'Forgot password?',
+      rememberMe: 'Keep me signed in for 30 days',
+      submitLogin: 'Sign In to ZARO',
+      submitRegister: 'Create Account',
+      orDivider: 'or continue with',
+      googleBtn: 'Google Account',
+      guestBtn: 'Guest Preview',
+      noAccount: "Don't have an account?",
+      haveAccount: 'Already have an account?',
+      signUpLink: 'Create Account',
+      signInLink: 'Sign In',
+      toastSwitched: 'Language set to English (India)',
+      demoLoaded: '✨ Example credentials loaded. You can edit or manually type your own credentials!',
+      manualSuccess: (name) => `✨ Welcome, ${name}! Login successful.`
+    },
+    TA: {
+      flag: '🇮🇳',
+      code: 'TA',
+      tabLogin: 'உள்நுழைக',
+      tabRegister: 'கணக்கு தொடங்க',
+      welcomeTitleLogin: 'மீண்டும் வருக!',
+      welcomeSubtitleLogin: 'உங்கள் டிஜிட்டல் டேஷ்போர்டு மற்றும் வணிக கருவிகளை அணுகவும்',
+      welcomeTitleRegister: 'புதிய கணக்கு தொடங்குக',
+      welcomeSubtitleRegister: 'உங்கள் உள்ளூர் வணிகத்தை ஆன்லைனில் கொண்டு செல்ல ZARO உடன் இணையுங்கள்',
+      exampleHint: '<strong>மாதிரி வடிவம்:</strong> பயனர்பெயர் <code>user@zaro.agency</code> &bull; கடவுச்சொல் <code>min 6 எழுத்துகள்</code> &mdash; உங்கள் விவரங்களை கீழே நேரடியாக டைப் செய்யவும்.',
+      emailLabel: 'மின்னஞ்சல் அல்லது பயனர்பெயர்',
+      emailPlaceholder: 'எ.கா: user@zaro.agency அல்லது உங்கள்_பெயர்',
+      emailError: 'சரியான மின்னஞ்சல் அல்லது பயனர்பெயரை உள்ளிடவும் (குறைந்தது 3 எழுத்துக்கள்)',
+      passwordLabel: 'கடவுச்சொல்',
+      passwordPlaceholder: 'எ.கா: •••••••• (குறைந்தது 6 எழுத்துக்கள்)',
+      passwordError: 'கடவுச்சொல் குறைந்தது 6 எழுத்துக்கள் இருக்க வேண்டும்',
+      forgotPassword: 'கடவுச்சொல் மறந்துவிட்டதா?',
+      rememberMe: '30 நாட்களுக்கு என்னை உள்நுழைந்தே வைத்திருக்கவும்',
+      submitLogin: 'ZARO-வில் உள்நுழைக',
+      submitRegister: 'புதிய கணக்கு தொடங்குக',
+      orDivider: 'அல்லது இதனுடன் தொடரவும்',
+      googleBtn: 'கூகுள் கணக்கு',
+      guestBtn: 'விருந்தினர் முன்னோட்டம்',
+      noAccount: 'கணக்கு இல்லையா?',
+      haveAccount: 'ஏற்கனவே கணக்கு உள்ளதா?',
+      signUpLink: 'கணக்கு தொடங்குக',
+      signInLink: 'உள்நுழைக',
+      toastSwitched: 'மொழி தமிழுக்கு மாற்றப்பட்டது',
+      demoLoaded: '✨ மாதிரி விவரங்கள் நிரப்பப்பட்டது. நீங்கள் சொந்த விவரங்களையும் நேரடியாக டைப் செய்யலாம்!',
+      manualSuccess: (name) => `✨ வணக்கம், ${name}! உள்நுழைவு வெற்றிகரமானது.`
+    },
+    HI: {
+      flag: '🇮🇳',
+      code: 'HI',
+      tabLogin: 'साइन इन',
+      tabRegister: 'खाता बनाएं',
+      welcomeTitleLogin: 'वापसी पर स्वागत है',
+      welcomeSubtitleLogin: 'अपने डिजिटल डैशबोर्ड और बिज़नेस ग्रोथ टूल्स तक पहुंचें',
+      welcomeTitleRegister: 'नया खाता बनाएं',
+      welcomeSubtitleRegister: 'अपने स्थानीय व्यवसाय को ऑनलाइन ले जाने के लिए ZARO से जुड़ें',
+      exampleHint: '<strong>डिफ़ॉल्ट उदाहरण:</strong> यूज़रनेम <code>user@zaro.agency</code> &bull; पासवर्ड <code>कम से कम 6 अक्षर</code> &mdash; कृपया अपने विवरण मैन्युअल रूप से टाइप करें।',
+      emailLabel: 'ईमेल या यूज़रनेम',
+      emailPlaceholder: 'उदा. user@zaro.agency या यूज़रनेम',
+      emailError: 'कृपया एक मान्य ईमेल या यूज़रनेम दर्ज करें',
+      passwordLabel: 'पासवर्ड',
+      passwordPlaceholder: 'उदा. •••••••• (न्यूनतम 6 अक्षर)',
+      passwordError: 'पासवर्ड कम से कम 6 अक्षरों का होना चाहिए',
+      forgotPassword: 'पासवर्ड भूल गए?',
+      rememberMe: 'मुझे 30 दिनों तक साइन इन रखें',
+      submitLogin: 'ZARO में साइन इन करें',
+      submitRegister: 'खाता बनाएं',
+      orDivider: 'या इसके साथ जारी रखें',
+      googleBtn: 'गूगल अकाउंट',
+      guestBtn: 'गेस्ट प्रीव्यू',
+      noAccount: 'खाता नहीं है?',
+      haveAccount: 'पहले से खाता है?',
+      signUpLink: 'खाता बनाएं',
+      signInLink: 'साइन इन करें',
+      toastSwitched: 'भाषा हिन्दी में बदली गई',
+      demoLoaded: '✨ उदाहरण क्रेडेंशियल भरे गए। आप अपने स्वयं के विवरण भी मैन्युअल टाइप कर सकते हैं!',
+      manualSuccess: (name) => `✨ नमस्ते, ${name}! लॉगिन सफल रहा।`
+    },
+    TE: {
+      flag: '🇮🇳',
+      code: 'TE',
+      tabLogin: 'సైన్ ఇన్',
+      tabRegister: 'ఖాతా సృష్టించండి',
+      welcomeTitleLogin: 'స్వాగతం',
+      welcomeSubtitleLogin: 'మీ డిజిటల్ డాష్‌బోర్డ్ మరియు వ్యాపార వృద్ధి సాధనాలను యాక్సెస్ చేయండి',
+      welcomeTitleRegister: 'కొత్త ఖాతా తెరవండి',
+      welcomeSubtitleRegister: 'మీ వ్యాపారాన్ని ఆన్‌లైన్‌లో తీసుకెళ్లడానికి ZARO లో చేరండి',
+      exampleHint: '<strong>డిఫాల్ట్ ఉదాహరణ:</strong> యూజర్‌నేమ్ <code>user@zaro.agency</code> &bull; పాస్‌వర్డ్ <code>కనీసం 6 అక్షరాలు</code> &mdash; దయచేసి వివరాలను మాన్యువల్‌గా టైప్ చేయండి.',
+      emailLabel: 'ఇమెయిల్ లేదా యూజర్‌నేమ్',
+      emailPlaceholder: 'ఉదా: user@zaro.agency లేదా యూజర్‌నేమ్',
+      emailError: 'దయచేసి సరైన ఇమెయిల్ లేదా యూజర్‌నేమ్ నమోదు చేయండి',
+      passwordLabel: 'పాస్‌వర్డ్',
+      passwordPlaceholder: 'ఉదా: •••••••• (కనీసం 6 అక్షరాలు)',
+      passwordError: 'పాస్‌వర్డ్ కనీసం 6 అక్షరాలు ఉండాలి',
+      forgotPassword: 'పాస్‌వర్డ్ మర్చిపోయారా?',
+      rememberMe: 'నన్ను 30 రోజులు సైన్ ఇన్ ఉంచండి',
+      submitLogin: 'ZARO లో సైన్ ఇన్ చేయండి',
+      submitRegister: 'ఖాతా సృష్టించండి',
+      orDivider: 'లేదా దీనితో కొనసాగించండి',
+      googleBtn: 'గూగుల్ ఖాతా',
+      guestBtn: 'గెస్ట్ ప్రివ్యూ',
+      noAccount: 'ఖాతా లేదా?',
+      haveAccount: 'ఇప్పటికే ఖాతా ఉందా?',
+      signUpLink: 'ఖాతా తెరవండి',
+      signInLink: 'సైన్ ఇన్ చేయండి',
+      toastSwitched: 'భాష తెలుగులోకి మార్చబడింది',
+      demoLoaded: '✨ ఉదాహరణ ఆధారాలు నింపబడ్డాయి. మీరు మాన్యువల్‌గా కూడా టైప్ చేయవచ్చు!',
+      manualSuccess: (name) => `✨ స్వాగతం, ${name}! లాగిన్ విజయవంతమైంది.`
+    },
+    ML: {
+      flag: '🇮🇳',
+      code: 'ML',
+      tabLogin: 'സൈൻ ഇൻ',
+      tabRegister: 'അക്കൗണ്ട് ഉണ്ടാക്കുക',
+      welcomeTitleLogin: 'സ്വാഗതം',
+      welcomeSubtitleLogin: 'നിങ്ങളുടെ ഡിജിറ്റൽ ഡാഷ്‌ബോർഡും വളർച്ചാ ടൂളുകളും ആക്‌സസ് ചെയ്യുക',
+      welcomeTitleRegister: 'പുതിയ അക്കൗണ്ട് തുറക്കുക',
+      welcomeSubtitleRegister: 'നിങ്ങളുടെ പ്രാദേശിക ബിസിനസ്സ് ഓൺലൈനിലേക്ക് കൊണ്ടുപോകാൻ ZARO-ൽ ചേരുക',
+      exampleHint: '<strong>ഡിഫോൾട്ട് മാതൃക:</strong> ഉപയോക്തൃനാമം <code>user@zaro.agency</code> &bull; പാസ്‌വേഡ് <code>കുറഞ്ഞത് 6 അക്ഷരങ്ങൾ</code> &mdash; ദയവായി മാനുവലായി ടൈപ്പ് ചെയ്യുക.',
+      emailLabel: 'ഇമെയിൽ അല്ലെങ്കിൽ ഉപയോക്തൃനാമം',
+      emailPlaceholder: 'ഉദാ: user@zaro.agency അല്ലെങ്കിൽ യൂസർനെയിം',
+      emailError: 'സാധുവായ ഇമെയിൽ അല്ലെങ്കിൽ ഉപയോക്തൃനാമം നൽകുക',
+      passwordLabel: 'പാസ്‌വേഡ്',
+      passwordPlaceholder: 'ഉദാ: •••••••• (കുറഞ്ഞത് 6 അക്ഷരങ്ങൾ)',
+      passwordError: 'പാസ്‌വേഡിന് കുറഞ്ഞത് 6 അക്ഷരങ്ങൾ ഉണ്ടായിരിക്കണം',
+      forgotPassword: 'പാസ്‌വേഡ് മറന്നോ?',
+      rememberMe: '30 ദിവസത്തേക്ക് എന്നെ സൈൻ ഇൻ ചെയ്ത് നിലനിർത്തുക',
+      submitLogin: 'ZARO-ൽ സൈൻ ഇൻ ചെയ്യുക',
+      submitRegister: 'അക്കൗണ്ട് ഉണ്ടാക്കുക',
+      orDivider: 'അല്ലെങ്കിൽ തുടരുക',
+      googleBtn: 'ഗൂഗിൾ അക്കൗണ്ട്',
+      guestBtn: 'ഗസ്റ്റ് പ്രിവ്യൂ',
+      noAccount: 'അക്കൗണ്ട് ഇല്ലേ?',
+      haveAccount: 'ഇതിനകം അക്കൗണ്ട് ഉണ്ടോ?',
+      signUpLink: 'അക്കൗണ്ട് ഉണ്ടാക്കുക',
+      signInLink: 'സൈൻ ഇൻ ചെയ്യുക',
+      toastSwitched: 'ഭാഷ മലയാളത്തിലേക്ക് മാറ്റി',
+      demoLoaded: '✨ മാതൃകാ വിവരങ്ങൾ നൽകി. നിങ്ങൾക്ക് സ്വന്തമായി ടൈപ്പ് ചെയ്യാം!',
+      manualSuccess: (name) => `✨ സ്വാഗതം, ${name}! ലോഗിൻ വിജയകരം.`
+    },
+    GL: {
+      flag: '🌐',
+      code: 'GL',
+      tabLogin: 'Sign In',
+      tabRegister: 'Create Account',
+      welcomeTitleLogin: 'Welcome Back',
+      welcomeSubtitleLogin: 'Access your digital dashboard and web growth tools',
+      welcomeTitleRegister: 'Create Account',
+      welcomeSubtitleRegister: 'Join ZARO to build & scale your high-converting business presence',
+      exampleHint: '<strong>Default Example:</strong> Username <code>user@zaro.agency</code> &bull; Password <code>min 6 chars</code> &mdash; please manually type your username &amp; password.',
+      emailLabel: 'Email or Username',
+      emailPlaceholder: 'e.g. user@zaro.agency or your_username',
+      emailError: 'Please enter a valid email or username (min 3 chars)',
+      passwordLabel: 'Password',
+      passwordPlaceholder: 'e.g. •••••••• (min 6 characters)',
+      passwordError: 'Password must be at least 6 characters',
+      forgotPassword: 'Forgot password?',
+      rememberMe: 'Keep me signed in for 30 days',
+      submitLogin: 'Sign In to ZARO',
+      submitRegister: 'Create Account',
+      orDivider: 'or continue with',
+      googleBtn: 'Google Account',
+      guestBtn: 'Guest Preview',
+      noAccount: "Don't have an account?",
+      haveAccount: 'Already have an account?',
+      signUpLink: 'Create Account',
+      signInLink: 'Sign In',
+      toastSwitched: 'Language set to Global English',
+      demoLoaded: '✨ Example credentials loaded. You can edit or manually type your own credentials!',
+      manualSuccess: (name) => `✨ Welcome, ${name}! Login successful.`
+    }
+  };
+
+  // Function to apply language changes dynamically
+  function applyLanguage(langKey) {
+    if (!translations[langKey]) langKey = 'EN';
+    currentLang = langKey;
+    localStorage.setItem('zaro-lang', langKey);
+    const t = translations[langKey];
+
+    // Update Header Indicator
+    if (currentFlag) currentFlag.textContent = t.flag;
+    if (currentLangCode) currentLangCode.textContent = t.code;
+
+    // Update Menu Items Active State
+    langItems.forEach(item => {
+      item.classList.toggle('active', item.getAttribute('data-lang') === langKey);
+    });
+
+    // Update Tabs
+    if (tabLoginText) tabLoginText.textContent = t.tabLogin;
+    if (tabRegisterText) tabRegisterText.textContent = t.tabRegister;
+
+    // Update Headings based on mode
+    if (isSignUpMode) {
+      if (welcomeTitle) welcomeTitle.textContent = t.welcomeTitleRegister;
+      if (welcomeSubtitle) welcomeSubtitle.textContent = t.welcomeSubtitleRegister;
+      if (submitLoginBtn) {
+        const btnText = submitLoginBtn.querySelector('.btn-text');
+        if (btnText) btnText.textContent = t.submitRegister;
+      }
+      if (switchPromptText) switchPromptText.textContent = t.haveAccount;
+      if (signUpToggleBtn) signUpToggleBtn.textContent = t.signInLink;
+    } else {
+      if (welcomeTitle) welcomeTitle.textContent = t.welcomeTitleLogin;
+      if (welcomeSubtitle) welcomeSubtitle.textContent = t.welcomeSubtitleLogin;
+      if (submitLoginBtn) {
+        const btnText = submitLoginBtn.querySelector('.btn-text');
+        if (btnText) btnText.textContent = t.submitLogin;
+      }
+      if (switchPromptText) switchPromptText.textContent = t.noAccount;
+      if (signUpToggleBtn) signUpToggleBtn.textContent = t.signUpLink;
+    }
+
+    // Update Example Hint Callout
+    if (exampleHintText) exampleHintText.innerHTML = t.exampleHint;
+
+    // Update Form Labels and Placeholders
+    if (emailLabel) emailLabel.textContent = t.emailLabel;
+    if (emailInput) emailInput.placeholder = t.emailPlaceholder;
+    if (emailError) emailError.textContent = t.emailError;
+
+    if (passwordLabel) passwordLabel.textContent = t.passwordLabel;
+    if (passwordInput) passwordInput.placeholder = t.passwordPlaceholder;
+    if (passwordError) passwordError.textContent = t.passwordError;
+
+    if (forgotPasswordBtn) forgotPasswordBtn.textContent = t.forgotPassword;
+    if (rememberMeLabel) rememberMeLabel.textContent = t.rememberMe;
+    if (orDividerText) orDividerText.textContent = t.orDivider;
+    if (googleBtnText) googleBtnText.textContent = t.googleBtn;
+    if (guestBtnText) guestBtnText.textContent = t.guestBtn;
+  }
 
   /* --------------------------------------------------------------------------
      1. Theme Engine & Synchronization with Main Website
@@ -184,13 +435,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* --------------------------------------------------------------------------
-     4. Remember Me Persistence
+     4. Always Default Empty Inputs: User Manually Types Username & Password
      -------------------------------------------------------------------------- */
-  const savedEmail = localStorage.getItem('zaro_remembered_email');
-  if (savedEmail && emailInput) {
-    emailInput.value = savedEmail;
-    if (rememberMeCheckbox) rememberMeCheckbox.checked = true;
-  }
+  // Clear inputs on page load so user always manually types their username & password
+  if (emailInput) emailInput.value = '';
+  if (passwordInput) passwordInput.value = '';
+
+  // Initialize selected language
+  applyLanguage(currentLang);
 
   /* --------------------------------------------------------------------------
      5. Mode Switching: Sign In <-> Sign Up
@@ -200,24 +452,16 @@ document.addEventListener('DOMContentLoaded', () => {
     clearFormError();
     emailGroup.classList.remove('has-error');
     passwordGroup.classList.remove('has-error');
-    const btnText = submitLoginBtn.querySelector('.btn-text');
+    
+    // Refresh text based on current active language
+    applyLanguage(currentLang);
 
     if (isSignUpMode) {
       if (tabLogin) tabLogin.classList.remove('active');
       if (tabRegister) tabRegister.classList.add('active');
-      if (welcomeTitle) welcomeTitle.textContent = 'Create Account';
-      if (welcomeSubtitle) welcomeSubtitle.textContent = 'Join ZARO to build & scale your high-converting business presence';
-      if (btnText) btnText.textContent = 'Create Account';
-      if (signUpToggleBtn) signUpToggleBtn.textContent = 'Sign In';
-      if (switchPromptText) switchPromptText.textContent = 'Already have an account?';
     } else {
       if (tabRegister) tabRegister.classList.remove('active');
       if (tabLogin) tabLogin.classList.add('active');
-      if (welcomeTitle) welcomeTitle.textContent = 'Welcome Back';
-      if (welcomeSubtitle) welcomeSubtitle.textContent = 'Access your digital dashboard and web growth tools';
-      if (btnText) btnText.textContent = 'Sign In to ZARO';
-      if (signUpToggleBtn) signUpToggleBtn.textContent = 'Create Account';
-      if (switchPromptText) switchPromptText.textContent = "Don't have an account?";
     }
   }
 
@@ -226,14 +470,15 @@ document.addEventListener('DOMContentLoaded', () => {
   if (signUpToggleBtn) signUpToggleBtn.addEventListener('click', () => setAuthMode(!isSignUpMode));
 
   /* --------------------------------------------------------------------------
-     6. Demo Fill & Quick Guest Preview
+     6. Example Demo Fill (Optional Reference)
      -------------------------------------------------------------------------- */
   if (demoAccountFillBtn) {
     demoAccountFillBtn.addEventListener('click', () => {
-      emailInput.value = 'client@zaro.agency';
+      emailInput.value = 'user@zaro.agency';
       passwordInput.value = 'ZaroStore2026!';
       clearFormError();
-      showToast('✨ Demo credentials loaded! Click Sign In to test.', 'info');
+      const t = translations[currentLang] || translations.EN;
+      showToast(t.demoLoaded, 'info');
     });
   }
 
@@ -241,7 +486,9 @@ document.addEventListener('DOMContentLoaded', () => {
     guestLoginBtn.addEventListener('click', () => {
       emailInput.value = 'guest.explorer@zaro.agency';
       passwordInput.value = 'ZaroExplorer2026';
-      showToast('🚀 Guest explorer credentials filled.', 'info');
+      clearFormError();
+      const t = translations[currentLang] || translations.EN;
+      showToast(t.demoLoaded, 'info');
     });
   }
 
