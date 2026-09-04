@@ -13,17 +13,20 @@ document.addEventListener('DOMContentLoaded', () => {
   /* --- 1. DARK & LIGHT THEME ENGINE --- */
   const themeToggleBtn = document.getElementById('theme-toggle-btn');
   const themeIcon = document.getElementById('theme-icon-element');
+  const mobileThemeLabel = document.getElementById('mobile-theme-label');
   
   // Set theme color system helper
   const setTheme = (theme) => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('zaro-theme', theme);
     
-    // Update Toggle Icon class
+    // Update Toggle Icon class & Mobile label
     if (theme === 'light') {
-      themeIcon.className = 'ri-moon-line';
+      if (themeIcon) themeIcon.className = 'ri-moon-line';
+      if (mobileThemeLabel) mobileThemeLabel.textContent = 'Dark Mode';
     } else {
-      themeIcon.className = 'ri-sun-line';
+      if (themeIcon) themeIcon.className = 'ri-sun-line';
+      if (mobileThemeLabel) mobileThemeLabel.textContent = 'Light Mode';
     }
   };
 
@@ -40,39 +43,52 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Handle click on theme switcher
-  themeToggleBtn.addEventListener('click', () => {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    if (currentTheme === 'light') {
-      setTheme('dark');
-    } else {
-      setTheme('light');
-    }
-  });
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      if (currentTheme === 'light') {
+        setTheme('dark');
+      } else {
+        setTheme('light');
+      }
+    });
+  }
 
 
   /* --- 2. MOBILE HAMBURGER MENU TOGGLE --- */
   const mobileToggle = document.getElementById('mobile-toggle');
+  const mobileToggleIcon = document.getElementById('mobile-toggle-icon');
+  const mobileNavClose = document.getElementById('mobile-nav-close');
   const navMenu = document.getElementById('nav-menu');
-  const navLinksList = document.querySelectorAll('.nav-link');
+  const navLinksList = document.querySelectorAll('.nav-link, .mobile-drawer-cta, .btn-login-mobile');
   const navOverlay = document.getElementById('nav-overlay');
 
   const toggleMobileMenu = (forceClose = false) => {
+    if (!navMenu) return;
     const isOpen = forceClose ? false : !navMenu.classList.contains('active');
     
     navMenu.classList.toggle('active', isOpen);
-    navOverlay.classList.toggle('active', isOpen);
+    if (navOverlay) navOverlay.classList.toggle('active', isOpen);
     document.body.classList.toggle('no-scroll', isOpen);
     
-    if (isOpen) {
-      mobileToggle.className = 'ri-close-line mobile-menu-btn';
-    } else {
-      mobileToggle.className = 'ri-menu-line mobile-menu-btn';
+    if (mobileToggle) {
+      mobileToggle.setAttribute('aria-expanded', String(isOpen));
+    }
+
+    if (mobileToggleIcon) {
+      mobileToggleIcon.className = isOpen ? 'ri-close-line' : 'ri-menu-line';
     }
   };
 
-  mobileToggle.addEventListener('click', () => toggleMobileMenu());
+  if (mobileToggle) {
+    mobileToggle.addEventListener('click', () => toggleMobileMenu());
+  }
 
-  // Close mobile menu when nav link is clicked
+  if (mobileNavClose) {
+    mobileNavClose.addEventListener('click', () => toggleMobileMenu(true));
+  }
+
+  // Close mobile menu when any nav link or drawer CTA is clicked
   navLinksList.forEach(link => {
     link.addEventListener('click', () => {
       toggleMobileMenu(true);
@@ -80,8 +96,24 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Close mobile menu when clicking the backdrop overlay
-  navOverlay.addEventListener('click', () => {
-    toggleMobileMenu(true);
+  if (navOverlay) {
+    navOverlay.addEventListener('click', () => {
+      toggleMobileMenu(true);
+    });
+  }
+
+  // Close on Escape key press
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navMenu && navMenu.classList.contains('active')) {
+      toggleMobileMenu(true);
+    }
+  });
+
+  // Auto-close mobile drawer when window resized to desktop (> 1080px)
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 1080 && navMenu && navMenu.classList.contains('active')) {
+      toggleMobileMenu(true);
+    }
   });
 
 
