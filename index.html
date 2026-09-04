@@ -41,24 +41,47 @@
         ZARO
       </a>
 
-      <!-- Nav Links -->
-      <nav id="nav-menu">
+      <!-- Nav Links & Mobile Drawer -->
+      <nav id="nav-menu" aria-label="Main Navigation">
+        <!-- Mobile Drawer Header -->
+        <div class="mobile-nav-header">
+          <div class="mobile-nav-brand">
+            <img class="logo-img" src="ZARO_logo.png" alt="ZARO Logo">
+            <span>ZARO</span>
+          </div>
+          <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close navigation menu">
+            <i class="ri-close-line"></i>
+          </button>
+        </div>
+
+        <!-- Links List -->
         <ul class="nav-links">
-          <li><a href="#home" class="nav-link active">Home</a></li>
-          <li><a href="#calculator" class="nav-link">Value Boost</a></li>
-          <li><a href="#transformation" class="nav-link">Why Website</a></li>
-          <li><a href="#services" class="nav-link">Services</a></li>
-          <li><a href="#pricing" class="nav-link">Pricing</a></li>
-          <li><a href="#portfolio" class="nav-link">Our Work</a></li>
-          <li><a href="#reviews" class="nav-link">Reviews</a></li>
-          <li><a href="#faq" class="nav-link">FAQ</a></li>
-          <li><a href="#contact" class="nav-link">Contact</a></li>
+          <li><a href="#home" class="nav-link active"><i class="ri-home-4-line nav-icon"></i><span>Home</span></a></li>
+          <li><a href="#calculator" class="nav-link"><i class="ri-funds-box-line nav-icon"></i><span>Value Boost</span></a></li>
+          <li><a href="#transformation" class="nav-link"><i class="ri-swap-line nav-icon"></i><span>Why Website</span></a></li>
+          <li><a href="#services" class="nav-link"><i class="ri-tools-line nav-icon"></i><span>Services</span></a></li>
+          <li><a href="#pricing" class="nav-link"><i class="ri-price-tag-3-line nav-icon"></i><span>Pricing</span></a></li>
+          <li><a href="#portfolio" class="nav-link"><i class="ri-gallery-line nav-icon"></i><span>Our Work</span></a></li>
+          <li><a href="#reviews" class="nav-link"><i class="ri-star-line nav-icon"></i><span>Reviews</span></a></li>
+          <li><a href="#faq" class="nav-link"><i class="ri-question-line nav-icon"></i><span>FAQ</span></a></li>
+          <li><a href="#contact" class="nav-link"><i class="ri-mail-send-line nav-icon"></i><span>Contact</span></a></li>
           <li class="nav-theme-toggle-li">
-            <button id="theme-toggle-btn" class="theme-toggle-nav" aria-label="Toggle Theme">
+            <button id="theme-toggle-btn" class="theme-toggle-nav" aria-label="Toggle Dark / Light Theme" title="Toggle Theme">
               <i class="ri-sun-line" id="theme-icon-element"></i>
+              <span class="mobile-theme-label" id="mobile-theme-label">Switch Theme</span>
             </button>
           </li>
         </ul>
+
+        <!-- Mobile Drawer Footer Actions -->
+        <div class="mobile-nav-footer">
+          <a href="login/index.html" class="btn-login-mobile">
+            <i class="ri-user-line"></i> Client Portal Login
+          </a>
+          <a href="#contact" class="btn btn-primary mobile-drawer-cta">
+            <i class="ri-rocket-2-fill"></i> Get Started
+          </a>
+        </div>
       </nav>
 
       <!-- Header CTA Actions -->
@@ -79,7 +102,9 @@
         </div>
 
         <a href="#contact" class="btn-get-started-nav">Get Started</a>
-        <i class="ri-menu-line mobile-menu-btn" id="mobile-toggle"></i>
+        <button class="mobile-menu-btn" id="mobile-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+          <i class="ri-menu-line" id="mobile-toggle-icon"></i>
+        </button>
       </div>
     </div>
   </header>
