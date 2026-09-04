@@ -470,13 +470,27 @@ section {
   align-items: center;
 }
 
+/* Hide mobile-specific drawer elements on desktop */
+.mobile-nav-header,
+.mobile-nav-footer,
+.nav-icon,
+.mobile-theme-label {
+  display: none;
+}
+
 .nav-links {
   display: flex;
   align-items: center;
   gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--text-secondary);
@@ -484,6 +498,8 @@ section {
   border-radius: var(--radius-full);
   transition: all var(--transition-fast);
   position: relative;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 .nav-link:hover {
@@ -507,6 +523,11 @@ section {
 }
 
 /* Theme Toggle Button */
+.nav-theme-toggle-li {
+  display: flex;
+  align-items: center;
+}
+
 .theme-toggle-nav {
   display: flex;
   align-items: center;
@@ -547,6 +568,7 @@ section {
   border-radius: var(--radius-full);
   cursor: pointer;
   transition: all var(--transition-fast);
+  white-space: nowrap;
 }
 
 .btn-login-nav:hover {
@@ -566,6 +588,8 @@ section {
   border-radius: var(--radius-full);
   box-shadow: 0 4px 14px var(--primary-glow);
   transition: all var(--transition-fast);
+  white-space: nowrap;
+  text-decoration: none;
 }
 
 .btn-get-started-nav:hover {
@@ -607,12 +631,34 @@ section {
   object-fit: cover;
 }
 
+/* Mobile Menu Burger Button */
 .mobile-menu-btn {
   display: none;
-  font-size: 1.5rem;
-  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
   color: var(--text-primary);
-  padding: 4px;
+  font-size: 1.35rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  outline: none;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.mobile-menu-btn:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-surface-elevated);
+  transform: scale(1.06);
+  color: var(--primary-color);
+}
+
+.mobile-menu-btn:active {
+  transform: scale(0.95);
 }
 
 /* Mobile Nav Overlay */
@@ -620,11 +666,12 @@ section {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   z-index: 998;
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--transition-smooth);
+  transition: opacity 0.35s ease;
 }
 
 .nav-overlay.active {
