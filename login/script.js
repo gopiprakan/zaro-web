@@ -24,6 +24,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const switchPromptText = document.getElementById('switchPromptText');
   const tabLogin = document.getElementById('tabLogin');
   const tabRegister = document.getElementById('tabRegister');
+  const tabLoginText = document.getElementById('tabLoginText');
+  const tabRegisterText = document.getElementById('tabRegisterText');
+  const exampleHintText = document.getElementById('exampleHintText');
+  const emailLabel = document.getElementById('emailLabel');
+  const passwordLabel = document.getElementById('passwordLabel');
+  const rememberMeLabel = document.getElementById('rememberMeLabel');
+  const orDividerText = document.getElementById('orDividerText');
+  const googleBtnText = document.getElementById('googleBtnText');
+  const guestBtnText = document.getElementById('guestBtnText');
+  const emailError = document.getElementById('emailError');
+  const passwordError = document.getElementById('passwordError');
 
   // --- Theme Elements ---
   const themeToggleBtn = document.getElementById('themeToggleBtn');
