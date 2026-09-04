@@ -1113,6 +1113,49 @@ a {
   line-height: 1.4;
 }
 
+/* Default Credentials Example Hint Callout */
+.credentials-example-hint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  border-radius: var(--radius-sm);
+  background: rgba(14, 165, 233, 0.08);
+  border: 1px solid rgba(14, 165, 233, 0.22);
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+[data-theme="light"] .credentials-example-hint {
+  background: rgba(14, 165, 233, 0.06);
+  border-color: rgba(14, 165, 233, 0.25);
+  color: #0369a1;
+}
+
+.credentials-example-hint i {
+  color: #0ea5e9;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.credentials-example-hint code {
+  font-family: var(--font-mono);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 0.8rem;
+}
+
+[data-theme="light"] .credentials-example-hint code {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #0f172a;
+}
+
 /* Inputs & Forms */
 .auth-form {
   display: flex;
