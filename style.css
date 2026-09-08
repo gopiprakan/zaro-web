@@ -3145,24 +3145,25 @@ footer {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #ff5722;
-  color: #ffffff;
+  background: var(--primary-color);
+  color: #121013;
   font-family: var(--font-heading);
   font-size: 0.76rem;
   font-weight: 900;
   letter-spacing: 0.5px;
   padding: 7px 14px;
   border-radius: var(--radius-xs);
-  box-shadow: 0 6px 16px rgba(255, 87, 34, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 16px rgba(81, 226, 245, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   cursor: pointer;
   transition: all 0.2s ease;
   margin-left: auto;
 }
 
 .banner-cta-btn:hover {
-  background: #ff6b4a;
+  background: var(--color-blue-green);
   transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(157, 249, 239, 0.5);
 }
 
 .showcase-bottom-badge {

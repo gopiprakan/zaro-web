@@ -425,12 +425,12 @@ a {
   font-family: var(--font-heading);
   font-size: 0.82rem;
   font-weight: 700;
-  color: #FBE9D0;
+  color: #ffffff;
   margin-bottom: 8px;
 }
 
 .mockup-brand-bar .brand-icon {
-  color: #ff6b4a;
+  color: var(--primary-color);
   font-size: 1rem;
 }
 
@@ -550,14 +550,14 @@ a {
 .metric-title {
   font-size: 0.6rem;
   font-family: var(--font-mono);
-  color: #90AEAD;
+  color: var(--color-blue-green);
 }
 
 .metric-value {
   font-family: var(--font-heading);
   font-size: 0.78rem;
   font-weight: 800;
-  color: #FBE9D0;
+  color: #ffffff;
 }
 
 /* Orbit Rings */
@@ -680,13 +680,13 @@ a {
   font-weight: 900;
   line-height: 1.12;
   letter-spacing: -0.5px;
-  color: #FBE9D0;
+  color: #ffffff;
   text-transform: uppercase;
 }
 
 .headline-highlight {
-  color: #ff6b4a;
-  text-shadow: 0 0 20px rgba(255, 107, 74, 0.4);
+  color: var(--color-bright-blue);
+  text-shadow: 0 0 20px rgba(81, 226, 245, 0.4);
   font-weight: 900;
 }
 
@@ -706,12 +706,12 @@ a {
 }
 
 .bullet-arrow {
-  color: #ff6b4a;
+  color: var(--color-bright-blue);
   font-size: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: drop-shadow(0 0 4px rgba(255, 107, 74, 0.6));
+  filter: drop-shadow(0 0 4px rgba(81, 226, 245, 0.6));
 }
 
 .service-name {
@@ -752,7 +752,7 @@ a {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 700;
-  color: #FBE9D0;
+  color: #ffffff;
 }
 
 .contact-phone-row,
@@ -764,7 +764,7 @@ a {
 
 .contact-phone-row i,
 .contact-web-row i {
-  color: #ff6b4a;
+  color: var(--color-bright-blue);
   font-size: 0.85rem;
 }
 
@@ -780,24 +780,24 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #ff5722;
-  color: #ffffff;
+  background: var(--primary-color);
+  color: #121013;
   font-family: var(--font-heading);
   font-size: 0.78rem;
   font-weight: 900;
   letter-spacing: 0.5px;
   padding: 8px 16px;
   border-radius: var(--radius-xs);
-  box-shadow: 0 6px 16px rgba(255, 87, 34, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 16px rgba(81, 226, 245, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .banner-cta-btn:hover {
-  background: #ff6b4a;
+  background: var(--color-blue-green);
   transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(255, 87, 34, 0.6);
+  box-shadow: 0 10px 22px rgba(157, 249, 239, 0.6);
 }
 
 .cta-sub-label {
