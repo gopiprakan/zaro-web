@@ -350,10 +350,10 @@ a {
   right: -24%;
   width: 76%;
   height: 124%;
-  background: linear-gradient(135deg, #ff5722 0%, #E64833 60%, #874F41 100%);
+  background: var(--primary-color);
   transform: rotate(-18deg);
   border-radius: 40px;
-  box-shadow: -15px 0 35px rgba(230, 72, 51, 0.35);
+  box-shadow: -15px 0 35px rgba(81, 226, 245, 0.35);
 }
 
 .diagonal-accent-line {
@@ -362,7 +362,7 @@ a {
   right: 48%;
   width: 4px;
   height: 120%;
-  background: rgba(251, 233, 208, 0.25);
+  background: rgba(157, 249, 239, 0.35);
   transform: rotate(-18deg);
 }
 
