@@ -487,7 +487,7 @@ a {
   gap: 8px;
   box-shadow: 0 12px 28px -5px rgba(0, 0, 0, 0.5);
   z-index: 3;
-  animation: floatCard 4s ease-in-out infinite alternate;
+  animation: none;
 }
 
 @keyframes floatCard {
