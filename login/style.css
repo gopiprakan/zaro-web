@@ -653,7 +653,7 @@ a {
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 700;
-  color: #E64833;
+  color: var(--primary-color);
   display: flex;
   align-items: center;
   gap: 3px;
