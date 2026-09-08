@@ -1859,7 +1859,7 @@ section {
   font-weight: 800;
   font-size: 0.95rem;
   letter-spacing: 0.06em;
-  color: #FBE9D0;
+  color: var(--text-primary);
 }
 
 .mock-status-chip {
@@ -1897,9 +1897,9 @@ section {
 .mock-features-pills span {
   font-size: 0.72rem;
   font-weight: 600;
-  background: rgba(36, 72, 85, 0.6);
-  border: 1px solid rgba(144, 174, 173, 0.25);
-  color: #FBE9D0;
+  background: rgba(162, 128, 137, 0.2);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
   padding: 3px 10px;
   border-radius: var(--radius-full);
 }
@@ -2863,12 +2863,12 @@ footer {
   font-family: var(--font-heading);
   font-size: 0.82rem;
   font-weight: 700;
-  color: #FBE9D0;
+  color: #ffffff;
   margin-bottom: 6px;
 }
 
 .mockup-brand-bar .brand-icon {
-  color: #ff6b4a;
+  color: var(--primary-color);
   font-size: 1rem;
 }
 
@@ -2976,17 +2976,17 @@ footer {
   flex-direction: column;
 }
 
-.metric-title {
+.metric-label {
   font-size: 0.6rem;
   font-family: var(--font-mono);
-  color: #90AEAD;
+  color: var(--color-blue-green);
 }
 
 .metric-value {
   font-family: var(--font-heading);
   font-size: 0.78rem;
   font-weight: 800;
-  color: #FBE9D0;
+  color: #ffffff;
 }
 
 .deco-orbit-ring {
@@ -3063,7 +3063,7 @@ footer {
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 1.5px;
-  color: #90AEAD;
+  color: var(--color-blue-green);
   text-transform: uppercase;
   margin-bottom: 2px;
 }
@@ -3074,13 +3074,13 @@ footer {
   font-weight: 900;
   line-height: 1.12;
   letter-spacing: -0.5px;
-  color: #FBE9D0;
+  color: #ffffff;
   text-transform: uppercase;
 }
 
 .headline-highlight {
-  color: #ff6b4a;
-  text-shadow: 0 0 20px rgba(255, 107, 74, 0.4);
+  color: var(--color-bright-blue);
+  text-shadow: 0 0 20px rgba(81, 226, 245, 0.4);
   font-weight: 900;
 }
 
@@ -3098,7 +3098,7 @@ footer {
 }
 
 .bullet-arrow {
-  color: #ff6b4a;
+  color: var(--color-bright-blue);
   font-size: 0.72rem;
   display: flex;
   align-items: center;
@@ -3127,7 +3127,7 @@ footer {
   font-family: var(--font-mono);
   font-size: 0.76rem;
   font-weight: 700;
-  color: #FBE9D0;
+  color: #ffffff;
 }
 
 .contact-phone-row, .contact-web-row {
@@ -3137,7 +3137,7 @@ footer {
 }
 
 .contact-phone-row i, .contact-web-row i {
-  color: #ff6b4a;
+  color: var(--color-bright-blue);
   font-size: 0.85rem;
 }
 
