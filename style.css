@@ -4266,8 +4266,8 @@ footer {
   border-radius: var(--radius-full);
 }
 
-.status-draft { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
-.status-dev { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+.status-draft { background: rgba(237, 247, 86, 0.15); color: #edf756; }
+.status-dev { background: rgba(81, 226, 245, 0.15); color: #51e2f5; }
 .status-launched { background: rgba(16, 185, 129, 0.15); color: #10b981; }
 
 .order-details-grid {
