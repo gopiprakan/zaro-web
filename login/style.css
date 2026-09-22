@@ -343,7 +343,8 @@ a {
   overflow: hidden;
 }
 
-/* Bold diagonal warm coral/orange shape on the right */
+/* Diagonal brand shape on the right */
+.diagonal-brand-slash,
 .diagonal-orange-slash {
   position: absolute;
   top: -12%;

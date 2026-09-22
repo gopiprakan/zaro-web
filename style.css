@@ -2785,6 +2785,7 @@ footer {
   overflow: hidden;
 }
 
+.diagonal-brand-slash,
 .diagonal-orange-slash {
   position: absolute;
   top: -12%;
