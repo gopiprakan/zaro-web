@@ -1,0 +1,10 @@
+# robots.txt for ZARO Web Agency
+User-agent: *
+Allow: /
+
+# Disallow internal backend API routes from search crawlers
+Disallow: /backend/
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://zarostudios.com/sitemap.xml

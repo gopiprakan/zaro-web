@@ -1,0 +1,16 @@
+{
+  "name": "ZARO Web Development Agency",
+  "short_name": "ZARO",
+  "description": "High-performing custom websites and local SEO for retail shops, boutiques, salons, and local businesses.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0b10",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "ZARO_logo.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png"
+    }
+  ]
+}
