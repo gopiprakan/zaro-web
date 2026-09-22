@@ -840,7 +840,7 @@ section {
 }
 
 .dot-red { background: #ef4444; }
-.dot-yellow { background: #f59e0b; }
+.dot-yellow { background: #edf756; }
 .dot-green { background: #10b981; }
 
 .mock-shop-hero {
@@ -2168,7 +2168,7 @@ section {
 .review-stars {
   display: flex;
   gap: 4px;
-  color: #f59e0b;
+  color: var(--highlight-color, #edf756);
   font-size: 1.1rem;
 }
 
