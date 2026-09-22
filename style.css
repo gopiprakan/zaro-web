@@ -2852,8 +2852,8 @@ footer {
   height: 8px;
   border-radius: 50%;
 }
-.dot-red { background: #ff5f56; }
-.dot-yellow { background: #ffbd2e; }
+.dot-red { background: #ef4444; }
+.dot-yellow { background: #edf756; }
 .dot-green { background: #27c93f; }
 
 .mockup-brand-bar {
@@ -2915,9 +2915,9 @@ footer {
   font-family: var(--font-mono);
   font-size: 0.6rem;
   font-weight: 700;
-  background: #ff5722;
-  color: #ffffff;
-  box-shadow: 0 4px 10px rgba(255, 87, 34, 0.4);
+  background: var(--primary-color, #51e2f5);
+  color: #121013;
+  box-shadow: 0 4px 10px rgba(81, 226, 245, 0.4);
 }
 
 .mock-btn-chip.alt {
@@ -2969,7 +2969,7 @@ footer {
 }
 
 .icon-green { background: rgba(72, 187, 120, 0.2); color: #48bb78; }
-.icon-orange { background: rgba(255, 107, 74, 0.2); color: #ff6b4a; }
+.icon-orange, .icon-cyan { background: rgba(81, 226, 245, 0.2); color: var(--primary-color, #51e2f5); }
 
 .metric-info {
   display: flex;
